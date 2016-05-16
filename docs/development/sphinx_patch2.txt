@@ -1,0 +1,14 @@
+--- C:/Python24/Lib/site-packages/Sphinx-0.6.5-py2.4.egg_orig/sphinx/builders/html.py	Thu Mar 18 09:59:25 2010
++++ C:/Python24/Lib/site-packages/Sphinx-0.6.5-py2.4.egg/sphinx/builders/html.py	Thu Mar 18 09:55:40 2010
+@@ -623,9 +623,9 @@
+         if self.indexer is not None and title:
+             self.indexer.feed(pagename, title, doctree)
+ 
+-    def _get_local_toctree(self, docname, collapse=True):
++    def _get_local_toctree(self, docname, **tmplKw):
+         return self.render_partial(self.env.get_toctree_for(
+-            docname, self, collapse))['fragment']
++            docname, self, **tmplKw))['fragment']
+ 
+     def get_outfilename(self, pagename):
+         return path.join(self.outdir, os_path(pagename) + self.out_suffix)

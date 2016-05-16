@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<topicdefntree>
+  <description>Test Topics showing hierarchy and topic inheritance</description>
+  <topic id="parent">
+      <description>Parent with a parameter and subtopics</description>
+      <listenerspec>
+          <arg id="lastname">surname</arg>
+          <arg id="name" optional="True">given name</arg>
+        </listenerspec>
+      <topic id="child">
+          <description>This is the first child</description>
+          <listenerspec>
+              <arg id="nick">A nickname</arg>
+            </listenerspec>
+        </topic>
+    </topic>
+</topicdefntree>
