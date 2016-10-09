@@ -98,15 +98,6 @@ from listener0, the following code would raise a
 
 because arg3 is not part of the MDS. 
 
-When transitioning from arg1 to kwargs messaging protocol, 
-two more exceptions are possible: 
-     
-    - ``pub.SenderTooManyKwargs``
-    - ``pub.SenderWrongKwargName``
-
-See section :ref:`label-trans_arg1_to_kwargs` as well as functions
-:py:func:`pubsub.setuparg1.enforceArgName` and 
-:py:func:`pubsub.setupkwargs.transitionFromArg1`.
 
 Topic Name Errors
 ^^^^^^^^^^^^^^^^^^

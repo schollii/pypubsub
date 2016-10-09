@@ -19,8 +19,9 @@ relevant information.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 """
 
-from ..core import callables
-from ..core.notificationmgr import INotificationHandler
+from typing import List, Mapping, Any, TextIO
+
+from ..core import TopicManager, INotificationHandler, Listener, Topic, Publisher
 
 
 class IgnoreNotificationsMixin(INotificationHandler):
@@ -30,19 +31,23 @@ class IgnoreNotificationsMixin(INotificationHandler):
     Then just override the desired methods. The rest of the notifications
     will automatically be ignored.
     """
-    
-    def notifySubscribe(self, pubListener, topicObj, newSub):
-        pass
-    def notifyUnsubscribe(self, pubListener, topicObj):
-        pass
-    def notifyDeadListener(self, pubListener, topicObj):
-        pass
-    def notifySend(self, stage, topicObj, pubListener=None):
+
+    def notifySubscribe(self, pubListener: Listener, topicObj: Topic, newSub: bool):
         pass
 
-    def notifyNewTopic(self, topicObj, description, required, argsDocs):
+    def notifyUnsubscribe(self, pubListener: Listener, topicObj: Topic):
         pass
-    def notifyDelTopic(self, topicName):
+
+    def notifyDeadListener(self, pubListener: Listener, topicObj: Topic):
+        pass
+
+    def notifySend(self, stage: str, topicObj: Topic, pubListener: Listener = None):
+        pass
+
+    def notifyNewTopic(self, topicObj: Topic, description: str, required: List[str], argsDocs: Mapping[str, str]):
+        pass
+
+    def notifyDelTopic(self, topicName: str):
         pass
 
 
@@ -52,11 +57,13 @@ class NotifyByWriteFile(INotificationHandler):
     """
 
     defaultPrefix = 'PUBSUB:'
-    
-    def __init__(self, fileObj = None, prefix = None):
-        """Will write to stdout unless fileObj given. Will use
+
+    def __init__(self, fileObj: TextIO = None, prefix: str = None):
+        """
+        Will write to stdout unless fileObj given. Will use
         defaultPrefix as prefix for each line output, unless prefix
-        specified. """
+        specified.
+        """
         self.__pre = prefix or self.defaultPrefix
 
         if fileObj is None:
@@ -67,8 +74,8 @@ class NotifyByWriteFile(INotificationHandler):
 
     def changeFile(self, fileObj):
         self.__fileObj = fileObj
-        
-    def notifySubscribe(self, pubListener, topicObj, newSub):
+
+    def notifySubscribe(self, pubListener: Listener, topicObj: Topic, newSub: bool):
         if newSub:
             msg = '%s Subscribed listener "%s" to topic "%s"\n'
         else:
@@ -76,19 +83,19 @@ class NotifyByWriteFile(INotificationHandler):
         msg = msg % (self.__pre, pubListener, topicObj.getName())
         self.__fileObj.write(msg)
 
-    def notifyUnsubscribe(self, pubListener, topicObj):
+    def notifyUnsubscribe(self, pubListener: Listener, topicObj: Topic):
         msg = '%s Unsubscribed listener "%s" from topic "%s"\n'
         msg = msg % (self.__pre, pubListener, topicObj.getName())
         self.__fileObj.write(msg)
 
-    def notifyDeadListener(self, pubListener, topicObj):
+    def notifyDeadListener(self, pubListener: Listener, topicObj: Topic):
         msg = '%s Listener "%s" of Topic "%s" has died\n' \
-            % (self.__pre, pubListener, topicObj.getName())
+              % (self.__pre, pubListener, topicObj.getName())
         # a bug apparently: sometimes on exit, the stream gets closed before
         # and leads to a TypeError involving NoneType
         self.__fileObj.write(msg)
 
-    def notifySend(self, stage, topicObj, pubListener=None):
+    def notifySend(self, stage: str, topicObj: Topic, pubListener: Listener = None):
         if stage == 'in':
             msg = '%s Sending message of topic "%s" to listener %s\n' % (self.__pre, topicObj.getName(), pubListener)
         elif stage == 'pre':
@@ -96,12 +103,12 @@ class NotifyByWriteFile(INotificationHandler):
         else:
             msg = '%s Done sending message of topic "%s"\n' % (self.__pre, topicObj.getName())
         self.__fileObj.write(msg)
-    
-    def notifyNewTopic(self, topicObj, description, required, argsDocs):
+
+    def notifyNewTopic(self, topicObj: Topic, description: str, required: List[str], argsDocs: Mapping[str, str]):
         msg = '%s New topic "%s" created\n' % (self.__pre, topicObj.getName())
         self.__fileObj.write(msg)
 
-    def notifyDelTopic(self, topicName):
+    def notifyDelTopic(self, topicName: str):
         msg = '%s Topic "%s" destroyed\n' % (self.__pre, topicName)
         self.__fileObj.write(msg)
 
@@ -124,59 +131,61 @@ class NotifyByPubsubMessage(INotificationHandler):
     this topic, your listener will be notified of what listener 
     unsubscribed from what topic. 
     """
-    
+
     topicRoot = 'pubsub'
 
     topics = dict(
-        send         = '%s.sendMessage'  % topicRoot,
-        subscribe    = '%s.subscribe'    % topicRoot,
-        unsubscribe  = '%s.unsubscribe'  % topicRoot,
-        newTopic     = '%s.newTopic'     % topicRoot,
-        delTopic     = '%s.delTopic'     % topicRoot,
-        deadListener = '%s.deadListener' % topicRoot)
-    
-    def __init__(self, topicMgr=None):
+        send='%s.sendMessage' % topicRoot,
+        subscribe='%s.subscribe' % topicRoot,
+        unsubscribe='%s.unsubscribe' % topicRoot,
+        newTopic='%s.newTopic' % topicRoot,
+        delTopic='%s.delTopic' % topicRoot,
+        deadListener='%s.deadListener' % topicRoot)
+
+    def __init__(self, topicMgr: TopicManager = None):
         self._pubTopic = None
-        self.__sending = False # used to guard against infinite loop
+        self.__sending = False  # used to guard against infinite loop
         if topicMgr is not None:
             self.createNotificationTopics(topicMgr)
-        
-    def createNotificationTopics(self, topicMgr):
-        """Create the notification topics. The root of the topics created
-        is self.topicRoot. The topicMgr is (usually) pub.topicMgr."""
+
+    def createNotificationTopics(self, topicMgr: TopicManager):
+        """
+        Create the notification topics. The root of the topics created
+        is self.topicRoot. The topicMgr is (usually) pub.topicMgr.
+        """
         # see if the special topics have already been defined
         try:
             topicMgr.getTopic(self.topicRoot)
-            
+
         except ValueError:
             # no, so create them
             self._pubTopic = topicMgr.getOrCreateTopic(self.topicRoot)
             self._pubTopic.setDescription('root of all pubsub-specific topics')
-            
+
             _createTopics(self.topics, topicMgr)
-    
-    def notifySubscribe(self, pubListener, topicObj, newSub):
+
+    def notifySubscribe(self, pubListener: Listener, topicObj: Topic, newSub: bool):
         if (self._pubTopic is None) or self.__sending:
             return
-    
+
         pubTopic = self._pubTopic.getSubtopic('subscribe')
         if topicObj is not pubTopic:
             kwargs = dict(listener=pubListener, topic=topicObj, newSub=newSub)
             self.__doNotification(pubTopic, kwargs)
 
-    def notifyUnsubscribe(self, pubListener, topicObj):
+    def notifyUnsubscribe(self, pubListener: Listener, topicObj: Topic):
         if (self._pubTopic is None) or self.__sending:
             return
-    
+
         pubTopic = self._pubTopic.getSubtopic('unsubscribe')
         if topicObj is not pubTopic:
             kwargs = dict(
-                topic       = topicObj, 
-                listenerRaw = pubListener.getCallable(), 
-                listener    = pubListener)
+                topic=topicObj,
+                listenerRaw=pubListener.getCallable(),
+                listener=pubListener)
             self.__doNotification(pubTopic, kwargs)
-    
-    def notifyDeadListener(self, pubListener, topicObj):
+
+    def notifyDeadListener(self, pubListener: Listener, topicObj: Topic):
         if (self._pubTopic is None) or self.__sending:
             return
 
@@ -184,101 +193,103 @@ class NotifyByPubsubMessage(INotificationHandler):
         kwargs = dict(topic=topicObj, listener=pubListener)
         self.__doNotification(pubTopic, kwargs)
 
-    def notifySend(self, stage, topicObj, pubListener=None):
-        """Stage must be 'pre' or 'post'. Note that any pubsub sendMessage
+    def notifySend(self, stage: str, topicObj: Topic, pubListener: Listener = None):
+        """
+        Stage must be 'pre' or 'post'. Note that any pubsub sendMessage
         operation resulting from this notification (which sends a message; 
         listener could handle by sending another message!) will NOT themselves
-        lead to a send notification. """
+        lead to a send notification.
+        """
         if (self._pubTopic is None) or self.__sending:
             return
-    
+
         sendMsgTopic = self._pubTopic.getSubtopic('sendMessage')
         if stage == 'pre' and (topicObj is sendMsgTopic):
-                msg = 'Not allowed to send messages of topic %s' % topicObj.getName()
-                raise ValueError(msg)
+            msg = 'Not allowed to send messages of topic %s' % topicObj.getName()
+            raise ValueError(msg)
 
         self.__doNotification(sendMsgTopic, dict(topic=topicObj, stage=stage))
-    
-    def notifyNewTopic(self, topicObj, desc, required, argsDocs):
-        if (self._pubTopic is None) or self.__sending:
-            return
-    
-        pubTopic = self._pubTopic.getSubtopic('newTopic')
-        kwargs = dict(topic=topicObj, description=desc, required=required, args=argsDocs)
-        self.__doNotification(pubTopic, kwargs)
-    
-    def notifyDelTopic(self, topicName):
-        if (self._pubTopic is None) or self.__sending:
-            return
-    
-        pubTopic = self._pubTopic.getSubtopic('delTopic')
-        self.__doNotification(pubTopic, dict(name=topicName) )
 
-    def __doNotification(self, pubTopic, kwargs):
+    def notifyNewTopic(self, topicObj: Topic, description: str, required: List[str], argsDocs: Mapping[str, str]):
+        if (self._pubTopic is None) or self.__sending:
+            return
+
+        pubTopic = self._pubTopic.getSubtopic('newTopic')
+        kwargs = dict(topic=topicObj, description=description, required=required, args=argsDocs)
+        self.__doNotification(pubTopic, kwargs)
+
+    def notifyDelTopic(self, topicName: str):
+        if (self._pubTopic is None) or self.__sending:
+            return
+
+        pubTopic = self._pubTopic.getSubtopic('delTopic')
+        self.__doNotification(pubTopic, dict(name=topicName))
+
+    def __doNotification(self, pubTopic: Topic, kwargs: Mapping[str, Any]):
         self.__sending = True
         try:
-            pubTopic.publish( **kwargs )
+            pubTopic.publish(**kwargs)
         finally:
             self.__sending = False
 
 
-def _createTopics(topicMap, topicMgr):
+def _createTopics(topicMap: Mapping[str, str], topicMgr: TopicManager):
     """
-    Create notification topics. These are used when 
-    some of the notification flags have been set to True (see
-    pub.setNotificationFlags(). The topicMap is a dict where key is 
-    the notification type, and value is the topic name to create.
-    Notification type is a string in ('send', 'subscribe', 
-    'unsubscribe', 'newTopic', 'delTopic', 'deadListener'. 
+    Create notification topics. These are used when some of the notification flags have been set to True (see
+    pub.setNotificationFlags(). The topicMap is a dict where key is the notification type, and value is the topic
+    name to create. Notification type is a string in ('send', 'subscribe', 'unsubscribe', 'newTopic', 'delTopic',
+    'deadListener').
     """
+
     def newTopic(_name, _desc, _required=None, **argsDocs):
         topic = topicMgr.getOrCreateTopic(_name)
         topic.setDescription(_desc)
         topic.setMsgArgSpec(argsDocs, _required)
 
     newTopic(
-        _name = topicMap['subscribe'], 
-        _desc = 'whenever a listener is subscribed to a topic',
-        topic = 'topic that listener has subscribed to',
-        listener = 'instance of pub.Listener containing listener', 
-        newSub = 'false if listener was already subscribed, true otherwise')
-        
+        _name=topicMap['subscribe'],
+        _desc='whenever a listener is subscribed to a topic',
+        topic='topic that listener has subscribed to',
+        listener='instance of pub.Listener containing listener',
+        newSub='false if listener was already subscribed, true otherwise')
+
     newTopic(
-        _name = topicMap['unsubscribe'], 
-        _desc = 'whenever a listener is unsubscribed from a topic',
-        topic = 'instance of Topic that listener has been unsubscribed from',
-        listener = 'instance of pub.Listener unsubscribed; None if listener not found',
-        listenerRaw = 'listener unsubscribed')
-        
+        _name=topicMap['unsubscribe'],
+        _desc='whenever a listener is unsubscribed from a topic',
+        topic='instance of Topic that listener has been unsubscribed from',
+        listener='instance of pub.Listener unsubscribed; None if listener not found',
+        listenerRaw='listener unsubscribed')
+
     newTopic(
-        _name = topicMap['send'], 
-        _desc = 'sent at beginning and end of sendMessage()',
-        topic = 'instance of topic for message being sent',
-        stage = 'stage of send operation: "pre" or "post" or "in"',
-        listener = 'which listener being sent to')
-        
+        _name=topicMap['send'],
+        _desc='sent at beginning and end of sendMessage()',
+        topic='instance of topic for message being sent',
+        stage='stage of send operation: "pre" or "post" or "in"',
+        listener='which listener being sent to')
+
     newTopic(
-        _name = topicMap['newTopic'],
-        _desc = 'whenever a new topic is defined', 
-        topic       = 'instance of Topic created',
-        description = 'description of topic (use)',
-        args        = 'the argument names/descriptions for arguments that listeners must accept',
-        required    = 'which args are required (all others are optional)')
-        
+        _name=topicMap['newTopic'],
+        _desc='whenever a new topic is defined',
+        topic='instance of Topic created',
+        description='description of topic (use)',
+        args='the argument names/descriptions for arguments that listeners must accept',
+        required='which args are required (all others are optional)')
+
     newTopic(
-        _name = topicMap['delTopic'],
-        _desc = 'whenever a topic is deleted',
-        name  = 'full name of the Topic instance that was destroyed')
-        
+        _name=topicMap['delTopic'],
+        _desc='whenever a topic is deleted',
+        name='full name of the Topic instance that was destroyed')
+
     newTopic(
-        _name = topicMap['deadListener'], 
-        _desc = 'whenever a listener dies without having unsubscribed',
-        topic = 'instance of Topic that listener was subscribed to',
-        listener = 'instance of pub.Listener containing dead listener')
+        _name=topicMap['deadListener'],
+        _desc='whenever a listener dies without having unsubscribed',
+        topic='instance of Topic that listener was subscribed to',
+        listener='instance of pub.Listener containing dead listener')
 
 
-def useNotifyByPubsubMessage(publisher=None, all=True, **kwargs):
-    """Will cause all of pubsub's notifications of pubsub "actions" (such as
+def useNotifyByPubsubMessage(publisher: Publisher = None, all: bool = True, **kwargs):
+    """
+    Will cause all of pubsub's notifications of pubsub "actions" (such as
     new topic created, message sent, listener subscribed, etc) to be sent
     out as messages. Topic will be 'pubsub' subtopics, such as
     'pubsub.newTopic', 'pubsub.delTopic', 'pubsub.sendMessage', etc.
@@ -302,24 +313,23 @@ def useNotifyByPubsubMessage(publisher=None, all=True, **kwargs):
         from .. import pub
         publisher = pub.getDefaultPublisher()
     topicMgr = publisher.getTopicMgr()
-    notifHandler = NotifyByPubsubMessage( topicMgr )
-    
+    notifHandler = NotifyByPubsubMessage(topicMgr)
+
     publisher.addNotificationHandler(notifHandler)
     publisher.setNotificationFlags(all=all, **kwargs)
 
 
-def useNotifyByWriteFile(fileObj=None, prefix=None, 
-    publisher=None, all=True, **kwargs):
-    """Will cause all pubsub notifications of pubsub "actions" (such as
-    new topic created, message sent, listener died etc) to be written to
-    specified file (or stdout if none given). The fileObj need only
-    provide a 'write(string)' method.
+def useNotifyByWriteFile(fileObj: TextIO = None, prefix: str = None, publisher: Publisher = None, all: bool = True,
+                         **kwargs):
+    """
+    Will cause all pubsub notifications of pubsub "actions" (such as new topic created, message sent, listener died
+    etc) to be written to specified file (or stdout if none given). The fileObj need only provide a 'write(string)'
+    method.
     
-    The first two arguments are the same as those of NotifyByWriteFile
-    constructor. The 'all' and kwargs arguments are those of pubsub's
-    setNotificationFlags(), except that 'all' defaults to True.  See
-    useNotifyByPubsubMessage() for an explanation of pubModule (typically
-    only if pubsub inside wxPython's wx.lib)"""
+    The first two arguments are the same as those of NotifyByWriteFile constructor. The 'all' and kwargs arguments
+    are those of pubsub's setNotificationFlags(), except that 'all' defaults to True.  See useNotifyByPubsubMessage()
+    for an explanation of pubModule (typically only if pubsub inside wxPython's wx.lib)
+    """
     notifHandler = NotifyByWriteFile(fileObj, prefix)
 
     if publisher is None:
@@ -327,5 +337,3 @@ def useNotifyByWriteFile(fileObj=None, prefix=None,
         publisher = pub.getDefaultPublisher()
     publisher.addNotificationHandler(notifHandler)
     publisher.setNotificationFlags(all=all, **kwargs)
-
-

@@ -49,5 +49,4 @@ The README.txt file in `examples/basic_kwargs`_ explains:
 
 .. _examples/basic_kwargs: http://svn.code.sf.net/p/pubsub/code/trunk/examples/basic_kwargs
 
-Use of the arg1 messaging protocol is documented in the Advanced section. 
 

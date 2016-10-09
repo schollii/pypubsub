@@ -132,22 +132,22 @@ the following subscriptions could be valid::
     pub.subscribe(callable, 'root-topic-1.sub-topic-2')
     pub.subscribe(callable, 'root-topic-1.sub-topic-2.sub-sub-topic-3')
 
-.. _label-TDS:
+.. _label-MDS:
 
 Message Data
 ^^^^^^^^^^^^^^
 
 Messages of a given topic can carry data. Which data is required and which 
-is optional is known as the *Topic Data Specification*, or TDS for short. 
-Unless your application explicitly defines the TDS for every topic in the hierarchy, 
-Pubsub infers the TDS of each topic based on the first pub.subscribe() or 
+is optional is known as the *Message Data Specification* for the topic, or MDS for short.
+Unless your application explicitly defines the MDS for every topic in the hierarchy,
+Pubsub infers the MDS of each topic based on the first pub.subscribe() or
 the first pub.sendMessage() for the topic, whichever occurs first during 
-an application run. Once defined, a topic's TDS never changes (during a run). 
+an application run. Once defined, a topic's MDS never changes (during a run).
 
-Examples of TDS inferred from a call to pub.subscribe():
+Examples of MDS inferred from a call to pub.subscribe():
 
 ============================================ =================================
-Callable signature                           TDS (inferred)
+Callable signature                           MDS (inferred)
 ============================================ =================================
 ``callable(arg1)``                           - required: arg1
                                              - optional: none
@@ -158,26 +158,26 @@ Callable signature                           TDS (inferred)
 ============================================ =================================
                                 
 All subsequent calls to pub.subscribe() for the same topic or any subtopic 
-must be consistent with the topic's TDS. 
-If a subscription specifies a callable that does not match the given topic's TDS, 
+must be consistent with the topic's MDS.
+If a subscription specifies a callable that does not match the given topic's MDS,
 pubsub raises an exception. Therefore, the pub.subscribe() calls above 
 *could* be valid; they *will* be valid if the given callable satisfies the 
-given topic's TDS. 
+given topic's MDS.
 
-Examples of subscriptions: assume TDS of topic 'root' is 
+Examples of subscriptions: assume MDS of topic 'root' is
 required=arg1, optional=arg2, then pub.subscribe(callable, 'root') for 
 the following callable signatures are ok:
 
 =============================== ==== =================================
 Callable                        OK    Why
 =============================== ==== =================================
-callable(arg1, arg3=1)          Yes  matches TDS
+callable(arg1, arg3=1)          Yes  matches MDS
 callable(arg1=None, arg3=None)  Yes  signature is less restrictive 
-                                     than TDS, and default value 
-                                     are not part of TDS
+                                     than MDS, and default value
+                                     are not part of MDS
 callable(arg1)                  No   arg2 could be in message, yet
                                      callable does not accept it
-callable(arg1, arg2)            No   callable requires arg2, but TDS 
+callable(arg1, arg2)            No   callable requires arg2, but MDS
                                      says it won't always be given in 
                                      message
 =============================== ==== =================================
@@ -185,7 +185,7 @@ callable(arg1, arg2)            No   callable requires arg2, but TDS
 A callable subscribed to a topic is a listener. 
 
 Note that the default value for an optional message data is not part 
-of the TDS. Each listener can therefore decide what default value to use if 
+of the MDS. Each listener can therefore decide what default value to use if
 the data is not provided in the message. 
 
 
@@ -210,7 +210,7 @@ Message Data
 ^^^^^^^^^^^^^
 
 The data must satisfy the 
-topic's TDS, and all arguments must be named. So for a topic 'root' with TDS 
+topic's MDS, and all arguments must be named. So for a topic 'root' with MDS
 of arg1, arg2 required and arg3 optional, the send command would have the form::
 
     pub.sendMessage('root', arg1=obj1, arg2=obj2, arg3=obj3)
@@ -227,7 +227,7 @@ is equally valid. But
 is not allowed. 
 
 Only the message data relevant to a topic is sent to the listeners of the 
-topic. For example if topic 'root.sub.subsub' has a TDS involving data arg1, arg2 and 
+topic. For example if topic 'root.sub.subsub' has a MDS involving data arg1, arg2 and
 arg3, and topic 'root' has only arg1, then listeners of 'root.sub.subsub' topic
 will get called with arg1, arg2, and arg3, but listeners of 'root' will 
 get called with the arg1 parameter only. The less specific topics have less
@@ -235,7 +235,7 @@ data.
 
 Since messages of a given topic are sent not only to listeners of the topic 
 but also to listeners of topic up the topic tree, pubsub requires that subtopic
-TDS be the same or more restrictive as that of its parent: optional arguments can become 
+MDS be the same or more restrictive as that of its parent: optional arguments can become
 required, but required arguments cannot become optional. Indeed if 'root' 
 messages require arg1, then 'root.sub' must also require it; otherwise a 
 message of type 'root.sub' could be sent without an object for arg1, and 
@@ -243,13 +243,13 @@ once the 'root' listeners received the message, they could find the required
 parameter missing. If 'root' messages have arg2 as optional data, then 
 'root.sub' can be more restrictive and require it. 
 
-Examples of subtopic TDS: assume topic 'root' has TDS required arg1 and 
-optional arg2. Then following 'root.sub' TDS would be 
+Examples of subtopic MDS: assume topic 'root' has MDS required arg1 and
+optional arg2. Then following 'root.sub' MDS would be
 
 ==== ================= ==== =========================================
-Case TDS extended by   OK    Why
+Case MDS extended by   OK    Why
 ==== ================= ==== =========================================
-1    + required arg3   Yes  Extends TDS of 'root'
+1    + required arg3   Yes  Extends MDS of 'root'
      + optional arg4
 2    + optional arg3   No   Less restrictive than 'root': arg3 
      + optional arg4        could be missing from 'root.sub' message
@@ -269,8 +269,8 @@ It can be queried to find the topic name via Topic.getName()::
 	pub.sendMessage("some_topic") # no data 
 		
 This allows each listener to define whether it needs the topic information 
-(rarely the case). Therefore, it is not part of the TDS. In the above 
-example, the TDS for 'some_topic' is empty. 
+(rarely the case). Therefore, it is not part of the MDS. In the above
+example, the MDS for 'some_topic' is empty.
 
 
 Sending vs Broadcasting
@@ -342,9 +342,9 @@ Only the
 portion of data that is relevant to the topic is given to each listener.
 Assume the following topic branch of the hierarchy::
 
-    tt: listeners a and b; TDS is r=arg1, o=arg4
-        uu: listeners c and d; TDS is r=(arg1, arg2), o=(arg4, arg5)
-            vv: listeners e and f; TDS is r=(arg1, arg2, arg3), o=(arg4, arg5, arg6)
+    tt: listeners a and b; MDS is r=arg1, o=arg4
+        uu: listeners c and d; MDS is r=(arg1, arg2), o=(arg4, arg5)
+            vv: listeners e and f; MDS is r=(arg1, arg2, arg3), o=(arg4, arg5, arg6)
             
 then ``pub.sendMessage('root-topic', arg1=1, arg2=2, arg3=3, arg4=4, arg5=5, arg6=6)``
 will call

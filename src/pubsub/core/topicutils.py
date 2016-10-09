@@ -11,11 +11,9 @@ import sys
 from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union, TextIO
 from .topicexc import TopicNameError
 
-
 __all__ = []
 
-
-UNDERSCORE = '_' # topic name can't start with this
+UNDERSCORE = '_'  # topic name can't start with this
 # just want something unlikely to clash with user's topic names
 ALL_TOPICS = 'ALL_TOPICS'
 
@@ -25,6 +23,7 @@ class WeakNone:
     Pretend to be a weak reference to nothing. Used by ArgsInfos to
     refer to parent when None so no if-else blocks needed.
     """
+
     def __call__(self):
         return None
 
@@ -42,11 +41,12 @@ def smartDedent(paragraph: str) -> str:
     else:
         lines = paragraph.split('\n')
         exceptFirst = dedent('\n'.join(lines[1:]))
-        para = lines[0]+exceptFirst
+        para = lines[0] + exceptFirst
     return para
 
 
 import re
+
 _validNameRE = re.compile(r'[-0-9a-zA-Z]\w*')
 
 
@@ -57,7 +57,9 @@ def validateName(topicName: str):
         reason = 'name tuple must have at least one item!'
         raise TopicNameError(None, reason)
 
-    class topic: pass
+    class topic:
+        pass
+
     for subname in topicNameTuple:
         if not subname:
             reason = 'can\'t contain empty string or None'
@@ -73,7 +75,7 @@ def validateName(topicName: str):
 
         if _validNameRE.match(subname) is None:
             reason = 'element #%s ("%s") has invalid characters' % \
-                (1+list(topicNameTuple).index(subname), subname)
+                     (1 + list(topicNameTuple).index(subname), subname)
             raise TopicNameError(topicNameTuple, reason)
 
 
@@ -115,11 +117,9 @@ def tupleize(topicName: str) -> Tuple[str, ...]:
     if isinstance(topicName, str):
         topicTuple = tuple(topicName.split('.'))
     else:
-        topicTuple = tuple(topicName) # assume already tuple of strings
+        topicTuple = tuple(topicName)  # assume already tuple of strings
 
     if not topicTuple:
         raise TopicNameError(topicTuple, "Topic name can't be empty!")
 
     return topicTuple
-
-

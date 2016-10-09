@@ -3,6 +3,16 @@ Changelog
 
 High-level changelog. For details, consult the SVN logs.
 
+:4.0.0 (Sep 2016):
+
+* Update for Python 3.5
+* Abandon support for Python 2.x, easy_install, and arg1 protocol
+* Use PEP 484 style of annotations throughout
+* Use enum when possible
+* Added currying of subscribed listener args
+* (but otherwise no changes in performance or behavior)
+
+
 :3.3.0 (Nov 2013):
 
 * cleanup low-level API: exception classes, moved some out of pub module that did not

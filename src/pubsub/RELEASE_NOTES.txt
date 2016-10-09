@@ -1,12 +1,12 @@
-For PyPubSub v3.4.0
+For PyPubSub v4.0.0
 ^^^^^^^^^^^^^^^^^^^^^
 
-* Abandon support for Python < 3.3, easy_install, and arg1 protocol
+* Abandon support for Python 2.x, easy_install, and arg1 protocol and v1
 * Added currying of subscribed listener args
-* Use Python 3.5 annotations throughout
+* Use PEP 484 style of annotations throughout
 
 Oliver Schoenborn
-Jan 2016
+September 2016
 
 
 For PyPubSub v3.3.0

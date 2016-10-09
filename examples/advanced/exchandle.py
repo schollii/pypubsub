@@ -11,7 +11,7 @@ from pubsub import pub
 # one type of notification
 class MyPubsubExcHandler(pub.IListenerExcHandler):
 
-    def __call__(self, listenerID):
+    def __call__(self, listenerID: str):
         print('Exception raised in listener %s during sendMessage()' % listenerID)
         print(TracebackInfo())
 

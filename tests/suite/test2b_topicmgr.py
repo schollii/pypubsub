@@ -190,8 +190,10 @@ class TestTopicMgr1_GetOrCreate_NoDefnProv:
 
 
 class TestTopicMgr2_GetOrCreate_DefnProv:
-    """Test TopicManager when one or more definition providers
-    can provide for some topic definitions."""
+    """
+    Test TopicManager when one or more definition providers
+    can provide for some topic definitions.
+    """
 
     def test10_DefnProvider(self):
         #
@@ -225,9 +227,11 @@ class TestTopicMgr2_GetOrCreate_DefnProv:
         #
 
         class DefnProvider(ITopicDefnProvider):
-            """Provide definitions for a root topic, subtopic, and
+            """
+            Provide definitions for a root topic, subtopic, and
             one subtopic whose parent is not defined here. It is easier
-            to use sub-only definitions."""
+            to use sub-only definitions.
+            """
             def __init__(self):
                 self.defns = {
                     ('a',) : (dict(arg1='arg1 desc', arg2='arg2 desc'),
@@ -252,9 +256,11 @@ class TestTopicMgr2_GetOrCreate_DefnProv:
                 return desc, defn
 
         class DefnProviderErr(ITopicDefnProvider):
-            """Provide some definitions that have wrong arg spec. It is
+            """
+            Provide some definitions that have wrong arg spec. It is
             easier to use the 'all-spec' for definitions, which provides
-            an opportunity for a different method of ArgSpecGiven. """
+            an opportunity for a different method of ArgSpecGiven.
+            """
             def __init__(self):
                 self.defns = {
                     ('a', 'err1') : (# missing arg2

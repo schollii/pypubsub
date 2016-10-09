@@ -95,7 +95,8 @@ class TopicManager:
         self.__allTopics = self.__createTopic((ALL_TOPICS,), desc, specGiven=specGiven)
 
     def getRootAllTopics(self) -> Topic:
-        """Get the topic that is parent of all root (ie top-level) topics,
+        """
+        Get the topic that is parent of all root (ie top-level) topics,
         for default TopicManager instance created when this module is imported.
         Some notes:
 
@@ -103,7 +104,8 @@ class TopicManager:
           getParent() is None;
         - all root-level topics satisfy isAll()==False, isRoot()==True, and
           getParent() is getDefaultTopicTreeRoot();
-        - all other topics satisfy neither. """
+        - all other topics satisfy neither.
+        """
         return self.__allTopics
 
     def addDefnProvider(self, providerOrSource: Any, format=None):
@@ -121,7 +123,7 @@ class TopicManager:
         if isinstance(providerOrSource, ITopicDefnProvider):
             provider = providerOrSource
         else:
-            from .topicdefnprovider import (TopicDefnProvider, TOPIC_TREE_FROM_MODULE)
+            from .topicdefnprovider import TopicDefnProvider, TOPIC_TREE_FROM_MODULE
             source = providerOrSource
             provider = TopicDefnProvider(source, format or TOPIC_TREE_FROM_MODULE)
         self.__defnProvider.addProvider(provider)
@@ -229,17 +231,21 @@ class TopicManager:
         return self.__createTopic(nameTuple, desc, parent=parentObj, specGiven=specGiven)
 
     def isTopicInUse(self, name: str) -> bool:
-        """Determine if topic 'name' is in use. True if a Topic object exists
+        """
+        Determine if topic 'name' is in use. True if a Topic object exists
         for topic name (i.e. message has already been sent for that topic, or a
         least one listener subscribed), false otherwise. Note: a topic may be in use
         but not have a definition (MDS and docstring); or a topic may have a
-        definition, but not be in use."""
+        definition, but not be in use.
+        """
         return self.getTopic(name, okIfNone=True) is not None
 
     def hasTopicDefinition(self, name: str) -> bool:
-        """Determine if there is a definition avaiable for topic 'name'. Return
+        """
+        Determine if there is a definition avaiable for topic 'name'. Return
         true if there is, false otherwise. Note: a topic may have a
-        definition without being in use, and vice versa."""
+        definition without being in use, and vice versa.
+        """
         # in already existing Topic object:
         alreadyCreated = self.getTopic(name, okIfNone=True)
         if alreadyCreated is not None and alreadyCreated.hasMDS():
@@ -253,8 +259,10 @@ class TopicManager:
         return False
 
     def checkAllTopicsHaveMDS(self):
-        """Check that all topics that have been created for their MDS.
-        Raise a TopicDefnError if one is found that does not have one."""
+        """
+        Check that all topics that have been created for their MDS.
+        Raise a TopicDefnError if one is found that does not have one.
+        """
         for topic in self._topicsMap.values():
             if not topic.hasMDS():
                 raise TopicDefnError(topic.getNameTuple())
@@ -348,7 +356,8 @@ class TopicManager:
 
         return parentObj
 
-    def __createTopic(self, nameTuple: Sequence[str], desc: str, specGiven: ArgSpecGiven, parent: Topic=None) -> Topic:
+    def __createTopic(self, nameTuple: Sequence[str], desc: str, specGiven: ArgSpecGiven,
+                      parent: Topic = None) -> Topic:
         """
         Actual topic creation step. Adds new Topic instance to topic map,
         and sends notification message (see ``Publisher.addNotificationMgr()``)
@@ -377,7 +386,7 @@ class TopicManager:
         # store new object and notify of creation
         self._topicsMap[newTopicObj.getName()] = newTopicObj
         self.__treeConfig.notificationMgr.notifyNewTopic(
-                newTopicObj, desc, specGiven.reqdArgs, specGiven.argsDocs)
+            newTopicObj, desc, specGiven.reqdArgs, specGiven.argsDocs)
 
         return newTopicObj
 
@@ -418,7 +427,7 @@ class _MasterTopicDefnProvider:
     definition, queries each provider (registered via addProvider()) and
     returns the first complete definition provided, or (None,None).
 
-    The providers must follow the ITopicDefnProvider protocol.
+    The providers must follow the ITopicDefnProvider API.
     """
 
     def __init__(self, treeConfig: TreeConfig):

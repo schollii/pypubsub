@@ -13,9 +13,6 @@ default Publisher, which contains a TopicManager, which generates a Topic object
 for every topic used. The Publisher instance returns a Listener instance from subscribe, 
 wrapping the given callable with pubsub-relevant meta-data about the callable. 
 
-.. note:: The following subsections provide the documentation for those classes 
-    when the kwargs messaging protocol is used (the default). When arg1 is used, 
-    the replace any ``**kwargs`` by ``data``.
 
 Publisher
 -----------

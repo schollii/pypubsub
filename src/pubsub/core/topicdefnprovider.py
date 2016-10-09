@@ -231,8 +231,8 @@ class TopicDefnDeserialClass(ITopicDefnDeserializer):
         PAT_BLANK = r'\s*'
         PAT_ITEM_SEP = r':'
         argNamePat = re.compile(
-                PAT_ITEM_STR + PAT_ARG_NAME + PAT_BLANK + PAT_ITEM_SEP
-                + PAT_BLANK + PAT_DOC_STR)
+            PAT_ITEM_STR + PAT_ARG_NAME + PAT_BLANK + PAT_ITEM_SEP
+            + PAT_BLANK + PAT_DOC_STR)
         protoDocs = dedent(protoDocs)
         lines = protoDocs.splitlines()
         argName = None
@@ -328,7 +328,16 @@ class TopicDefnDeserialString(ITopicDefnDeserializer):
     def doneIter(self):
         self.__modDeserial.doneIter()
         # remove the temporary module and its compiled version (*.pyc)
-        os.remove(self.__filename)
+        for count in range(50):
+            try:
+                os.remove(self.__filename)
+                break
+            except PermissionError:
+                pass
+        else:
+            # can't remove file!!
+            pass
+
         try:  # py3.2+ uses special folder/filename for .pyc files
             from imp import cache_from_source
             os.remove(cache_from_source(self.__filename))
@@ -437,16 +446,16 @@ def _backupIfExists(filename: str, bak: str):
 
 
 defaultTopicTreeSpecHeader = \
-"""
-Topic tree for application.
-Used via pub.addTopicDefnProvider(thisModuleName).
-"""
+    """
+    Topic tree for application.
+    Used via pub.addTopicDefnProvider(thisModuleName).
+    """
 
 defaultTopicTreeSpecFooter = \
-"""\
-# End of topic tree definition. Note that application may load
-# more than one definitions provider.
-"""
+    """\
+    # End of topic tree definition. Note that application may load
+    # more than one definitions provider.
+    """
 
 
 def exportTopicTreeSpec(moduleName: str = None, rootTopic: Union[Topic, str] = None,
@@ -504,10 +513,12 @@ class TopicTreeSpecPrinter:
     """
 
     INDENT_CH = ' '
+
     # INDENT_CH = '.'
 
-    def __init__(self, rootTopic: Union[str, Topic]=None, fileObj: TextIO=None, width: int=70, indentStep: int=4,
-                 treeDoc: str=defaultTopicTreeSpecHeader, footer: str=defaultTopicTreeSpecFooter):
+    def __init__(self, rootTopic: Union[str, Topic] = None, fileObj: TextIO = None, width: int = 70,
+                 indentStep: int = 4,
+                 treeDoc: str = defaultTopicTreeSpecHeader, footer: str = defaultTopicTreeSpecFooter):
         """
         For formatting, can specify the width of output, the indent step, the
         header and footer to print to override defaults. The destination is fileObj;
@@ -522,7 +533,7 @@ class TopicTreeSpecPrinter:
         self.__destination = fileObj
         self.__output = []
         self.__header = self.__toDocString(treeDoc)
-        self.__footer = footer
+        self.__footer = dedent(footer)
         self.__lastWasAll = False  # True when last topic done was the ALL_TOPICS
 
         self.__width = width
@@ -531,7 +542,7 @@ class TopicTreeSpecPrinter:
         self.__indent = 0
 
         args = dict(width=width, indentStep=indentStep, treeDoc=treeDoc,
-                    footer=footer, fileObj=fileObj)
+                    footer=self.__footer, fileObj=fileObj)
 
         def fmItem(argName, argVal):
             if isinstance(argVal, str):
@@ -670,14 +681,14 @@ class TopicTreeSpecPrinter:
                     self.__formatItem(msg, extraIndent)
             self.__formatItem('"""', extraIndent)
 
-    def __formatItem(self, item: str, extraIndent: int=0):
+    def __formatItem(self, item: str, extraIndent: int = 0):
         indent = extraIndent + self.__indent
         indentStr = self.INDENT_CH * indent
         lines = item.splitlines()
         for line in lines:
             self.__output.append('%s%s' % (indentStr, line))
 
-    def __formatBlock(self, text: str, extraIndent: int=0):
+    def __formatBlock(self, text: str, extraIndent: int = 0):
         self.__wrapper.initial_indent = self.INDENT_CH * (self.__indent + extraIndent)
         self.__wrapper.subsequent_indent = self.__wrapper.initial_indent
         self.__output.append(self.__wrapper.fill(text))

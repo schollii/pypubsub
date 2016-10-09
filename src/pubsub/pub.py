@@ -46,6 +46,8 @@ from .core import (
     TopicDefnError,
     TopicNameError,
     UnrecognizedSourceFormatError,
+    SenderUnknownMsgDataError,
+    SenderMissingReqdMsgDataError,
 
     ALL_TOPICS,
 
@@ -104,6 +106,7 @@ __all__ = [
     # publisher stuff:
 
     'sendMessage',
+
     # misc:
 
     'addNotificationHandler',
@@ -115,29 +118,31 @@ __all__ = [
 
 ]
 
-
 # --------- Publisher singleton and bound methods ------------------------------------
 
 _publisher = _Publisher()
 
-subscribe   = _publisher.subscribe
+subscribe = _publisher.subscribe
 unsubscribe = _publisher.unsubscribe
-unsubAll    = _publisher.unsubAll
+unsubAll = _publisher.unsubAll
 sendMessage = _publisher.sendMessage
 
-getListenerExcHandler     = _publisher.getListenerExcHandler
-setListenerExcHandler     = _publisher.setListenerExcHandler
+getListenerExcHandler = _publisher.getListenerExcHandler
+setListenerExcHandler = _publisher.setListenerExcHandler
 
-addNotificationHandler    = _publisher.addNotificationHandler
+addNotificationHandler = _publisher.addNotificationHandler
 clearNotificationHandlers = _publisher.clearNotificationHandlers
-setNotificationFlags      = _publisher.setNotificationFlags
-getNotificationFlags      = _publisher.getNotificationFlags
+setNotificationFlags = _publisher.setNotificationFlags
+getNotificationFlags = _publisher.getNotificationFlags
 
-setTopicUnspecifiedFatal  = _publisher.setTopicUnspecifiedFatal
+setTopicUnspecifiedFatal = _publisher.setTopicUnspecifiedFatal
+
 
 def getDefaultPublisher():
-    """Get the Publisher instance created by default when this module
-    is imported. See the module doc for details about this instance."""
+    """
+    Get the Publisher instance created by default when this module
+    is imported. See the module doc for details about this instance.
+    """
     return _publisher
 
 
@@ -146,51 +151,61 @@ def getDefaultPublisher():
 _topicMgr = _publisher.getTopicMgr()
 
 topicTreeRoot = _topicMgr.getRootAllTopics()
-topicsMap     = _topicMgr._topicsMap
+topicsMap = _topicMgr._topicsMap
 
 
 def isValid(listener, topicName, curriedArgNames=None):
-    """Return true only if listener can subscribe to messages of given topic.
+    """
+    Return true only if listener can subscribe to messages of given topic.
     If curriedArgNames can be a list of parameters of the given listener, that
     should be assumed curried (i.e. actual listener signature is signature of
-    given listener minus curried args)."""
+    given listener minus curried args).
+    """
     return _topicMgr.getTopic(topicName).isValid(listener, curriedArgNames=curriedArgNames)
 
 
 def validate(listener, topicName, curriedArgNames=None):
-    """Checks if listener can subscribe to topicName. If not, raises
+    """
+    Checks if listener can subscribe to topicName. If not, raises
     ListenerMismatchError, otherwise just returns. The curriedArgNames is
-    same as for isValid()."""
+    same as for isValid().
+    """
     _topicMgr.getTopic(topicName).validate(listener, curriedArgNames=curriedArgNames)
 
 
 def isSubscribed(listener, topicName):
-    """Returns true if listener has subscribed to topicName, false otherwise.
+    """
+    Returns true if listener has subscribed to topicName, false otherwise.
     WARNING: a false return is not a guarantee that listener won't get
     messages of topicName: it could receive messages of a subtopic of
-    topicName. """
+    topicName.
+    """
     return _topicMgr.getTopic(topicName).hasListener(listener)
 
 
 def getDefaultTopicMgr():
-    """Get the TopicManager instance created by default when this
+    """
+    Get the TopicManager instance created by default when this
     module is imported. This function is a shortcut for
-    ``pub.getDefaultPublisher().getTopicMgr()``."""
+    ``pub.getDefaultPublisher().getTopicMgr()``.
+    """
     return _topicMgr
 
 
-addTopicDefnProvider     = _topicMgr.addDefnProvider
-clearTopicDefnProviders  = _topicMgr.clearDefnProviders
+addTopicDefnProvider = _topicMgr.addDefnProvider
+clearTopicDefnProviders = _topicMgr.clearDefnProviders
 getNumTopicDefnProviders = _topicMgr.getNumDefnProviders
 
 
 def instantiateAllDefinedTopics(provider):
-    """Loop over all topics of given provider and "instantiate" each topic, thus
+    """
+    Loop over all topics of given provider and "instantiate" each topic, thus
     forcing a parse of the topics documentation, message data specification (MDS),
     comparison with parent MDS, and MDS documentation. Without this function call,
     an error among any of those characteristics will manifest only if the a
-    listener is registered on it. """
+    listener is registered on it.
+    """
     for topicName in provider:
         _topicMgr.getOrCreateTopic(topicName)
 
-#---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------

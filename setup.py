@@ -19,22 +19,22 @@ def getPubsubVersion():
     import pubsub
     return pubsub.__version__
 
+
 setup(
     name         = 'PyPubSub',
     version      = getPubsubVersion(),
     description  = 'Python Publish-Subscribe Package',
+    keywords     = "publish subscribe observer pattern signal signals event events message messages messaging dispatch dispatching",
     author       = 'Oliver Schoenborn',
     author_email = 'oliver.schoenborn@gmail.com',
-    url          = 'http://pubsub.sourceforge.net',
-    download_url = 'http://downloads.sourceforge.net/pubsub',
+    url          = 'http://pypubsub.sourceforge.net',
     license      = "BSD",
     zip_safe     = False,
 
     packages     = getPackagesToDistribute(),
     package_dir  = {'': 'src'},
     package_data = {'pubsub': ['LICENSE_BSD_Simple.txt', 'RELEASE_NOTES.txt']},
-
-    keywords     = "publish subscribe observer pattern signal signals event events message messages messaging dispatch dispatching",
+    install_requires=['typing'],
 
     classifiers  = [
         'Development Status :: 5 - Production/Stable',

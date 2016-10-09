@@ -31,6 +31,17 @@ pause
 
 echo.
 echo.
+echo ######################## advanced - kwargs - console #########################
+echo.
+
+pushd advanced
+%PYTHON_EXE% main_kwargs.py
+popd
+pause
+
+
+echo.
+echo.
 echo ######################## basic - kwargs - wx #########################
 echo.
 
@@ -39,14 +50,4 @@ pushd basic_kwargs
 popd
 pause
 
-
-echo.
-echo.
-echo ######################## advanced - kwargs - console #########################
-echo.
-
-pushd advanced
-%PYTHON_EXE% main_kwargs.py
-popd
-pause
 

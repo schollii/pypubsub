@@ -56,7 +56,7 @@ class IListenerExcHandler:
     Without an exception handler, the sendMessage() will fail.
     """
 
-    def __call__(self, listenerID: int, topicObj: Topic):
+    def __call__(self, listenerID: str, topicObj: Topic):
         raise NotImplementedError('%s must override __call__()' % self.__class__)
 
 
@@ -149,13 +149,13 @@ class Listener:
 
     def setCurriedArgs(self, **curriedArgs):
         """
-        Curry the wrapped listener so it appears to *not* have **curriedArgs among its parameters.
+        Curry the wrapped listener so it appears to *not* have list(curriedArgs) among its parameters.
         The curriedArgs key-value pairs will be given to wrapped listener at call time.
         """
         if curriedArgs.keys() != self.curriedArgs.keys():
             raise ValueError(
-                    "Listener '{}' already subscribed with a different set of pure curried args ({} != {})"
-                        .format(self, curriedArgs.keys(), self.curriedArgs.keys()))
+                "Listener '{}' already subscribed with a different set of pure curried args ({} != {})"
+                    .format(self, curriedArgs.keys(), self.curriedArgs.keys()))
 
         self.curriedArgs = curriedArgs
 
@@ -270,7 +270,7 @@ class ListenerValidator:
         :param listener: the callable to validate
         :param curriedArgNames: the list of parameter names to treat as curried
         :returns: a CallArgsInfo object containing information about the listener's call arguments, such as
-            whether listener wants topic name (signified by a kwarg value = AUTO_TOPIC in listener protocol).
+            whether listener wants topic name (signified by a kwarg value = AUTO_TOPIC in listener signature).
         :raises ListenerMismatchError: if listener not usable for topic
         """
         paramsInfo = getArgs(listener)

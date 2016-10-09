@@ -14,18 +14,17 @@ CallArgsInfo regarding its autoTopicArgName data member.
 
 from inspect import getargspec, ismethod, isfunction
 import sys
-from types import ModuleType, FunctionType
+from types import ModuleType
 from typing import Tuple, List, Sequence, Callable, Any
-
 
 # Opaque constant used to mark a kwarg of a listener as one to which pubsub should assign the topic of the
 # message being sent to the listener. This constant should be used by reference; its value is "unique" such that
 # pubsub can find such kwarg.
 AUTO_TOPIC = '## your listener wants topic object ## (string unlikely to be used by caller)'
 
-# In the user-domain, a listener is any callable, regardless of signature. However, the return value is ignored,
-# i.e. the listener will be treated as thougn it is a Callable[..., None]. Also, the args, "...", must be
-# consistent with the MDS of the topic to which user-callable is being subscribed.
+# In the user domain, a listener is any callable, regardless of signature. The return value is ignored,
+# i.e. the listener will be treated as though it is a Callable[..., None]. Also, the args, "...", must be
+# consistent with the MDS of the topic to which listener is being subscribed.
 UserListener = Callable[..., Any]
 
 
@@ -47,7 +46,7 @@ def getID(callable_: UserListener) -> Tuple[str, ModuleType]:
     """
     Get "ID" of a callable, in the form of its name and module in which it is defined
     E.g. getID(Foo.bar) returns ('Foo.bar', 'a.b') if Foo.bar was defined in module a.b.
-    :param callable_: a callable, ie function, bound method or callable instance
+    :param callable\_: a callable, ie function, bound method or callable instance
     """
     sc = callable_
     if ismethod(sc):
@@ -116,11 +115,11 @@ class ListenerMismatchError(ValueError):
 
 class CallArgsInfo:
     """
-    Represent the "signature" or protocol of a listener in the context of
-    topics.
+    Represent the "signature" of a listener of topic messages: which arguments are
+    required vs optional.
     """
 
-    def __init__(self, func: UserListener, firstArgIdx: int, ignoreArgs: Sequence[str]=None):
+    def __init__(self, func: UserListener, firstArgIdx: int, ignoreArgs: Sequence[str] = None):
         """
         :param func: the callable for which to get paramaters info
         :param firstArgIdx: 0 if listener is a function, 1 if listener is a method
@@ -203,7 +202,7 @@ class CallArgsInfo:
                 break
 
 
-def getArgs(callable_: UserListener, ignoreArgs: Sequence[str]=None):
+def getArgs(callable_: UserListener, ignoreArgs: Sequence[str] = None):
     """
     Get the call paramters of a callable.
     :param callable_: the callable for which to get call parameters

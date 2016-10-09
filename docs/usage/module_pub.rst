@@ -32,7 +32,6 @@ if pubsub's default Publisher must be accessed, on or more separate instances of
 Publisher is required, and so forth. 
 
 .. autofunction:: getDefaultPublisher
-.. autofunction:: getMsgProtocol()
 .. autoclass::    pubsub.core.Publisher
     :noindex:
 
@@ -167,7 +166,7 @@ which may fit your requirements.
 Topic Specification 
 ----------------------
 
-Topic definition, documentation, and MDS:
+Topic definition, documentation, and message data specification (MDS):
 
 .. autoexception:: TopicDefnError
     :show-inheritance:

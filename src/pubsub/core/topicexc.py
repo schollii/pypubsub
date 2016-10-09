@@ -56,7 +56,7 @@ class ExcHandlerError(RuntimeError):
     raises an exception. The original exception is contained.
     """
 
-    def __init__(self, badExcListenerID: str, topicObj: Topic, origExc: Exception=None):
+    def __init__(self, badExcListenerID: str, topicObj: Topic, origExc: Exception = None):
         """
         The badExcListenerID is the name of the listener that raised
         the original exception that handler was attempting to handle.

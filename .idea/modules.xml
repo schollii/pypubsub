@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$USER_HOME$/PycharmProjects/Codillity/.idea/Codillity.iml" filepath="$USER_HOME$/PycharmProjects/Codillity/.idea/Codillity.iml" />
-      <module fileurl="file://$USER_HOME$/PycharmProjects/MPQ/.idea/MPQ.iml" filepath="$USER_HOME$/PycharmProjects/MPQ/.idea/MPQ.iml" />
-      <module fileurl="file://$USER_HOME$/PycharmProjects/PyQt/.idea/PyQt.iml" filepath="$USER_HOME$/PycharmProjects/PyQt/.idea/PyQt.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../TopTal/.idea/TopTal.iml" filepath="$PROJECT_DIR$/../TopTal/.idea/TopTal.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Toptal Jogging Web App/.idea/Toptal Jogging Web App.iml" filepath="$PROJECT_DIR$/../Toptal Jogging Web App/.idea/Toptal Jogging Web App.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Toptal Worktime Web App/.idea/Toptal Worktime Web App.iml" filepath="$PROJECT_DIR$/../Toptal Worktime Web App/.idea/Toptal Worktime Web App.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/pypubsub.iml" filepath="$PROJECT_DIR$/.idea/pypubsub.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../github/pytest_from_nose/.idea/pytest_from_nose.iml" filepath="$PROJECT_DIR$/../github/pytest_from_nose/.idea/pytest_from_nose.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../pytest_from_nose/.idea/pytest_from_nose.iml" filepath="$PROJECT_DIR$/../pytest_from_nose/.idea/pytest_from_nose.iml" />
     </modules>
   </component>
 </project>

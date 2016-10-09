@@ -84,6 +84,8 @@ def test1():
     myTopicTree = open('myTopicTree.py', 'w')
     myTopicTree.write( dedent(provFile) )
     myTopicTree.close()
+    import time
+    time.sleep(0.1)
     pub.addTopicDefnProvider('myTopicTree')
     import os
     os.remove('myTopicTree.py')

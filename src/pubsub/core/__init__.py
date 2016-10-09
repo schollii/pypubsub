@@ -22,6 +22,7 @@ from .listener import (
 from .topicobj import (
     Topic,
     SenderUnknownMsgDataError,
+    SenderMissingReqdMsgDataError,
     MessageDataSpecError,
     TopicDefnError,
     ExcHandlerError,

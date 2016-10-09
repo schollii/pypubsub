@@ -1,12 +1,6 @@
 """
-Uses topic definition provider for kwargs messaging protocol. Compare with
-main_arg1.py which shows example using arg1 messaging protocol:
-kwargs protocol provides for message data self-documentation and more
-robustness (pubsub can determine if message data missing or unknown due
-to type, etc).
-
-Experiment by changing arg1_topics.py and looking at the output tree
-in kwargs_topics_out.py.
+Advanced example that shows other capabilities of pubsub such as pubsub notification, listener
+exception handling, and topic definition providers.
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE.txt for details.

@@ -81,11 +81,6 @@ The ``setup.py`` for this would look something like this
 
 .. literalinclude:: setup-cxfreeze.py
 
-The packages option slightly differs for *cx_Freeze*: we have to
-explicitly include the sub packages ``pubsub.core.kwargs`` and
-``pubsub.core.arg1`` so that all the modules under them get included
-for packaging.
-
 To build, run::
 
    python setup.py build
@@ -99,8 +94,4 @@ We can safely ignore the missing modules warning in the build log::
    ? topicargspecimpl imported from pubsub.core.topicargspec
    ? topicmgrimpl imported from pubsub.core.topicmgr
 
-All these modules are under ``pubsub.core.kwargs`` and
-``pubsub.core.arg1``. In *cx_Freeze* dependent modules are gathered from
-the import statements recursively, during this it reports that it
-can't find the above modules. But as we have included them directly in
-the packages option these modules are included for packaging.
+

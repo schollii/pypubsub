@@ -223,9 +223,11 @@ class Topic:
         return self.__tupleName == (ALL_TOPICS,)
 
     def isRoot(self) -> bool:
-        """Returns true if this is a "root" topic, false otherwise. A
+        """
+        Returns true if this is a "root" topic, false otherwise. A
         root topic is a topic whose name contains no dots and which
-        has pub.ALL_TOPICS as parent."""
+        has pub.ALL_TOPICS as parent.
+        """
         parent = self.getParent()
         if parent:
             return parent.isAll()
@@ -321,7 +323,7 @@ class Topic:
         """
         return self.__listeners.keys()
 
-    def validate(self, listener: UserListener, curriedArgNames: Sequence[str]=None) -> CallArgsInfo:
+    def validate(self, listener: UserListener, curriedArgNames: Sequence[str] = None) -> CallArgsInfo:
         """
         Checks whether listener could be subscribed to this topic:
         if yes, just returns; if not, raises ListenerMismatchError.
@@ -332,7 +334,7 @@ class Topic:
             raise TopicDefnError(self.__tupleName)
         return self.__validator.validate(listener, curriedArgNames=curriedArgNames)
 
-    def isValid(self, listener: UserListener, curriedArgNames: Sequence[str]=None) -> bool:
+    def isValid(self, listener: UserListener, curriedArgNames: Sequence[str] = None) -> bool:
         """
         Return True only if listener could be subscribed to this topic,
         otherwise returns False. Note that method raises TopicDefnError
@@ -347,7 +349,7 @@ class Topic:
         Subscribe listener to this topic. Returns a pair (pub.Listener, success).
 
         :param curriedArgs: keyword argument to curry the listener arguments at message time; the listener(args) is
-            treated essentially as listener(**(args - curriedArgs)). If the listener was already subscribed,
+            treated essentially as ``listener(**(args - curriedArgs))``. If the listener was already subscribed,
             the pure curried args names (curriendArgs.keys() - _overrides_) must be unchanged.
         :return: True only if listener was not already subscribed; False if it was already subscribed.
         """
@@ -368,7 +370,7 @@ class Topic:
                 assert self.__validator is not None
             argsInfo = self.__validator.validate(listener, curriedArgNames=curriedArgs)
             weakListener = Listener(
-                    listener, argsInfo, curriedArgs=curriedArgs, onDead=self.__onDeadListener)
+                listener, argsInfo, curriedArgs=curriedArgs, onDead=self.__onDeadListener)
             self.__listeners[weakListener] = weakListener
             subdLisnr = weakListener
 
@@ -398,7 +400,7 @@ class Topic:
 
         return unsubdLisnr
 
-    def unsubscribeAllListeners(self, filter: ListenerFilter=None) -> List[Listener]:
+    def unsubscribeAllListeners(self, filter: ListenerFilter = None) -> List[Listener]:
         """
         Clears list of subscribed listeners. If filter is given, it must
         be a function that takes a listener and returns true if the listener
@@ -467,7 +469,7 @@ class Topic:
         """Only to be called by pubsub package"""
         return self.__msgArgs
 
-    def __prePublish(self, msgData: MsgData, topicObj: Topic=None, iterState: IterState=None) -> IterState:
+    def __prePublish(self, msgData: MsgData, topicObj: Topic = None, iterState: IterState = None) -> IterState:
         if iterState is None:
             # do a first check that all args are there, costly so only do once
             iterState = self.IterState(msgData)

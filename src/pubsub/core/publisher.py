@@ -13,7 +13,6 @@ from .topicmgr import (
 from .listener import IListenerExcHandler, Listener, UserListener
 from .notificationmgr import INotificationHandler
 
-
 TopicFilter = Callable[[str], bool]
 ListenerFilter = Callable[[Listener], bool]
 
@@ -52,8 +51,10 @@ class Publisher:
         self.__treeConfig.notificationMgr.addHandler(handler)
 
     def clearNotificationHandlers(self):
-        """Remove all notification handlers that were added via
-        self.addNotificationHandler(). """
+        """
+        Remove all notification handlers that were added via
+        self.addNotificationHandler().
+        """
         self.__treeConfig.notificationMgr.clearHandlers()
 
     def setNotificationFlags(self, **kwargs: Mapping[str, Optional[bool]]):
@@ -132,15 +133,6 @@ class Publisher:
 
         return oldVal
 
-    def sendMessage(self, topicName, *args, **kwargs):
-        """
-        Send a message for topic name with given data (args and kwargs).
-        This will be overridden by derived classes that implement
-        message-sending for different messaging protocols; not all
-        parameters may be accepted.
-        """
-        raise NotImplementedError
-
     def subscribe(self, listener: UserListener, topicName: str, **curriedArgs) -> Listener:
         """
         Subscribe listener to named topic. Raises ListenerMismatchError
@@ -186,6 +178,7 @@ class Publisher:
                  topicFilter: Union[str, TopicFilter] = None) -> List[Listener]:
         """
         Unsubscribe all listeners of a topic.
+
         :param topicName: if none given, unsub from all topics.
         :param listenerFilter: filter function to apply to listeners, unsubscribe only the listeners
             that satisfy listenerFilter(listener: Listener) == True

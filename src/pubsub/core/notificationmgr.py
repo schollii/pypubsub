@@ -6,6 +6,9 @@
 import sys
 from typing import List, Mapping
 
+from .listener import Listener
+from .topicobj import Topic
+
 
 class INotificationHandler:
     """
@@ -15,7 +18,7 @@ class INotificationHandler:
     for pubsub events (see pub.addNotificationHandler).
     """
 
-    def notifySubscribe(self, pubListener, topicObj, newSub):
+    def notifySubscribe(self, pubListener: Listener, topicObj: Topic, newSub: bool):
         """
         Called when a listener is subscribed to a topic.
         :param pubListener: the pubsub.core.Listener that wraps subscribed listener.
@@ -24,7 +27,7 @@ class INotificationHandler:
         """
         raise NotImplementedError
 
-    def notifyUnsubscribe(self, pubListener, topicObj):
+    def notifyUnsubscribe(self, pubListener: Listener, topicObj: Topic):
         """
         Called when a listener is unsubscribed from given topic.
         :param pubListener: the pubsub.core.Listener that wraps unsubscribed listener.
@@ -32,7 +35,7 @@ class INotificationHandler:
         """
         raise NotImplementedError
 
-    def notifyDeadListener(self, pubListener, topicObj):
+    def notifyDeadListener(self, pubListener: Listener, topicObj: Topic):
         """
         Called when a listener has been garbage collected.
         :param pubListener: the pubsub.core.Listener that wraps GC'd listener.
@@ -40,11 +43,12 @@ class INotificationHandler:
         """
         raise NotImplementedError
 
-    def notifySend(self, stage, topicObj, pubListener=None):
+    def notifySend(self, stage: str, topicObj: Topic, pubListener: Listener = None):
         """
         Called multiple times during a sendMessage: once before message
         sending has started (pre), once for each listener about to be sent the
         message, and once after all listeners have received the message (post).
+
         :param stage: 'pre', 'post', or 'loop'.
         :param topicObj: the Topic object for the message.
         :param pubListener: None for pre and post stages; for loop, the listener
@@ -52,18 +56,19 @@ class INotificationHandler:
         """
         raise NotImplementedError
 
-    def notifyNewTopic(self, topicObj, description, required, argsDocs):
+    def notifyNewTopic(self, topicObj: Topic, description: str, required: List[str], argsDocs: Mapping[str, str]):
         """
         Called whenever a new topic is added to the topic tree.
+
         :param topicObj: the Topic object for the message.
         :param description: docstring for the topic.
         :param required: list of message data names (keys in argsDocs) that are required.
         :param argsDocs: dictionary of all message data names, with the
-        corresponding docstring.
+            corresponding docstring.
         """
         raise NotImplementedError
 
-    def notifyDelTopic(self, topicName):
+    def notifyDelTopic(self, topicName: str):
         """
         Called whenever a topic is removed from topic tree.
         :param topicName: name of topic removed.
@@ -112,7 +117,7 @@ class NotificationMgr:
             self.__registerForAppExit()
         self.__handlers.append(handler)
 
-    def getHandlers(self) ->List[INotificationHandler]:
+    def getHandlers(self) -> List[INotificationHandler]:
         return self.__handlers[:]
 
     def clearHandlers(self):
@@ -151,16 +156,16 @@ class NotificationMgr:
     def getFlagStates(self) -> Mapping[str, bool]:
         """Return state of each notification flag, as a dict."""
         return dict(
-            subscribe    = self.__notifyOnSubscribe,
-            unsubscribe  = self.__notifyOnUnsubscribe,
-            deadListener = self.__notifyOnDeadListener,
-            sendMessage  = self.__notifyOnSend,
-            newTopic     = self.__notifyOnNewTopic,
-            delTopic     = self.__notifyOnDelTopic,
-            )
+            subscribe=self.__notifyOnSubscribe,
+            unsubscribe=self.__notifyOnUnsubscribe,
+            deadListener=self.__notifyOnDeadListener,
+            sendMessage=self.__notifyOnSend,
+            newTopic=self.__notifyOnNewTopic,
+            delTopic=self.__notifyOnDelTopic,
+        )
 
-    def setFlagStates(self, subscribe=None, unsubscribe=None, deadListener=None,
-                      sendMessage=None, newTopic=None, delTopic=None, all=None):
+    def setFlagStates(self, subscribe: bool = None, unsubscribe: bool = None, deadListener: bool = None,
+                      sendMessage: bool = None, newTopic: bool = None, delTopic: bool = None, all: bool = None):
         """
         Set the notification flag on/off for various aspects of pubsub.
         The kwargs that are None are left at their current value. The 'all',
@@ -173,8 +178,8 @@ class NotificationMgr:
         """
         if all is not None:
             # ignore all other arg settings, and set all of them to true:
-            numArgs = 7 # how many args in this method
-            self.setFlagStates( all=None, * ((numArgs-1)*[all]) )
+            numArgs = 7  # how many args in this method
+            self.setFlagStates(all=None, *((numArgs - 1) * [all]))
 
         if sendMessage is not None:
             self.__notifyOnSend = sendMessage
@@ -194,5 +199,3 @@ class NotificationMgr:
         import atexit
         atexit.register(self.clearHandlers)
         self.__atExitRegistered = True
-
-
