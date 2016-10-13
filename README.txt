@@ -4,10 +4,9 @@ receiving messages between objects of an application, as well as a variety of
 advanced features that facilitate debugging and maintaining topics and messages
 in larger applications. 
 
-Install with "pip install pypubsub".
+Install most recent with "pip install --dev pypubsub".
 
-Older downloads are on pypi.python.org. hosted on SourceForge. See the `Files pages on SF.net
-<http://downloads.sf.net/project/pubsub/pubsub>`_ for additional downloads, 
+Older downloads are on pypi.python.org.
 older releases, and download stats (the ones on PyPi page are specific to PyPi). 
 
 

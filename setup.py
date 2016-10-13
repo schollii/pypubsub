@@ -20,6 +20,13 @@ def getPubsubVersion():
     return pubsub.__version__
 
 
+def getInstallRequires():
+    import sys
+    if sys.version_info < (3,5):
+        return ['typing']
+    return []
+
+
 setup(
     name         = 'PyPubSub',
     version      = getPubsubVersion(),
@@ -34,7 +41,7 @@ setup(
     packages     = getPackagesToDistribute(),
     package_dir  = {'': 'src'},
     package_data = {'pubsub': ['LICENSE_BSD_Simple.txt', 'RELEASE_NOTES.txt']},
-    install_requires=['typing'],
+    install_requires=getInstallRequires(),
 
     classifiers  = [
         'Development Status :: 5 - Production/Stable',

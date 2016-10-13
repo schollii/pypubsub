@@ -8,7 +8,7 @@ Pubsub package initialization.
 _PREVIOUS_RELEASE_DATE = "2014-02-01"
 _PREVIOUS_RELEASE_VER = "3.3.0"
 
-__version__ = "4.0.0"
+__version__ = "4.0.0rc4"
 
 __all__ = [
     'pub',
