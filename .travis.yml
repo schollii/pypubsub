@@ -9,7 +9,7 @@ python:
   
 # command to install dependencies
 install:
-  - pip install typing
+  - if [[ $TRAVIS_PYTHON_VERSION != '3.5' ]]; then travis_retry pip install typing; fi
   
 # command to run tests
-script: pytest
+script: py.test
