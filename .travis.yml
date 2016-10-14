@@ -4,7 +4,7 @@ python:
   - "3.3"
   - "3.4"
   - "3.5"
-  - "3.6"
+  - "3.6-dev"
   - "pypy"
   
 # command to install dependencies
@@ -12,4 +12,4 @@ install:
   - if [[ $TRAVIS_PYTHON_VERSION != '3.5' ]]; then travis_retry pip install typing; fi
   
 # command to run tests
-script: py.test
+script: py.test tests
