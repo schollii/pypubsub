@@ -10,6 +10,7 @@ python:
 # command to install dependencies
 install:
   - if [[ $TRAVIS_PYTHON_VERSION != '3.5' ]]; then travis_retry pip install typing; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == '3.3' ]]; then travis_retry pip install enum34 pathlib weakrefmethod; fi
   - pip install -e .
   
 # command to run tests
