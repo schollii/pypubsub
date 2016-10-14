@@ -10,7 +10,7 @@ python:
 # command to install dependencies
 install:
   - if [[ $TRAVIS_PYTHON_VERSION != '3.5' ]]; then travis_retry pip install typing; fi
-  - pip install --pre pypubsub
+  - pip install -e .
   
 # command to run tests
 script: py.test tests/suite
