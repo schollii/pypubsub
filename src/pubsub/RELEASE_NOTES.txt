@@ -1,12 +1,21 @@
 Main changes in v4.0.0
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-* Support Python 3.5
+* Support Python 3.5 and 3.6
 * Distribution via wheel
 * Abandon support for Python 2.x and easy_install
 * Abandon support for long-ago deprecated arg1 messaging protocol
 * Added currying of subscribed listener args
 * Use PEP 484 style of annotations throughout
+
+The setuparg1.py and setupkwargs.py files have been removed. If your application
+uses setuparg1.py, first upgrade to pypubsub 3.3 and following the instructions in
+its documentation (http://pypubsub.sourceforge.net/usage/howtos/index.html)
+to migrate your application to use the kwargs protocol. Once this
+is done, you will no longer need setuparg1.py. You can then upgrade to pypubsub v4 and
+your app should just work. If your application uses setupkwargs.py, simply remove the
+import from your app. If you face any issues, please post on
+https://groups.google.com/forum/#!forum/pypubsub.
 
 Oliver Schoenborn
 October 2016
