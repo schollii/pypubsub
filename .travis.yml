@@ -1,0 +1,20 @@
+language: python
+
+python:
+  - "3.3"
+  - "3.4"
+  - "3.5"
+  - "3.6-dev"
+  - "pypy3"
+  
+# command to install dependencies
+install:
+  - if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]];   then pip install typing; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == '3.3' ]];   then pip install typing enum34 pathlib weakrefmethod; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 'pypy3' ]]; then pip install typing enum34 pathlib weakrefmethod importlib; fi
+  - pip install -e .
+  
+# command to run tests
+script: 
+  - cd tests/suite
+  - py.test
