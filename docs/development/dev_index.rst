@@ -8,6 +8,8 @@ This page is intended mostly for developers.
    :local:
 
 
+.. _label-roadmap:
+
 Roadmap
 --------
 
@@ -27,6 +29,7 @@ List of things I would like to add to pubsub:
 - finish the src/contrib/monitor implementation to monitor pubsub messages,
   or some way of monitoring message sending
 
+If anyone is interested in helping, please contact me.
 
 .. _label-contributing:
 

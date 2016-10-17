@@ -286,15 +286,3 @@ get my act together and finally release v4: a nice simple design with no import
 magic needed, no configuration, no complicated docs to explain the mulitple APIs,
 use of wheels instead of eggs, use of annotations, etc.
 
-Roadmap
--------
-
-I'd like to do the following:
-
-- improve performance by traversing the topic tree from root to leave (which means
-  extending the message data dict instead of filtering it)
-- support network-based pubsub
-- multi-threaded pubsub
-- fix bugs listed at
-
-If anyone is interested in helping, please contact me.
