@@ -85,11 +85,11 @@ As pubsub matured, its API went through changes:
   simplifies the code base considerably.
 
   
-Receiving all data of a topic
-------------------------------
+Receiving all data of a message
+-------------------------------
 
-If a Listener uses \**kwargs then will be given all data of message,
-not just the portion specific to registration topic. For example, ::
+If a Listener uses \**kwargs then it will be given all data of a message,
+not just the portion specific to the topic it is subscribed to. For example, ::
 
     >>> def listener0(arg1, arg2): print('listener0: ', arg1, arg2)
     >>> def listener1(**kwargs): print('listener1: ', kwargs)
@@ -97,7 +97,14 @@ not just the portion specific to registration topic. For example, ::
     >>> pub.subscribe(listener1, 'topic')
     >>> pub.sendMessage('topic', arg1=1, arg2=2)
 
-Then listener1 will receive arg1 and arg2.  Note: as explained in :ref:`label-topic_tree_def`, pubsub
-infers a topic's Message Data Specification based on the first listener subscribed. In real code that
-defined a listener like listener1(\**kwargs), you would have to ensure listener1 is not the first
-listener subscribed, or use a topic definition provider as explained in :ref:`label-topic_tree_def`.
+Then listener1 will receive arg1 and arg2.
+
+Note: as explained in :ref:`label-topic_tree_def`, pubsub infers a topic's *Message Data Specification*
+based on the first listener subscribed, unless there is a Topic Definition Provider for the topic. In the above
+example, pubsub would infer that *topic* has 2 required data: arg1 and arg2. However, if listener1
+were subscribed first, pubsub would infer that *topic* had no required data (because there are
+no positional parameters in the listener1 signature), and no optional data (because there are no
+parameters with default values in the the listener1 signature). Thus the subscription of listener0
+to *topic* would raise an exception. In real-world code, it can be difficult
+to guarantee the order of registration of listeners. Such issue is one of the intended use cases
+for a *Topic Definition Provider*, as explained in :ref:`label-topic_tree_def`.
