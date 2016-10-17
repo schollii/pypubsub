@@ -35,10 +35,10 @@ The Publish - Subscribe API provided by pubsub has the following characteristics
    b. The MDS of a child topic cannot be more restrictive than that of a parent topic;
    c. Once the MDS is set for a topic, it never changes during the runtime of an application.
 
-3. Message Listener: All message listeners are callables that get registered with pubsub
+4. Message Listener: All message listeners are callables that get registered with pubsub
    in order to receive messages of a given topic, and must have a signature that is
    compatible with the topic's MDS.
-4. Message Delivery: 
+5. Message Delivery:
 
    a. Messages sent will be delivered to all registered listeners of a given topic; this
       includes listeners of the topic, parent topic, etc. Hence the root of all topics
@@ -51,13 +51,13 @@ The Publish - Subscribe API provided by pubsub has the following characteristics
    e. A message sent will be delivered to all registered listeners of the specified topic
       before control is returned to the sender.
 
-5. Message Immutability: message contents must be left unchanged by listeners, but pypubsub
+6. Message Immutability: message contents must be left unchanged by listeners, but pypubsub
    does not verify this.
-6. Message Direction: a message is one-way from sender to set-of-listeners; pubsub does not
+7. Message Direction: a message is one-way from sender to set-of-listeners; pubsub does not
    support "answering" with a response from each listener to the sender. This could, of course,
    be achieved by having the sender include a callback as message data, and each listener
    calling that callback with agreed-upon data, but this (typically) increases coupling.
-7. Message Source: Pubsub does not provide any information to the listeners regarding the
+8. Message Source: Pubsub does not provide any information to the listeners regarding the
    origin (aka source, or provenance) of a message. The sender could, of course, include such
    information with the message data, but this is *not* recommended as it defeats the purpose
    of the Observer pattern.
