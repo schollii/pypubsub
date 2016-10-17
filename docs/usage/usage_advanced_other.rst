@@ -63,7 +63,8 @@ for its capability to receive the data. It also makes it easier to document the
 message data, and to specify it. The protocol was implemented in pubsub version 3.
 
 Pubsub v4 supports only one way of transmitting data to listeners, namely via the
-'kwargs' protocol.
+'kwargs' protocol. Since this is the only protocol supported, there is no code left
+that handles protocol name or selection.
 
 
 .. _label-pubsub_versions:
@@ -87,11 +88,16 @@ As pubsub matured, its API went through changes:
 Receiving all data of a topic
 ------------------------------
 
-Listener uses \**kwargs then will be given all data of message,
+If a Listener uses \**kwargs then will be given all data of message,
 not just the portion specific to registration topic. For example, ::
 
-    >>> def listener(**kwargs): pass
-    >>> pub.subscribe(listener, 'topic')
+    >>> def listener0(arg1, arg2): print('listener0: ', arg1, arg2)
+    >>> def listener1(**kwargs): print('listener1: ', kwargs)
+    >>> pub.subscribe(listener0, 'topic')
+    >>> pub.subscribe(listener1, 'topic')
     >>> pub.sendMessage('topic', arg1=1, arg2=2)
 
-Then listener will receive arg1 and arg2. 
+Then listener1 will receive arg1 and arg2.  Note: as explained in :ref:`label-topic_tree_def`, pubsub
+infers a topic's Message Data Specification based on the first listener subscribed. In real code that
+defined a listener like listener1(\**kwargs), you would have to ensure listener1 is not the first
+listener subscribed, or use a topic definition provider as explained in :ref:`label-topic_tree_def`.

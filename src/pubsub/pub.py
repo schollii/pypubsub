@@ -28,7 +28,7 @@ message transfer between threads).
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 """
 
-VERSION_API = 3  #: major API version
+VERSION_API = 4  #: major API version
 
 VERSION_SVN = "$Rev: 243 $".split()[1]  # DO NOT CHANGE: automatically updated by VCS
 

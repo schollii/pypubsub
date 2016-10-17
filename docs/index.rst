@@ -4,16 +4,12 @@
 Welcome to PyPubSub's Home Page!
 ====================================
 
-.. note:: The latest API is v3.3.0, released February 2014
-
-.. note:: This site was updated for v3.3.0. The home page for the previous release 
-   v3.2.0 is at `this v3.2 URL <v3.2/index.html>`_. The home page for the release 
-   before that, v3.1.2, is at `this v3.1 URL <v3.1/index.html>`_.
-
-The Pubsub package provides a publish - subscribe Python API that facilitates 
-event-based programming. Using the publish - subscribe pattern in your application 
+This is the documentaiton for the PyPubSub project. This Python project defines
+a package called 'pubsub' which provides a publish - subscribe API to facilitate
+event-based programming and decoupling of components of an application. Using
+the publish - subscribe pattern in your application
 can dramatically simplify its design and improve testability. Robin Dunn, the 
-creator of wxPython where the pubsub package was born, summerizes Pubsub nicely:
+creator of wxPython where the pubsub package was born, summerizes PyPubSub nicely:
 
     Basically you just have some part(s) of your program 
     subscribe to a particular topic and have some other part(s) 
@@ -23,35 +19,28 @@ creator of wxPython where the pubsub package was born, summerizes Pubsub nicely:
 The Publish - Subscribe pattern, as implemented by pubsub, provides the following 
 contract between sender and receiver: 
 
-1. Message Sending: A message can be sent (aka broadcast) from any code that can 
-   import pubsub's `pub` module
+1. Message Sender: The sender of a pubsub message is the ccode that calls pub.sendMessage().
 2. Message Topic: 
    a. Every message has a "type": it corresponds to its "topic", a string name
    b. Topics form a hierarchy. A parent topic is more generic than a child topic. 
-3. Message Handling: All message handlers must register with pubsub in order to 
-   receive messages of a given topic
+3. Message Listener: All message listeners are callables that
+   get registered with pubsub in order to receive messages of a given topic
 4. Message Delivery: 
 
-   a. Messages sent will be delivered to all registered handlders (aka listeners, also 
-      receivers) for a given topic
-   b. Sequence of delivery is unknown: can change at any time; no logic should depend on it
-   c. Messages are delivered synchronously: a handler must return or throw an exception 
-      before the message is delivered to the next handler
-   d. A message sent will be delivered immediately and control will be returned to the sender 
-      only once message has been delivered to all handlers
-   e. There is no relationship between order of registration vs order of delivery
-   f. Additionally occurs to all listeners of more generic, ie parent topics, up to the 
-      root topic which is a "catch all" topic
-      
-5. Message Constness: message contents will be left unchanged by any handlers
-6. Message Direction: a message is one-way from sender to receiver; it cannot be used by 
-   the handler to transmit data back to the sender
-7. Message Source: Pubsub does not provide any information to the handlers regarding the 
-   origin (aka source, or provenance) of a message
+   a. Messages sent will be delivered to all registered listeners for a given topic,
+      and all listeners of the parent topic, etc until the root of all topics is reached
+      (hence the root of all topics, called ALL_TOPICS, receives all messages)
+   b. Sequence of delivery: unspecified and can change at any time; do not depend on it
+   c. Messages are delivered synchronously: a listener must return or throw an exception
+      before the message is delivered to the next listener
+   d. A message sent will be delivered to all registered listeners of the message topic
+      before control is returned to the sender
 
-In this documentation, a *sender* is any part of the application that asks Pubsub to send 
-a message of a given topic with a given payload (data, or content). The handler, aka 
-receiver, is a callable object (function etc) referred to as a *listener*. 
+5. Message Constness: message contents must be left unchanged by any listeners
+6. Message Direction: a message is one-way from sender to listener; it cannot be used by
+   the listener to transmit data back to the sender
+7. Message Source: Pubsub does not provide any information to the listeners regarding the
+   origin (aka source, or provenance) of a message
 
 Here is a schematic representation of the role of pubsub during message sending and delivery:
 

@@ -18,8 +18,9 @@ Authors
 
 The main developer of the package is Oliver Schoenborn, but Robb Shecter 
 started it all back in early 2000's. The code is now hosted on
-SourceForge.net at http://www.sf.net/projects/pubsub, and has an entry
-in Cheeseshop at http://pypi.python.org/pypi/PyPubSub.
+github at http://github.com/schollii/pypubsub (previous to that, it was
+hosted on SourceForge.net, and prior to that, it was hosted in wxPython).
+PyPubSub is on the Python Package Index at http://pypi.python.org/pypi/PyPubSub.
 
 As listed in the :ref:`label-contributing` section, contributions of any
 form are welcome. Even questions help progress the project.
@@ -30,23 +31,19 @@ form are welcome. Even questions help progress the project.
 Acknowledgements
 ----------------
 
-Thanks to SourceForge.net for hosting the project, to Robb Shechter to have 
-given me the chance to take over this project from him many years ago, to 
-all those users of pubsub who ask questions, make suggestions, point out 
+Thanks to SourceForge.net for hosting the project until September 2016.
+Thanks to Github.com for hosting the project from October 2016.
+Thanks to Robb Shechter for having
+given me the chance to take over this project from him many years ago (ca 2004!).
+Thanks to all those users of pypubsub who ask questions, make suggestions, point out
 bugs, etc. 
-
-.. image:: http://sflogo.sourceforge.net/sflogo.php?group_id=197063&amp;type=2
-   :alt: SourceForge.net Logo
-   :width: 125
-   :height: 37
-   :target: http://sourceforge.net
 
 
 Pubsub Users
 -------------
 
 Several users have donated a bit of their time to describe how they use
-pubsub in their Python projects.
+pypubsub in their Python projects.
 
 *Jerome Laheurte, for Task Coach, since Feb 2012*:
     Task Coach (https://sourceforge.net/projects/taskcoach/) is a 
@@ -55,6 +52,7 @@ pubsub in their Python projects.
     effort tracking, categories, notes and more. Task Coach uses PyPubSub as 
     its Publisher/Listener implementation to cleanly separate model and view 
     layers. 
+
 
 *Steven Sproat, for Whyteboard, since Feb 2010*:
     I've been using PyPubSub for around 2 months in my cross-platform
@@ -66,6 +64,7 @@ pubsub in their Python projects.
     longer need to maintain references to the canvas in order to perform
     operations on it, and can instead send a message saying "do something"
     without caring how it's done.
+
 
 *Josh English, for WMS, since 2008*:
     I use it in my Writing Management System (http://joshua.r.english
@@ -173,7 +172,7 @@ pubsub in their Python projects.
     you?).
 
 
-*Author, for several applications, since 2004*:
+*Oliver Schoenborn (Author of PyPubSub), for several applications, from 2004 to 2010*:
     I have used PyPubSub on several projects. Applications which, for example, 
 
     - show tree structures with selectable nodes, and selected node's
@@ -208,81 +207,94 @@ History
 -------
 
 Pubsub was originally created by Robb Shecter as a module in the
-wxPython library, named wx.lib.pubsub. In spring of 2004, I added the
-ability of the module to use weak references, even to methods, and I
-asked Robin Dunn if he would like the changes to be put in
-wx.lib.pubsub. Robb and Robin liked them so much that they offered that
-I take over ownership of the pubsub package.
+wxPython library, named wx.lib.pubsub, sometime around y2k. At that time,
+pubsub had one responsiblity: to allow for messages to be sent to listeners
+based on a hierarchy of topics. In the Spring of 2004, I added the
+ability to automaticaly unregister listeners that were no longer in use
+outside of pubsub (by making the module's Publisher use weak references to
+listeners). For large pubsub-based application, this greatly simplified
+listener management. I asked Robin Dunn if he would like the changes
+to be put in wx.lib.pubsub; he forwarded the request to Robb. And the rest
+is history.
 
-The package was stable and fairly well scoped such that only a few minor
-tweaks and improvements happened after that. In 2006 when I used pubsub
-on some larger projects, I wished that topic trees and the topic message
-data could be documented, and that more data could be passed more
-easily. I also wished I could find a strategy that would allow the use
+Only a few minor tweaks and improvements happened for the next couple years.
+In 2006 when I used pubsub
+on a couple larger projects, I wished that topic trees and the topic message
+data could be documented. I also found that a major time waster when using
+pubsub at that time was debugging incorrect message data, so I started thinking
+of a way that I could validate message data. I also
+wished that I could find a design that would allow the use
 of tools like pylint to point out invalid topic names.
 
-So I developed version 2 of the library. In fall 2006 I created an entry
-in the Python Cheeseshop as PyPubSub
-(http://pypi.python.org/pypi/PyPubSub) and used the cheese shop to hold
-snapshots of my files. This way, developers not using wxPython can 
-benefit from the publish/subscribe mechanism that it provides.
+So I developed version 2 of wx.lib.pubsub in the
+Fall of 2006. I also created an entry in the Python Package Index as PyPubSub
+(http://pypi.python.org/pypi/PyPubSub) and used PyPI to hold a
+snapshot of my files so that even developers not using wxPython could
+benefit from it.
 
-In May 2007 I decided it was time to create a project on SF.net for it. 
-It is http://sourceforge.net/projects/pubsub, so the web site is at 
-http://pubsub.sourceforge.net. Note that there also exists 
-http://sourceforge.net/projects/pypubsub and http://pypubsub.sourceforge.net 
-which are completely unrelated to this project. The details might be 
-interesting, if only for historical purposes: 
+In May 2007 I decided it was time to create a project on SourceForge.net for it.
+It was http://sourceforge.net/projects/pubsub, so the web site was at
+http://pubsub.sourceforge.net. The wx.lib.pubsub was then a verbatim copy of the
+src folder from sf.net/projects/pubsub, as it was before pypubsub version 2.
 
-    I wanted my SF.net project ID to be pypubsub to match the entry on 
-    CheeseShop, but turns out pypubsub was already used by another sourceforge project: one that did not have an entry on Cheese Shop -- 
-    or any code on SF.net for that matter -- and was more recent that mine. 
-    The author did accept to rename his SF.net project (renamed to *Python 
-    Messaging Service* (PMS)), but the ID could not be changed.
-    So I kept the name PyPubSub, but I had to settle for the less descriptive ID 'pubsub' on SF.net, leading to a project page
-    at http://sourceforge.net/projects/pubsub/ and a website at 
-    http://pubsub.sourceforge.net. 
-    
-    I was hoping the author would move his 
-    project to a different SF.net ID, easy for him so no data (code, issue tickets, forums etc). The author said he would edit the snapshots on his 
-    web sites that show an image with the word "PyPubSub". These images would be
-    confusing to visitors that aren't familiar with the "real/original" 
-    PyPubSub. 
-    
-After using version 2 for a bit I wasn't really happy with it so I started 
-work version 3 before I got to beta of 2. Version 3.0.0, completed some time 
-in 2008, added support for documenting
-topics, a more OO topic tree, keyword data to be sent along with the topic 
-message and topic argument specification to allow for more validations. Version
-3 also supports a more versatile notification mechanism that allows messages to 
-be sent when certain things happen in the pubsub module, e.g. a listener 
-subscribes. 
+In 2008 someone created, unbeknownst to me,
+an unrelated Python project on sourceforge and named it pypubsub. The author
+did not realize that mine already existed with that name in PyPI and that
+therefore he would have to rename his so as not to confuse users. This project
+came to my attention when I wanted to rename pubsub on SF.net to pypubsub to make
+it clear that it was python based, and to match the already one-year old entry on
+PyPI. In the end, the author renamed his project and sf.net/projects/pypubsub
+was available for my taking.
 
-However the version of PyPubSub in wxPython was still version 1 API, with
-an option to use version 2 or 3 via some settings set at import time. Everytime 
-I updated pubsub, the changes had to be copied into wxPython's ``wx.lib.pubsub``.
-This was annoying, plus I realized that if I didn't depracate the v1 API the new 
-one would stay unused for a while longer (inertia!). This led to version 3.1.0 
-in early 2010, this supported v1 API in version 3, and supported migration from 
-old to new. This was tough but worked well and meant that wx/lib/python could 
-be a verbatim copy of PyPubSub/src/pubsub folder. 
+After using pypubsub version 2 for a bit I wasn't really happy with it, so I went back
+to the drawing board to support topic and message data documentation, definition and
+validation started. Version 3.0.0, completed some time
+in 2008, achieved this via keyword-based message data and topic definition providers.
+Version 3 also added support for tracking pubsub activity such as listener subscription,
+topic creation, and sending messages, very useful in large applications.
 
-Not much happened between that time and first half of 2013, except for a minor 
+Version 3 of Pypubsub was not compatible with v2 or v1, so I couldn't directly upgrade
+wx.lib.pubsub to it without at least supporting a deprecated v1 for a while.
+This led to version 3.1.0 in early 2010, which supported the v1 API via a setupv1.py
+configuration module that could be imported before the first import of pubsub.
+This was quite a challenge as there was a fair bit of commonality between pubsub v1 and v3,
+but also some significant differences. In retrospect I should not have done that because
+it made the code rather complex. I did a good job of it so it was easy to make fixes, but
+it could be a pain to troubleshoot. If I had to walk the same mile again, I would
+just have two separate implementations, with an easy way to import one or the other
+(e.g. pubsub vs pubsub3 packages).
+
+Not much happened between early 2010 and first half of 2013, except for a minor
 release 3.1.2 in November 2011: the code was stable and did its job nicely so no 
 major changes needed. Also in that period I didn't develop or maintain any 
 event-based Python application so I didn't have any reason to update PyPubSub. I 
-did accumulate about a dozen tickets on SF.net involving bugs or patches 
+did accumulate about a dozen tickets on SF.net involving minor bugs or patches
 contributed by users in that period. 
 
-Prompted by the overhaul of wxPython 
-'Phoenix' in 2013, I removed all the code that was there just to support the old 
-version 1 API. I took the opportunity to address the dozen tickets during the 
-summer of 2013, and redesign the docs. During that period I also found a user 
-who had clone PyPubSub to github without mentioning intent, giving credit etc; 
-but no code edits either so was probably to have as a backup for one of his 
-projects that required a specific version of it, but still, there are already 
-enough pubsub's on the net, no need to confuse developers even more. Also found
-recent project with same name, much smaller scale, hopefully the author will change it and just join this project. And the sf.net/projects/pypubsub is still 
-there but hasn't been maintained since 2008.  
+The overhaul of wxPython 'Phoenix' in 2013 was the perfect opportunity to make
+pubsub version 3 API the default, and to make version 1 API accessible only on demand
+(via the setuparg1.py configuration module).
+I also removed all the code that was there just to support the old
+version 1 API, leaving just a version 3 API with two message protocols available.
+I took the opportunity to address the dozen tickets during the
+summer of 2013, and to improve the docs.
 
+In early 2016 I started work to remove the deprecated code and support only the
+original messaging protocol that I had designed in 3.0. With two busy kids,
+it is not easy to find the time to do this, so it took me till October 2016 for me to
+get my act together and finally release v4: a nice simple design with no import
+magic needed, no configuration, no complicated docs to explain the mulitple APIs,
+use of wheels instead of eggs, use of annotations, etc.
 
+Roadmap
+-------
+
+I'd like to do the following:
+
+- improve performance by traversing the topic tree from root to leave (which means
+  extending the message data dict instead of filtering it)
+- support network-based pubsub
+- multi-threaded pubsub
+- fix bugs listed at
+
+If anyone is interested in helping, please contact me.
