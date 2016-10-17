@@ -100,11 +100,12 @@ not just the portion specific to the topic it is subscribed to. For example, ::
 Then listener1 will receive arg1 and arg2.
 
 Note: as explained in :ref:`label-topic_tree_def`, pubsub infers a topic's *Message Data Specification*
-based on the first listener subscribed, unless there is a Topic Definition Provider for the topic. In the above
+based on the first listener subscribed, unless there is a *Topic Definition Provider* for the topic. In the above
 example, pubsub would infer that *topic* has 2 required data: arg1 and arg2. However, if listener1
 were subscribed first, pubsub would infer that *topic* had no required data (because there are
 no positional parameters in the listener1 signature), and no optional data (because there are no
 parameters with default values in the the listener1 signature). Thus the subscription of listener0
-to *topic* would raise an exception. In real-world code, it can be difficult
+to *topic* would raise an exception (because listener0 requires arg1 and arg2). In real-world code,
+it can be difficult
 to guarantee the order of registration of listeners. Such issue is one of the intended use cases
 for a *Topic Definition Provider*, as explained in :ref:`label-topic_tree_def`.
