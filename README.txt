@@ -8,4 +8,6 @@ and messages in larger applications.
 
 Install most recent with "pip install pypubsub".
 
+The latest documentation home page is at http://pypubsub.readthedocs.io/en/master/.
+
 
