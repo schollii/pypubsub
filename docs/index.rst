@@ -4,7 +4,7 @@
 Welcome to PyPubSub's Home Page!
 ====================================
 
-This is the documentaiton for the PyPubSub project. This Python project defines
+This is the documentation for the PyPubSub project. This Python project defines
 a package called 'pubsub' which provides a publish - subscribe API to facilitate
 event-based programming and decoupling of components of an application via the
 Observer pattern. PyPybSub originated in wxPython around y2k but has been
@@ -21,6 +21,13 @@ creator of wxPython where the pubsub package was born, summerizes PyPubSub nicel
     subscribe to a particular topic and have some other part(s) 
     of your program publish messages with that topic.  All the 
     plumbing is taken care of by pubsub.  -- *Robin Dunn, Jun 2007*
+
+The Observer pattern mandates that listeners and senders be mutually "unaware" of
+each other: which listeners are in the set, how big is the set, "who" sent a message, etc.
+Basically the Observer pattern is like a radio broadcast: the emitter doesn't know which
+radios (receivers) are tuned to a frequency; radios are unaware of other radios; radios
+don't know what tower broadcasted a given message, just that the emission frequency is
+the one that carries information that the radio user wants.
 
 The Publish - Subscribe API provided by pubsub has the following characteristics:
 
@@ -42,12 +49,14 @@ The Publish - Subscribe API provided by pubsub has the following characteristics
 
    a. Messages sent will be delivered to all registered listeners of a given topic; this
       includes listeners of the topic, parent topic, etc. Hence the root of all topics
-      (called ALL_TOPICS) receives all messages;
-   b. Sequence of delivery is unspecified and can change at any time; do not depend on it!
+      (called ALL_TOPICS) receives all messages.
+   b. Sequence of delivery is unspecified and can change at any time. This is fundamental
+      to the Observer pattern, and your application's listeners must be designed to not depend
+      on the order in which they receive a given message.
    c. Messages are delivered synchronously: a listener must return or throw an exception
-      before the message is delivered to the next listener;
+      before the message is delivered to the next listener.
    d. A listener that raises an exception does not prevent remaining listeners from
-      receiving the message;
+      receiving the message.
    e. A message sent will be delivered to all registered listeners of the specified topic
       before control is returned to the sender.
 

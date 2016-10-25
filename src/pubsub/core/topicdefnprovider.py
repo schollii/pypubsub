@@ -7,6 +7,10 @@ import os, re, inspect, io
 from textwrap import TextWrapper, dedent
 import sys
 from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union, TextIO
+try:
+    from importlib.util import cache_from_source
+except ImportError:
+    from imp import cache_from_source
 
 from .topicargspec import (
     topicArgsFromCallable,
@@ -327,22 +331,19 @@ class TopicDefnDeserialString(ITopicDefnDeserializer):
 
     def doneIter(self):
         self.__modDeserial.doneIter()
-        # remove the temporary module and its compiled version (*.pyc)
-        for count in range(50):
+        # remove the temporary module; it might be locked for some time by the interpreter,
+        # so try a number of times:
+        NUM_TRIES = 50
+        for count in range(NUM_TRIES):
             try:
                 os.remove(self.__filename)
                 break
             except PermissionError:
                 pass
-        else:
-            # can't remove file!!
-            pass
 
-        try:  # py3.2+ uses special folder/filename for .pyc files
-            from imp import cache_from_source
+        # and remove its byte-compiled version:
+        try:
             os.remove(cache_from_source(self.__filename))
-        except ImportError:
-            os.remove(self.__filename + 'c')
         except FileNotFoundError:
             pass  # don't care if file already removed
 

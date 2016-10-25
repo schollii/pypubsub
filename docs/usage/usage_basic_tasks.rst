@@ -259,11 +259,11 @@ Topic as Message Data
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 If a listener requires to know the topic of the message, a specially named 
-default value ``pub.AUTO_TOPIC_OBJ`` can be used for one of its call parameters: 
+default value ``pub.AUTO_TOPIC`` can be used for one of its call parameters:
 at call time, pubsub will replace the value by the pub.TopicObj object for the topic. 
 It can be queried to find the topic name via Topic.getName()::
 
-	def listener(topic=pub.AUTO_TOPIC_OBJ): 
+	def listener(topic=pub.AUTO_TOPIC):
 		print "real topic is", topic.getName()
 	pub.subscribe(listener, "some_topic")
 	pub.sendMessage("some_topic") # no data 

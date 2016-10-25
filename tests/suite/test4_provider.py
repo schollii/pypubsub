@@ -9,11 +9,23 @@ from typing import Any
 from textwrap import dedent
 from pathlib import Path
 import sys
-from importlib.util import cache_from_source
+try:
+    from importlib.util import cache_from_source
+except ImportError:
+    from imp import cache_from_source
 
 import pytest
 
 from pubsub import pub
+
+try:
+    Path.write_text  # new in Python 3.5
+except AttributeError:
+    def write_text(path: Path, text: str):
+        with path.open('w') as f:
+            f.write(text)
+    Path.write_text = write_text
+
 
 topicMgr = pub.getDefaultTopicMgr()
 
@@ -41,7 +53,7 @@ def try_call(max_times: int, func: callable, *args: Any, func_on_fail: callable 
     return retries
 
 
-@pytest.mark.parametrize('execution_number', range(100))
+@pytest.mark.parametrize('execution_number', range(1))
 def test1(execution_number):
     root = topicMgr.getRootAllTopics()
     for topic in list(root.getSubtopics()):

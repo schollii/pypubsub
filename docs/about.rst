@@ -45,6 +45,15 @@ Pubsub Users
 Several users have donated a bit of their time to describe how they use
 pypubsub in their Python projects.
 
+*Darin Gordon, for Yosai, since 2015*:
+    Yosai (https://github.com/YosaiProject) is a security framework for python
+    applications, offering authentication,
+    authorization, and session management from a common API.  Yosai uses pypubsub to
+    facilitate event-driven responses to security-related changes.  For instance,
+    when a session expires, valuable information is logged and cached authorization
+    info is cleared.
+
+
 *Jerome Laheurte, for Task Coach, since Feb 2012*:
     Task Coach (https://sourceforge.net/projects/taskcoach/) is a 
     simple open source todo manager to keep track of personal 
