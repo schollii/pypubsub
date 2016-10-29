@@ -7,7 +7,7 @@ Provide the Topic class.
 
 from weakref import ref as weakref
 import sys
-from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union, TextIO, MutableMapping
+from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union, TextIO, MutableMapping, Iterator
 
 from .listener import (
     Listener,
@@ -309,14 +309,14 @@ class Topic:
         """
         return bool(self.__listeners)
 
-    def getListeners(self) -> Listener:
+    def getListeners(self) -> List[Listener]:
         """
         Get a copy of list of listeners subscribed to this topic. Safe to iterate over while listeners
         get un/subscribed from this topics (such as while sending a message).
         """
         return list(self.__listeners.keys())
 
-    def getListenersIter(self):
+    def getListenersIter(self) -> Iterator[Listener]:
         """
         Get an iterator over listeners subscribed to this topic. Do not use if listeners can be
         un/subscribed while iterating.

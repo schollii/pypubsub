@@ -108,7 +108,7 @@ class TopicManager:
         """
         return self.__allTopics
 
-    def addDefnProvider(self, providerOrSource: Any, format=None):
+    def addDefnProvider(self, providerOrSource: Any, format=None) -> ITopicDefnProvider:
         """
         Register a topic definition provider. After this method is called, whenever a topic must
         be created, the first definition provider that has a definition for the required topic
@@ -137,7 +137,7 @@ class TopicManager:
         """Get how many topic definitions providers are registered."""
         return self.__defnProvider.getNumProviders()
 
-    def getTopic(self, name: str, okIfNone: bool = False):
+    def getTopic(self, name: str, okIfNone: bool = False) -> Topic:
         """
         Get the Topic instance for the given topic name. By default, raises
         an TopicNameError exception if a topic with given name doesn't exist. If
@@ -165,7 +165,7 @@ class TopicManager:
         msg = 'Topic "%s" doesn\'t have "%s" as subtopic' % (parentObj.getName(), subtopicName)
         raise TopicNameError(name, msg)
 
-    def getOrCreateTopic(self, name: str, protoListener: UserListener = None):
+    def getOrCreateTopic(self, name: str, protoListener: UserListener = None) -> Topic:
         """
         Get the Topic instance for topic of given name, creating it
         (and any of its missing parent topics) as necessary. Pubsub

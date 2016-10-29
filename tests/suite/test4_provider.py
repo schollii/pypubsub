@@ -9,6 +9,9 @@ from typing import Any
 from textwrap import dedent
 from pathlib import Path
 import sys
+
+from pubsub.core import TopicNameError
+
 try:
     from importlib.util import cache_from_source
 except ImportError:
@@ -37,160 +40,193 @@ def try_call(max_times: int, func: callable, *args: Any, func_on_fail: callable 
     :param args: arguments to give to function
     :param max_times: maximum number of attempts
     :param func_on_fail: when call fails, call this function
-    :return:
+    :return: # of calls left (so if 0, ran out of calls, i.e. tried more than max_times)
     """
     retries = 0
     while True:
         try:
-            if retries < max_times:
-                func(*args)
-            return retries
+            if retries >= max_times:
+                break
+            func(*args)
+            break
         except Exception as exc:
             retries += 1
             if func_on_fail is not None:
                 func_on_fail(exc)
 
-    return retries
+    return max_times - retries
 
 
-@pytest.mark.parametrize('execution_number', range(1))
-def test1(execution_number):
+def cleanup_py_files(path):
+    """Cleanup python file and associated byte-compiled file"""
+    path = Path(path)
+
+    if path.exists():
+        path.unlink()
+    assert not path.exists()
+
+    cached_file = Path(cache_from_source(str(path)))
+    if cached_file.exists():
+        cached_file.unlink()
+    assert not cached_file.exists()
+
+
+def clear_topic_tree():
     root = topicMgr.getRootAllTopics()
     for topic in list(root.getSubtopics()):
         topicMgr.delTopic(topic.getName())
+    topicMgr.clearDefnProviders()
 
-    class my_topics:
-        class rootTopic1:
-            """Root topic 1"""
 
-            class subtopic_1:
+def create_all_defined_topics(*args):
+    prov = pub.addTopicDefnProvider(*args)
+    return pub.instantiateAllDefinedTopics(prov)
+
+
+topicDefns2 = '''
+    class root_topic_1:
+        class subtopic_1:
+            class subsubtopic_11:
                 """
-                Sub topic 1 of root topic. Docs rely on one blank line for
-                topic doc, and indentation for each argument doc.
+                Sub sub topic 1 of sub topic 1. Only need to doc the
+                extra args.
                 """
-
-                def msgDataSpec(arg1, arg2=None):
+                def msgDataSpec(arg1, arg3, arg2=None, arg4=None):
                     """
-                    - arg1: some multiline doc
-                        for arg1
-                    - arg2: some multiline doc
-                        for arg2
+                    - arg3: doc for arg3
+                    - arg4: doc for arg4
                     """
                     pass
 
-                class subsubtopic_12:
-                    """Sub sub topic 2 of sub topic 1."""
-
-                    def msgDataSpec(arg1, argA, arg2=None, argB=None):
-                        """
-                        - argA: doc for argA
-                        - argB: doc for argB
-                        """
-                        pass
-
-        class rootTopic2:
-            """Root topic 2"""
-
-    pub.addTopicDefnProvider(my_topics, pub.TOPIC_TREE_FROM_CLASS)
-
-    provString = '''
-        class rootTopic1:
-            class subtopic_1:
-                class subsubtopic_11:
-                    """
-                    Sub sub topic 1 of sub topic 1. Only need to doc the
-                    extra args.
-                    """
-                    def msgDataSpec(arg1, arg3, arg2=None, arg4=None):
-                        """
-                        - arg3: doc for arg3
-                        - arg4: doc for arg4
-                        """
-                        pass
-
-            '''
-
-    pub.addTopicDefnProvider(provString, pub.TOPIC_TREE_FROM_STRING)
-
-    provFile = '''
-        class rootTopic1:
-            class subtopic_2:
-                class subsubtopic_21:
-                    """Sub sub topic 1 of sub topic 2."""
-                    def msgDataSpec(arg1, arg2=None, someArg=456, arg4=None):
-                        """
-                        - arg1: doc for arg1
-                        - arg2: doc for arg2
-                        - arg4: doc for arg4
-                        """
-                        pass
         '''
 
-    # created module file (and confirm it is there):
-    myTopicTreePath = Path('myTopicTree.py')
-    myTopicTreePath.write_text(dedent(provFile))
-    assert myTopicTreePath.exists()
-    writePath = myTopicTreePath.parent.resolve()
-    assert str(writePath) in sys.path
 
-    # import from it: 
-    pub.addTopicDefnProvider('myTopicTree')
+class topicDefns3:
+    class root_topic_1:
+        """Root topic 1"""
 
-    # cleanup file:
-    def cleanup_py_files(path):
-        path = Path(path)
+        class subtopic_1:
+            """
+            Sub topic 1 of root topic. Docs rely on one blank line for
+            topic doc, and indentation for each argument doc.
+            """
 
-        if path.exists():
-            path.unlink()
-        assert not path.exists()
+            def msgDataSpec(arg1, arg2=None):
+                """
+                - arg1: some multiline doc
+                    for arg1
+                - arg2: some multiline doc
+                    for arg2
+                """
+                pass
 
-        cached_file = Path(cache_from_source(str(path)))
-        if cached_file.exists():
-            cached_file.unlink()
-        assert not cached_file.exists()
+            class subsubtopic_12:
+                """Sub sub topic 2 of sub topic 1."""
 
-    try_call(100, cleanup_py_files, myTopicTreePath)
+                def msgDataSpec(arg1, argA, arg2=None, argB=None):
+                    """
+                    - argA: doc for argA
+                    - argB: doc for argB
+                    """
+                    pass
 
-    # verify what was imported:
-    assert not topicMgr.getTopic('rootTopic1.subtopic_2', okIfNone=True)
-    # the following should create all topic tree since parent
-    # topics are automatically created
-    assert topicMgr.getOrCreateTopic('rootTopic1.subtopic_1.subsubtopic_11')
-    assert topicMgr.getOrCreateTopic('rootTopic1.subtopic_1.subsubtopic_12')
-    assert topicMgr.getOrCreateTopic('rootTopic1.subtopic_2.subsubtopic_21')
 
-    # validate that topic specs were properly parsed
+failed_imports = []
+
+num_tries = 2000
+
+def teardown_module():
+    #print(len(failed_imports) / num_tries)
+    pass
+
+
+# @pytest.mark.parametrize('dummy', range(num_tries))
+# def test_import(dummy):
+#     from importlib import import_module
+#     pytest.raises(ImportError, import_module, 'some_module')
+#
+#     some_module_path = Path('some_module.py')
+#     some_module_path.write_text("")
+#     assert some_module_path.exists()
+#     assert 'some_module' not in sys.modules
+#     assert str(some_module_path.parent.resolve()) in sys.path
+#     try:
+#         import_module('some_module')
+#         del sys.modules['some_module']
+#     except ImportError:
+#         failed_imports.append(dummy)
+#
+#     assert try_call(1000, cleanup_py_files, some_module_path)
+#
+
+def test_provider():
+    clear_topic_tree()
+
+    # create several providers that provide for different subsets of a tree:
+    pub.addTopicDefnProvider('my_import_topics')
+    pub.addTopicDefnProvider(topicDefns2, pub.TOPIC_TREE_FROM_STRING)
+    pub.addTopicDefnProvider(topicDefns3, pub.TOPIC_TREE_FROM_CLASS)
+
+    # adding the providers loaded the specifications, but did not create any topics:
+    pytest.raises(TopicNameError, topicMgr.getTopic, 'root_topic_1')
+    pytest.raises(TopicNameError, topicMgr.getTopic, 'root_topic_1.subtopic_2')
+
+    # the following will create topics based on the providers added:
+    assert topicMgr.getOrCreateTopic('root_topic_1').hasMDS()
+    assert topicMgr.getOrCreateTopic('root_topic_1.subtopic_1').hasMDS()
+    assert topicMgr.getOrCreateTopic('root_topic_1.subtopic_1.subsubtopic_11').hasMDS()
+    assert topicMgr.getOrCreateTopic('root_topic_1.subtopic_1.subsubtopic_12').hasMDS()
+    assert topicMgr.getOrCreateTopic('root_topic_1.subtopic_2').hasMDS()
+    assert topicMgr.getOrCreateTopic('root_topic_1.subtopic_2.subsubtopic_21').hasMDS()
+
+    # create some listeners and validate them even though none have been subscribed so the MDS
+    # will be used in order to validate them:
+
+    def sub(arg1=678):
+        pass
+
+    def sub_2(arg1=987, arg2=123):
+        pass
+
+    def sub_21(arg1, arg2=None, arg4=None):
+        pass
+
     def isValid(topicName, listener):
         topic = topicMgr.getTopic(topicName)
         assert topic.getDescription()
         assert topic.hasMDS()
         return topic.isValid(listener)
 
-    def sub():
+    assert isValid('root_topic_1', sub)
+    assert isValid('root_topic_1.subtopic_2', sub_2)
+    assert isValid('root_topic_1.subtopic_2.subsubtopic_21', sub_21)
+
+    def sub_21_bad(arg4):  # required arg4 rather than optional!
         pass
 
-    def sub_1(arg1, arg2=123):
-        pass
-
-    def sub_11(arg1, arg3, arg2=None, arg4=None):
-        pass
-
-    assert isValid('rootTopic1', sub)
-    assert isValid('rootTopic1.subtopic_1', sub_1)
-    assert isValid('rootTopic1.subtopic_1.subsubtopic_11', sub_11)
-    # no providers have spec for subtopic_2
-    assert not topicMgr.getTopic('rootTopic1.subtopic_2').hasMDS()
-
-    # printTreeSpec()
-
-    # export topic tree: 
-    try_call(100, pub.exportTopicTreeSpec, 'newTopicTree')
-    root2Defn = pub.exportTopicTreeSpec(rootTopic='rootTopic1')
-
-    try_call(100, cleanup_py_files, 'newTopicTree.py')
+    assert not topicMgr.getTopic('root_topic_1.subtopic_2.subsubtopic_21').isValid(sub_21_bad)
 
 
-def test2_import_export_no_change():
+@pytest.mark.parametrize('repeat', range(1))
+def test_export(repeat):
+    # create a topic tree from a couple of the topic providers:
+    clear_topic_tree()
+    all_topics = create_all_defined_topics(topicDefns2, pub.TOPIC_TREE_FROM_STRING)
+    all_topics.extend(create_all_defined_topics(topicDefns3, pub.TOPIC_TREE_FROM_CLASS))
+
+    # export topic tree:
+    try_call(100, pub.exportTopicTreeSpec, 'my_exported_topics')
+
+    # import exported tree:
+    clear_topic_tree()
+    all_topics2 = create_all_defined_topics('my_exported_topics')
+    # verify:
+    assert sorted(all_topics) == sorted(all_topics2)
+
+    try_call(100, cleanup_py_files, 'my_exported_topics.py')
+
+
+def test_import_export_no_change():
     #
     # Test that import/export/import does not change the import
     #
@@ -295,14 +331,16 @@ def test2_import_export_no_change():
 
 
 def test_module_as_class():
-    assert topicMgr.getTopic('root_topic1', True) is None
-    assert topicMgr.getTopic('root_topic2.sub_topic21', True) is None
+    clear_topic_tree()
+    assert topicMgr.getTopic('root_topic_1', True) is None
+    assert topicMgr.getTopic('root_topic_2.sub_topic_21', True) is None
 
+    # noinspection PyUnresolvedReferences
     import my_import_topics
     provider = pub.addTopicDefnProvider(my_import_topics, pub.TOPIC_TREE_FROM_CLASS)
     pub.instantiateAllDefinedTopics(provider)
 
-    assert topicMgr.getTopic('root_topic1') is not None
-    assert topicMgr.getTopic('root_topic2.sub_topic21') is not None
+    assert topicMgr.getTopic('root_topic_1') is not None
+    assert topicMgr.getTopic('root_topic_2.subtopic_21') is not None
 
-    pub.sendMessage(my_import_topics.root_topic1)
+    pub.sendMessage(my_import_topics.root_topic_1)

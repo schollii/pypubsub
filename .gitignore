@@ -1,2 +1,8 @@
 __pycache__
 /build
+/tests/*.pstats
+/dist
+/docs/html
+/src/PyPubSub.egg-info
+/tools/macrium
+/tools/ping

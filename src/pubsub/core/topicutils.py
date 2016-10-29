@@ -91,7 +91,7 @@ def stringize(topicName: Sequence[str]) -> str:
     if isinstance(topicName, str):
         return topicName
 
-    if hasattr(topicName, "msgDataSpec"):
+    if hasattr(topicName, "_topicNameStr"):
         return topicName._topicNameStr
 
     try:
