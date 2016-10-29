@@ -4,7 +4,7 @@
 """
 
 import os, re, inspect, io
-from textwrap import TextWrapper, dedent
+from textwrap import TextWrapper, dedent, indent
 import sys
 from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union, TextIO
 try:
@@ -309,19 +309,10 @@ class TopicDefnDeserialString(ITopicDefnDeserializer):
         version) will be deleted when the doneIter() method is called.
         """
 
-        def createTmpModule():
-            moduleNamePre = 'tmp_export_topics_'
-            import os, tempfile
-            creationDir = os.getcwd()
-            fileID, path = tempfile.mkstemp('.py', moduleNamePre, dir=creationDir)
-            stringFile = os.fdopen(fileID, 'w')
-            stringFile.write(dedent(source))
-            stringFile.close()
-            return path, [creationDir]
-
-        self.__filename, searchPath = createTmpModule()
-        moduleName = os.path.splitext(os.path.basename(self.__filename))[0]
-        self.__modDeserial = TopicDefnDeserialModule(moduleName, searchPath)
+        source = "class TopicTree:\n" + indent(dedent(source), ' '*4)
+        namespace = {}
+        exec(source, namespace)
+        self.__modDeserial = TopicDefnDeserialClass(namespace['TopicTree'])
 
     def getTreeDoc(self) -> str:
         return self.__modDeserial.getTreeDoc()
@@ -331,21 +322,6 @@ class TopicDefnDeserialString(ITopicDefnDeserializer):
 
     def doneIter(self):
         self.__modDeserial.doneIter()
-        # remove the temporary module; it might be locked for some time by the interpreter,
-        # so try a number of times:
-        NUM_TRIES = 50
-        for count in range(NUM_TRIES):
-            try:
-                os.remove(self.__filename)
-                break
-            except PermissionError:
-                pass
-
-        # and remove its byte-compiled version:
-        try:
-            os.remove(cache_from_source(self.__filename))
-        except FileNotFoundError:
-            pass  # don't care if file already removed
 
     def resetIter(self):
         self.__modDeserial.resetIter()

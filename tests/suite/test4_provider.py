@@ -207,7 +207,7 @@ def test_provider():
     assert not topicMgr.getTopic('root_topic_1.subtopic_2.subsubtopic_21').isValid(sub_21_bad)
 
 
-@pytest.mark.parametrize('repeat', range(1))
+@pytest.mark.parametrize('repeat', range(100))
 def test_export(repeat):
     # create a topic tree from a couple of the topic providers:
     clear_topic_tree()
@@ -226,15 +226,13 @@ def test_export(repeat):
     try_call(100, cleanup_py_files, 'my_exported_topics.py')
 
 
-def test_import_export_no_change():
-    #
-    # Test that import/export/import does not change the import
-    #
+def test_string_prov_export():
+    clear_topic_tree()
 
     importStr = '''
         """Tree docs, can be anything you want."""
 
-        class test_import_export_no_change:
+        class root_topic_1:
             """Root topic 1."""
 
             class subtopic_1:
@@ -252,21 +250,27 @@ def test_import_export_no_change():
                         for arg2
                     """
                     pass
+
+        class root_topic_2:
+            """Root topic 2."""
+
         '''
     pub.clearTopicDefnProviders()
     provider = pub.addTopicDefnProvider(importStr, pub.TOPIC_TREE_FROM_STRING)
     treeDoc = provider.getTreeDoc()
     assert treeDoc == """Tree docs, can be anything you want."""
-    root = topicMgr.getOrCreateTopic('test_import_export_no_change.subtopic_1')
+    root = topicMgr.getOrCreateTopic('root_topic_1.subtopic_1')
+    assert root is not None
+    assert topicMgr.getOrCreateTopic('root_topic_2').hasMDS()
 
     # few sanity checks
     def sub_1(arg1, arg2=None): pass
 
     assert root.hasMDS()
-    assert pub.isValid(sub_1, 'test_import_export_no_change.subtopic_1')
+    assert pub.isValid(sub_1, 'root_topic_1.subtopic_1')
 
     # export tree
-    exported = pub.exportTopicTreeSpec(rootTopic='test_import_export_no_change', moduleDoc=treeDoc)
+    exported = pub.exportTopicTreeSpec(rootTopic='root_topic_1', moduleDoc=treeDoc)
     # print(exported)
 
     expectExport = '''\
@@ -284,7 +288,7 @@ def test_import_export_no_change():
         """
 
 
-        class test_import_export_no_change:
+        class root_topic_1:
             """
             Root topic 1.
             """
@@ -321,7 +325,7 @@ def test_import_export_no_change():
     modDoc = provider.getTreeDoc()
     assert modDoc.startswith('\nTree docs, can be anything you')
     pub.exportTopicTreeSpec('test4_prov_module_actual',
-                            rootTopic='test_import_export_no_change2', moduleDoc=treeDoc)
+                            rootTopic='root_topic_1b', moduleDoc=treeDoc)
     lines1 = open('test4_prov_module_actual.py', 'r').readlines()
     lines2 = open('test4_prov_module_expect.py', 'r').readlines()
     diffs = ndiff(lines1, lines2)

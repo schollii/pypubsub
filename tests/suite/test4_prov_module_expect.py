@@ -12,7 +12,7 @@ Tree docs, can be anything you want.
 """
 
 
-class test_import_export_no_change2:
+class root_topic_1b:
     """
     Root topic 1.
     """
