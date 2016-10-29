@@ -4,13 +4,22 @@
 """
 
 import os, re, inspect, io
-from textwrap import TextWrapper, dedent, indent
+from textwrap import TextWrapper, dedent
 import sys
 from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union, TextIO
 try:
     from importlib.util import cache_from_source
 except ImportError:
     from imp import cache_from_source
+
+try:
+    # raise ImportError
+    from textwrap import indent
+except ImportError:
+    def indent(text, prefix):
+        new_text =  ''.join(((prefix + line) if line.strip() else '\n') for line in text.splitlines(True))
+        return new_text
+
 
 from .topicargspec import (
     topicArgsFromCallable,
@@ -312,22 +321,22 @@ class TopicDefnDeserialString(ITopicDefnDeserializer):
         source = "class TopicTree:\n" + indent(dedent(source), ' '*4)
         namespace = {}
         exec(source, namespace)
-        self.__modDeserial = TopicDefnDeserialClass(namespace['TopicTree'])
+        self.__clsDeserial = TopicDefnDeserialClass(namespace['TopicTree'])
 
     def getTreeDoc(self) -> str:
-        return self.__modDeserial.getTreeDoc()
+        return self.__clsDeserial.getTreeDoc()
 
     def getNextTopic(self) -> ITopicDefnDeserializer.TopicDefn:
-        return self.__modDeserial.getNextTopic()
+        return self.__clsDeserial.getNextTopic()
 
     def doneIter(self):
-        self.__modDeserial.doneIter()
+        self.__clsDeserial.doneIter()
 
     def resetIter(self):
-        self.__modDeserial.resetIter()
+        self.__clsDeserial.resetIter()
 
     def getDefinedTopics(self) -> List[str]:
-        return self.__modDeserial.getDefinedTopics()
+        return self.__clsDeserial.getDefinedTopics()
 
 
 TOPIC_TREE_FROM_MODULE = 'module'
