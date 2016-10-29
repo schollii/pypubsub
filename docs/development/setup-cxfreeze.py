@@ -11,6 +11,7 @@ else:
 
 opts = { 'compressed' : True,
          'create_shared_zip' : False,
+         'packages' : ['pubsub.core.kwargs', 'pubsub.core.arg1'],
          }
 
 WIN_Target = cxExecutable(

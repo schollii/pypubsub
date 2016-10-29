@@ -1,5 +1,5 @@
 #!python
-# -----------------------------
+#-----------------------------
 # Name:     PyPubSubMonitor
 # Purpose:  A pubsub activity monitor
 #
@@ -7,7 +7,7 @@
 #
 # Date:     20-Aug-2008
 # Last Rev: 127 (Last revision this code was checked with)
-# -------------------------------------
+#-------------------------------------
 
 # NOTE: The Tool and Mixin components (including the
 # docstrings) borrow heavily on Robin Dunn's wxInspectionTool
@@ -20,7 +20,6 @@ from pubsub import pubsubconf as conf
 
 conf.setNotifierClass(utils.NotifyByPubsubMessage)
 pub.setNotificationFlags(all=True)
-
 
 ### MonitorTopics
 ###  Three topics for PyPubSub messages to control the monitor
@@ -40,47 +39,39 @@ class MonitorTopics(utils.TopicTreeDefnSimple):
             """Toggles the monitor to be shown or hidden"""
 
 
-pub.addTopicDefnProvider(MonitorTopics())
-
+pub.addTopicDefnProvider( MonitorTopics() )
 
 class MonitorTool:
-    """
-    The MonitorTool is a singleton based on the
+    """The MonitorTool is a singleton based on the
     wx.lib.inspection.InspectionTool.
     """
     __shared_state = {}
-
     def __init__(self):
         self.__dict__ = self.__shared_state
         if not hasattr(self, 'initialized'):
             self.initialized = False
         pub.subscribe(self.Show, 'monitor.show')
-        print
-        "Made Monitor Tool"
-        tobj = pub.getTopic('monitor.show')
-        print
-        tobj
+        print "Made Monitor Tool"
+        tobj= pub.getTopic('monitor.show')
+        print tobj
 
-    def Init(self, app=None):
+    def Init(self,app = None):
         self._frame = None
         self._app = app
         if not self._app:
             self._app = wx.GetApp()
         self.initialized = True
-        print
-        "Monitor Tool Init"
+        print "Monitor Tool Init"
 
     def Show(self, show):
-        print
-        "Monitor Tool Show"
+        print "Monitor Tool Show"
         if not self.initialized:
             self.Init()
 
         parent = self._app.GetTopWindow()
         if not self._frame:
-            self._frame = MonitorFrame(parent=parent)
+            self._frame = MonitorFrame(parent = parent)
         self._frame.Show(show)
-
 
 class MonitorMixin(object):
     """
@@ -95,30 +86,29 @@ class MonitorMixin(object):
     MonitorMixin and then call the `Init` method from the app's
     OnInit.
     """
-
-    def Init(self, alt=True, cmd=True, shift=False, keycode=ord('M')):
+    def Init(self, alt=True, cmd = True, shift = False, keycode = ord('M')):
         self.Bind(wx.EVT_KEY_DOWN, self._OnKeyPress)
         self._alt = alt
         self._cmd = cmd
         self._shift = shift
         self._keycode = keycode
         MonitorTool().Init(self)
-        print
-        "Mixin Init"
+        print "Mixin Init"
 
     def _OnKeyPress(self, evt):
         if evt.AltDown() == self._alt and \
-                        evt.CmdDown() == self._cmd and \
-                        evt.ShiftDown() == self._shift and \
-                        evt.GetKeyCode() == self._keycode:
+           evt.CmdDown() == self._cmd and \
+           evt.ShiftDown() == self._shift and \
+           evt.GetKeyCode() == self._keycode:
             self.ShowMonitorTool()
         else:
             evt.Skip()
 
     def ShowMonitorTool(self):
-        print
-        "Mixin Show"
+        print "Mixin Show"
         MonitorTool().Show(True)
+
+
 
 
 class MonitorFrame(wx.Frame):
@@ -126,11 +116,10 @@ class MonitorFrame(wx.Frame):
     This is the main monitor frame. Interaction between varying panels
     is done through direct method calls to prevent message clutter
     """
-
-    def __init__(self, parent):
-        wx.Frame.__init__(self, parent, size=(700, 600), title="PyPubSubMonitor")
+    def __init__(self,parent):
+        wx.Frame.__init__(self, parent, size= (700,600), title = "PyPubSubMonitor")
         panel = wx.Panel(self)
-        splitter = wx.SplitterWindow(panel, style=wx.SP_BORDER)
+        splitter = wx.SplitterWindow(panel, style = wx.SP_BORDER)
 
         self.NotifyControl = NotifierPanel(panel)
         self.TopicTree = TopicTreePanel(splitter)
@@ -138,7 +127,7 @@ class MonitorFrame(wx.Frame):
         self.Entry = LastLogEntryPanel(panel)
         self.Count = CountPanel(panel)
 
-        ##        redirect = Redirector(self.Log.getText())
+##        redirect = Redirector(self.Log.getText())
         self.Logger = MonitorLogger(pub, self.Log)
 
         pub.subscribe(self.psUpdate, pub.ALL_TOPICS)
@@ -148,22 +137,21 @@ class MonitorFrame(wx.Frame):
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         row = wx.BoxSizer(wx.HORIZONTAL)
-        row.Add(self.NotifyControl, 0, wx.EXPAND | wx.ALL, 3)
+        row.Add(self.NotifyControl, 0, wx.EXPAND|wx.ALL, 3)
 
         splitter.SetMinimumPaneSize(20)
         splitter.SetSashGravity(0.5)
         splitter.SplitVertically(self.TopicTree, self.Log, 0)
 
-        row.Add(splitter, 1, wx.EXPAND | wx.GROW | wx.ALL, 3)
+        row.Add(splitter, 1, wx.EXPAND|wx.GROW| wx.ALL, 3)
         sizer.Add(row, 1, wx.EXPAND | wx.GROW | wx.ALL, 3)
-        sizer.Add(self.Entry, 0, wx.EXPAND | wx.ALL, 3)
-        sizer.Add(self.Count, 0, wx.EXPAND | wx.ALL, 3)
+        sizer.Add(self.Entry,0,wx.EXPAND|wx.ALL, 3)
+        sizer.Add(self.Count, 0, wx.EXPAND|wx.ALL, 3)
         panel.SetSizerAndFit(sizer)
         self.Layout()
         self.Refresh()
         self.Bind(wx.EVT_CLOSE, self.OnClose)
-        print
-        "Frame Init"
+        print "Frame Init"
 
     def OnClose(self, evt):
         """Turn off notifications before closing down
@@ -172,9 +160,7 @@ class MonitorFrame(wx.Frame):
         evt.Skip()
 
     def psShow(self, show): self.Show(bool(show))
-
     def psHide(self): self.Hide()
-
     def psToggle(self): self.Show(not self.IsShown())
 
     def psUpdate(self, msgTopic=pub.AUTO_TOPIC):
@@ -183,22 +169,20 @@ class MonitorFrame(wx.Frame):
         self.Entry.SetPSTopic(self.Logger.lastLogTopic.getName())
         self.Count.count(self.Logger.lastLogTopic.getName())
 
-
 class NotifierPanel(wx.Panel):
     """NotifierPanel
     Seven toggle buttons to control which kinds of messages the
     monitor will pay attention to.
     """
-
     def __init__(self, parent):
-        wx.Panel.__init__(self, parent, name="notifier control")
-        box = wx.StaticBox(self, label="Notifiers")
+        wx.Panel.__init__(self, parent, name = "notifier control")
+        box = wx.StaticBox(self, label = "Notifiers")
 
-        allBtn = wx.ToggleButton(self, label="all")
+        allBtn = wx.ToggleButton(self, label = "all")
         allBtn.SetValue(True)
         allBtn.Bind(wx.EVT_TOGGLEBUTTON, self.OnNotifyAll)
 
-        self.subBtn = wx.ToggleButton(self, label="subscribe")
+        self.subBtn = wx.ToggleButton(self, label = "subscribe")
         self.subBtn.SetValue(True)
         self.subBtn.Bind(wx.EVT_TOGGLEBUTTON, self.OnSubscribe)
 
@@ -222,20 +206,21 @@ class NotifierPanel(wx.Panel):
         self.deadBtn.SetValue(True)
         self.deadBtn.Bind(wx.EVT_TOGGLEBUTTON, self.OnDead)
 
-        btnpad = wx.LEFT | wx.RIGHT | wx.EXPAND
+        btnpad = wx.LEFT|wx.RIGHT|wx.EXPAND
         sizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         sizer.Add(allBtn, 0, btnpad, 3)
-        sizer.Add(wx.StaticLine(self, wx.HORIZONTAL), 0, wx.ALL | wx.EXPAND, 2)
+        sizer.Add(wx.StaticLine(self, wx.HORIZONTAL),0, wx.ALL|wx.EXPAND, 2)
         sizer.Add(self.subBtn, 0, btnpad, 3)
         sizer.Add(self.unsubBtn, 0, btnpad, 3)
         sizer.Add(self.sendBtn, 0, btnpad, 3)
-        sizer.Add(wx.StaticLine(self, wx.HORIZONTAL), 0, wx.ALL | wx.EXPAND, 2)
+        sizer.Add(wx.StaticLine(self, wx.HORIZONTAL), 0, wx.ALL|wx.EXPAND, 2)
         sizer.Add(self.newTBtn, 0, btnpad, 3)
         sizer.Add(self.delTBtn, 0, btnpad, 3)
         sizer.Add(self.deadBtn, 0, btnpad, 3)
 
         self.SetSizerAndFit(sizer)
         self.Layout()
+
 
     def OnNotifyAll(self, evt):
         val = evt.IsChecked()
@@ -265,18 +250,16 @@ class NotifierPanel(wx.Panel):
     def OnDead(self, evt):
         pub.setNotificationFlags(deadListener=evt.IsChecked())
 
-
-class TopicTreePanel(wx.Panel):
+class TopicTreePanel (wx.Panel):
     """MonitorTreePanel
     Contains the topic tree and a few controls, including
     an instance of TopicDescriptionPanel
     """
-
-    def __init__(self, parent, *args, **kwargs):
-        wx.Panel.__init__(self, parent, *args, **kwargs)
+    def __init__(self,parent,*args,**kwargs):
+        wx.Panel.__init__(self,parent,*args,**kwargs)
         box = wx.StaticBox(self, label="Topic Tree")
         sizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        label = wx.StaticText(self, label="RightClick on any item in the tree")
+        label = wx.StaticText(self,label="RightClick on any item in the tree")
         ### Create a dummy panel
         self.tdp = wx.Panel(self)
         tree = TopicTree(self)
@@ -284,31 +267,30 @@ class TopicTreePanel(wx.Panel):
         refreshButton.Bind(wx.EVT_BUTTON, tree._load)
 
         sizer.Add(label)
-        sizer.Add(tree, 1, wx.EXPAND)
+        sizer.Add(tree,1, wx.EXPAND)
         sizer.Add(refreshButton, 0, wx.EXPAND | wx.ALL, 3)
         sizer.Add(self.tdp, 0, wx.EXPAND)
 
         self.SetSizerAndFit(sizer)
         self.Layout()
 
-    def SetTopicDescription(self, tObj):
+    def SetTopicDescription(self,tObj):
         """Replace the current topic description with a new one"""
         tdp = TopicDescriptionPanel(self, tObj)
         sizer = self.GetSizer()
         sizer.Detach(self.tdp)
         self.tdp.Destroy()
-        sizer.Add(tdp, 0, wx.EXPAND | wx.ALL, 3)
+        sizer.Add(tdp, 0, wx.EXPAND|wx.ALL, 3)
         self.tdp = tdp
         self.Layout()
         self.Refresh()
-
 
 class TopicTreeFiller(utils.ITopicTreeTraverser):
     """Link a pubsub.utils.ITopicTreeTraverser to a wxTreeCtrl
     Call traverse(topicObj) to fill
     """
 
-    def __init__(self, wxTree=None, startTopic=None):
+    def __init__(self,wxTree = None, startTopic = None):
         if wxTree is None:
             raise RunTimeError, "TopicTreeFiller needs a wx.TreeCtrl to work with"
 
@@ -319,7 +301,7 @@ class TopicTreeFiller(utils.ITopicTreeTraverser):
         self.lastT = self.root
         self.Topics = [self.root]
 
-    def _onTopic(self, topicObj):
+    def _onTopic(self,topicObj):
         if topicObj is not self.startTopic:
             top = self.Tree.AppendItem(self.Topics[-1], str(topicObj.getName()))
             self.lastT = top
@@ -330,15 +312,13 @@ class TopicTreeFiller(utils.ITopicTreeTraverser):
     def _endChildren(self):
         self.Topics.pop()
 
-
 class TopicTree(wx.TreeCtrl):
     """Subclass of wxTreeCtrl, sits in a TopicTreePanel object
     Uses direct method calls, even though this is exactly what
     pubsub is supposed to do. I don't want to create messasge static
     in the monitor
     """
-
-    def __init__(self, parent):
+    def __init__(self,parent):
         wx.TreeCtrl.__init__(self, parent)
         self._load()
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelection)
@@ -354,20 +334,20 @@ class TopicTree(wx.TreeCtrl):
         tName = self.GetItemText(self.GetSelection())
         tObj = pub.getTopic(str(tName))
         if tObj.hasListeners():
-            llist = '\n'.join([repr(l.getCallable()) for l in tObj.getListenersIter()])
+            llist= '\n'.join([repr(l.getCallable()) for l in tObj.getListenersIter()])
         else:
-            llist = "No listeners"
-        wx.MessageBox(llist, "Topic Listeners", style=wx.OK)
+            llist= "No listeners"
+        wx.MessageBox(llist, "Topic Listeners", style= wx.OK)
 
-    def OnRightClick(self, evt):
-        self.SelectItem(evt.GetItem())
-        if not hasattr(self, 'sendmessageID'):
+    def OnRightClick(self,evt):
+        self.SelectItem( evt.GetItem())
+        if not hasattr(self,'sendmessageID'):
             self.sendmessageID = wx.NewId()
             self.showlistenersID = wx.NewId()
             self.Bind(wx.EVT_MENU, self.SendPubSubMessage)
             self.Bind(wx.EVT_MENU, self.ShowListeners)
         menu = wx.Menu()
-        menu.Append(self.sendmessageID, "Send Message")
+        menu.Append(self.sendmessageID,"Send Message")
         menu.Append(self.showlistenersID, "Show Listeners")
         self.PopupMenu(menu)
 
@@ -382,7 +362,6 @@ class TopicTree(wx.TreeCtrl):
         trv.traverse(pub.getTopic(pub.ALL_TOPICS))
         self.Expand(self.GetRootItem())
 
-
 class SendMessageDialog(wx.Dialog):
     """SendMessageDialog
     create a dialog with the topic description panel and
@@ -393,16 +372,15 @@ class SendMessageDialog(wx.Dialog):
     To get OnSendMessage to work, there needs to be a better
     way to know what the listener expects for each argument.
     """
-
-    def __init__(self, parent, tObj):
-        wx.Dialog.__init__(self, parent, title="Send Message")
+    def __init__(self,parent,tObj):
+        wx.Dialog.__init__(self, parent, title = "Send Message")
         self.topicObj = tObj
         s = wx.BoxSizer(wx.VERTICAL)
-        self.tdp = TopicDescriptionPanel(self, tObj, useTextCtrl=True)
+        self.tdp = TopicDescriptionPanel(self, tObj, useTextCtrl = True)
         checkButton = wx.Button(self, label="Check")
         checkButton.Bind(wx.EVT_BUTTON, self.CheckTopic)
 
-        sendButton = wx.Button(self, id=wx.ID_OK, label="Send")
+        sendButton = wx.Button(self, id = wx.ID_OK, label="Send")
         sendButton.Bind(wx.EVT_BUTTON, self.OnSendMessage)
 
         cancelButton = wx.Button(self, wx.ID_CANCEL)
@@ -420,12 +398,12 @@ class SendMessageDialog(wx.Dialog):
         args = {}
         for key in self.tdp.topicArgs:
             args[key] = self.tdp.topicArgs[key].GetValue()
-        ##        print args
+##        print args
         ok = self.topicObj.checkArgs(args)
         ### currently gets None from topic.checkArgs
         ###  topic.checkArgs should return True or False
         if ok:
-            wx.MessageBox('Arguments check out', 'Check Args')
+            wx.MessageBox('Arguments check out','Check Args')
         else:
             wx.MessageBox("Arguments don't check", "Check Args")
 
@@ -435,25 +413,23 @@ class SendMessageDialog(wx.Dialog):
         """
         wx.MessageBox("This feature is not complete. See the doc string", "Not Implemented")
 
-
 class TopicDescriptionPanel(wx.Panel):
     """TopicDescriptionPanel(parent, tObj)
     Creates a panel describing the topic object
     """
-
-    def __init__(self, parent, tObj, useTextCtrl=False):
-        wx.Panel.__init__(self, parent, name="topicDescription")
-        box = wx.StaticBox(self, label="Topic Information")
+    def __init__(self, parent, tObj, useTextCtrl = False):
+        wx.Panel.__init__(self, parent, name = "topicDescription" )
+        box = wx.StaticBox(self, label = "Topic Information")
         sizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         dtext = "%s [%s]\n(%d listener%s)" % \
-                (tObj.getName(),
-                 tObj.getDescription(),
-                 tObj.getNumListeners(),
-                 "" if tObj.getNumListeners() == 1 else "s")
-        self.desc = wx.StaticText(self, label=dtext)
-        self.desc.Wrap(self.Parent.GetSize()[0] - 6)
-        sizer.Add(self.desc, 0, wx.EXPAND | wx.ALL, 2)
-        grid = wx.FlexGridSizer(cols=2, vgap=3, hgap=2)
+            (tObj.getName(),
+            tObj.getDescription(),
+            tObj.getNumListeners(),
+            "" if tObj.getNumListeners() == 1 else "s")
+        self.desc = wx.StaticText(self, label = dtext )
+        self.desc.Wrap(self.Parent.GetSize()[0]-6)
+        sizer.Add(self.desc, 0, wx.EXPAND|wx.ALL, 2)
+        grid = wx.FlexGridSizer(cols= 2, vgap = 3, hgap = 2)
         grid.AddGrowableCol(1)
         req, opt, com = tObj.getArgs()
         dscs = tObj.getArgDescriptions()
@@ -463,32 +439,30 @@ class TopicDescriptionPanel(wx.Panel):
             grid.Add(wx.StaticText(self, label=lbl), 0, wx.ALIGN_RIGHT)
             if useTextCtrl:
                 dsc = wx.TextCtrl(self)
-                dsc.SetToolTipString(dscs.get(arg, "none"))
+                dsc.SetToolTipString(dscs.get(arg,"none"))
                 self.topicArgs[arg] = dsc
             else:
-                dsc = wx.StaticText(self, label=dscs.get(arg, "None"))
-            grid.Add(dsc, 1, wx.ALIGN_LEFT | wx.EXPAND)
+                dsc = wx.StaticText(self, label= dscs.get(arg,"None"))
+            grid.Add(dsc, 1, wx.ALIGN_LEFT|wx.EXPAND)
 
         sizer.Add(grid, 1, wx.EXPAND | wx.ALL, 2)
         self.SetSizerAndFit(sizer)
         self.Layout()
 
-        self.Bind(wx.EVT_SIZE, self.OnSize)
-        # ~ print dir(tObj)
+        self.Bind(wx.EVT_SIZE,self.OnSize)
+        #~ print dir(tObj)
         ### Some code to explore the types of arguments the listener
         ### expects, strings, booleans, dictionary, etc.
+##        if tObj.hasListeners():
+##            listener = tObj.getListeners()[0]
+##            print listener, listener.__class__, listener.getCallable()
+##            print inspect.getargspec(listener.getCallable())
 
-    ##        if tObj.hasListeners():
-    ##            listener = tObj.getListeners()[0]
-    ##            print listener, listener.__class__, listener.getCallable()
-    ##            print inspect.getargspec(listener.getCallable())
-
-    def OnSize(self, evt):
-        self.desc.Wrap(evt.GetSize()[0] - 6)
+    def OnSize(self,evt):
+        self.desc.Wrap(evt.GetSize()[0]-6)
 
         self.Parent.Refresh()
         evt.Skip()
-
 
 class MonitorLogger:
     """
@@ -523,7 +497,7 @@ class MonitorLogger:
     prefix = 'PUBSUB: '
     import sys
 
-    def __init__(self, publisher=None, out=sys.stdout):
+    def __init__(self, publisher=None,out = sys.stdout):
         """If publisher is not None, then all self's methods
         are subscribed to the 'pubsub.*' topics by using
         publisher.subscribe(). """
@@ -535,18 +509,18 @@ class MonitorLogger:
 
         if publisher is not None:
             pub = publisher
-            pub.subscribe(self.subscribe, 'pubsub.subscribe')
-            pub.subscribe(self.newTopic, 'pubsub.newTopic')
-            pub.subscribe(self.delTopic, 'pubsub.delTopic')
-            pub.subscribe(self.unsubscribe, 'pubsub.unsubscribe')
-            pub.subscribe(self.sendMessage, 'pubsub.sendMessage')
+            pub.subscribe(self.subscribe,    'pubsub.subscribe')
+            pub.subscribe(self.newTopic,     'pubsub.newTopic')
+            pub.subscribe(self.delTopic,     'pubsub.delTopic')
+            pub.subscribe(self.unsubscribe,  'pubsub.unsubscribe')
+            pub.subscribe(self.sendMessage,  'pubsub.sendMessage')
             pub.subscribe(self.deadListener, 'pubsub.deadListener')
-            pub.subscribe(self.all, 'pubsub')
+            pub.subscribe(self.all,          'pubsub')
 
-    def setOut(self, out):
+    def setOut(self,out):
         self._out = out
 
-    def all(self, msgTopic=pub.AUTO_TOPIC):
+    def all(self,msgTopic=pub.AUTO_TOPIC):
         self.counts['all'] += 1
         self.lastLogTopic = msgTopic
 
@@ -563,10 +537,9 @@ class MonitorLogger:
         self.lastLogTopic = 'pubsub.subscribe'
         self.counts['sub'] += 1
         self.lastMsg = msg
+##        print msg
 
-    ##        print msg
-
-    def unsubscribe(self, topic=None, listener=None, listenerRaw=None):
+    def unsubscribe(self, topic=None, listener=None, listenerRaw = None):
         """Give this to pub.subscribe() as listener of
         'pubsub.unsubscribe' mesages. """
         msg = '%sUnsubscribed listener %s from topic "%s"\n'
@@ -576,8 +549,7 @@ class MonitorLogger:
         self.lastLogTopic = 'pubsub.unsubscribe'
         self.lastMsg = msg
         self.counts['unsub'] += 1
-
-    ##        print msg
+##        print msg
 
     def newTopic(self, topic=None, args=None, description=None, required=None):
         """Give this to pub.subscribe() as listener of
@@ -588,12 +560,11 @@ class MonitorLogger:
         msg = '%sNew topic "%s" created (%s)\n'
         msg = msg % (self.prefix, topic.getName(), description)
         self._out.write(msg)
-        self.lastTopic = topic.getName()
+        self.lastTopic=topic.getName()
         self.lastLogTopic == 'pubsub.newTopic'
         self.lastMsg = msg
         self.counts['newt'] += 1
-
-    ##        print msg
+##        print msg
 
     def delTopic(self, name=None):
         """Give this to pub.subscribe() as listener of
@@ -605,8 +576,7 @@ class MonitorLogger:
         self.lastLogTopic = 'pubsub.delTopic'
         self.lastMsg = msg
         self.counts['delt'] += 1
-
-    ##        print msg
+##        print msg
 
     def sendMessage(self, topic=None, stage=None):
         """Give this to pub.subscribe() as listener of
@@ -623,7 +593,7 @@ class MonitorLogger:
             msg = "%sSent '%s' message\n"
             msg = msg % (self.prefix, topic.getName())
             self._out.write(msg)
-        ##        print msg
+##        print msg
 
     def deadListener(self, topic=None, listener=None):
         """Give this to pub.subscribe() as a listener of
@@ -635,8 +605,6 @@ class MonitorLogger:
         self.lastTopic = topic.getName()
         self.lastLogTopic = 'pubsub.deadlistener'
         self.counts['dead'] += 1
-
-
 ##        print msg
 
 ##class Redirector:
@@ -657,11 +625,11 @@ class MonitorLogger:
 
 class LogPanel(wx.Panel):
     def __init__(self, parent):
-        wx.Panel.__init__(self, parent, name="log")
-        box = wx.StaticBox(self, label="Log")
+        wx.Panel.__init__(self, parent, name ="log")
+        box = wx.StaticBox(self, label= "Log")
         sizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        self.Text = wx.TextCtrl(self, style=wx.TE_READONLY | wx.TE_DONTWRAP | wx.TE_MULTILINE)
-        sizer.Add(self.Text, 1, wx.EXPAND | wx.GROW | wx.ALL, 2)
+        self.Text = wx.TextCtrl(self, style = wx.TE_READONLY | wx.TE_DONTWRAP | wx.TE_MULTILINE)
+        sizer.Add(self.Text, 1, wx.EXPAND | wx.GROW |wx.ALL, 2)
         self.SetSizerAndFit(sizer)
         self.Layout()
 
@@ -669,14 +637,14 @@ class LogPanel(wx.Panel):
         return self.Text
 
     def write(self, text):
-        ##        print "writing"
+##        print "writing"
         self.Text.AppendText(text)
 
 
 class LastLogEntryPanel(wx.Panel):
     def __init__(self, parent):
-        wx.Panel.__init__(self, parent, name="last log")
-        box = wx.StaticBox(self, label="Last Log Entry")
+        wx.Panel.__init__(self, parent, name = "last log")
+        box = wx.StaticBox(self, label = "Last Log Entry")
 
         messageLabel = wx.StaticText(self, label="Message:")
         self.messageText = wx.TextCtrl(self, name="messageText")
@@ -685,19 +653,20 @@ class LastLogEntryPanel(wx.Panel):
         pstopicLabel = wx.StaticText(self, label="psTopic:")
         self.pstopicText = wx.TextCtrl(self, name="pstopicText")
 
+
         sizer = wx.StaticBoxSizer(box, wx.VERTICAL)
         row = wx.BoxSizer(wx.HORIZONTAL)
-        row.Add(messageLabel, 0, wx.ALIGN_RIGHT | wx.ALIGN_CENTRE_VERTICAL)
-        row.Add(self.messageText, 1, wx.LEFT | wx.EXPAND, 3)
+        row.Add(messageLabel, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTRE_VERTICAL)
+        row.Add(self.messageText, 1, wx.LEFT|wx.EXPAND, 3)
         sizer.Add(row, 0, wx.EXPAND)
 
         row = wx.BoxSizer(wx.HORIZONTAL)
-        row.Add(topicLabel, 0, wx.ALIGN_RIGHT | wx.ALIGN_CENTRE_VERTICAL)
-        row.Add(self.topicText, 1, wx.LEFT | wx.EXPAND, 3)
+        row.Add(topicLabel, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTRE_VERTICAL)
+        row.Add(self.topicText, 1, wx.LEFT|wx.EXPAND, 3)
 
-        row.Add(pstopicLabel, 0, wx.LEFT | wx.ALIGN_RIGHT | wx.ALIGN_CENTRE_VERTICAL, 6)
-        row.Add(self.pstopicText, 1, wx.LEFT | wx.EXPAND, 3)
-        sizer.Add(row, 0, wx.EXPAND | wx.TOP, 3)
+        row.Add(pstopicLabel, 0, wx.LEFT|wx.ALIGN_RIGHT|wx.ALIGN_CENTRE_VERTICAL, 6)
+        row.Add(self.pstopicText, 1, wx.LEFT|wx.EXPAND, 3)
+        sizer.Add(row, 0, wx.EXPAND|wx.TOP, 3)
 
         self.SetSizerAndFit(sizer)
         self.Layout()
@@ -713,7 +682,7 @@ class LastLogEntryPanel(wx.Panel):
 
 
 class CountPanel(wx.Panel):
-    def __init__(self, parent):
+    def __init__(self,parent):
         wx.Panel.__init__(self, parent, name="counts")
         box = wx.StaticBox(self, label="Counts")
         sizer = wx.StaticBoxSizer(box, wx.VERTICAL)
@@ -722,52 +691,43 @@ class CountPanel(wx.Panel):
         counts = {}
         for c in lbls:
             t = wx.StaticText(self, label="0", name="count_%s" % c,
-                              style=wx.ALIGN_CENTRE | wx.ST_NO_AUTORESIZE | wx.SIMPLE_BORDER)
-            grid.Add(t, 0,
-                     wx.TOP | wx.LEFT | wx.RIGHT | wx.EXPAND | wx.ALIGN_CENTRE_VERTICAL | wx.ALIGN_CENTRE_HORIZONTAL, 2)
+                              style=wx.ALIGN_CENTRE|wx.ST_NO_AUTORESIZE|wx.SIMPLE_BORDER)
+            grid.Add(t, 0, wx.TOP|wx.LEFT|wx.RIGHT|wx.EXPAND|wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_CENTRE_HORIZONTAL, 2)
         for c in lbls:
             t = wx.StaticText(self, label=c)
-            grid.Add(t, 0, wx.ALIGN_CENTRE_VERTICAL | wx.ALIGN_CENTRE_HORIZONTAL)
+            grid.Add(t, 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALIGN_CENTRE_HORIZONTAL)
 
-        sizer.Add(grid, 1, wx.EXPAND | wx.GROW)
+        sizer.Add(grid, 1, wx.EXPAND|wx.GROW)
         self.SetSizerAndFit(sizer)
         self.Layout()
 
     def count(self, topicname):
-        ##        print "counting:",topicname
+##        print "counting:",topicname
         garbage, topicname = topicname.split('.')
-        if topicname == 'sendMessage':
-            topicname = 'send'
-        if topicname == 'unsubscribe':
-            topicname = 'unsub'
-        if topicname == 'newTopic':
-            topicname = 'newt'
-        if topicname == 'delTopic':
-            topicname = 'delt'
-        if topicname == 'deadListener':
-            topicname = 'dead'
+        if topicname == 'sendMessage' : topicname = 'send'
+        if topicname == 'unsubscribe' : topicname = 'unsub'
+        if topicname == 'newTopic': topicname = 'newt'
+        if topicname == 'delTopic': topicname = 'delt'
+        if topicname == 'deadListener': topicname = 'dead'
         lbl = self.FindWindowByName("count_%s" % topicname)
         if lbl:
             c = int(lbl.GetLabel())
-            lbl.SetLabel(str(c + 1))
+            lbl.SetLabel(str(c+1))
         else:
-            print
-            "something has gone wrong with", topicname
+            print "something has gone wrong with", topicname
         alllbl = self.FindWindowByName('count_all')
-        alllbl.SetLabel(str(int(alllbl.GetLabel()) + 1))
-
+        alllbl.SetLabel(str(int(alllbl.GetLabel())+1))
 
 def test():
     """This test opens the MonitorFrame, as well as a frame
     with a show and hide button
     """
-
     class showFrame(wx.Frame):
         def __init__(self, parent):
             wx.Frame.__init__(self, parent, title="Monitor Toggle")
-            sbtn = wx.Button(self, label="Show Frame")
+            sbtn = wx.Button(self, label = "Show Frame")
             sbtn.Bind(wx.EVT_BUTTON, self.SendShowMsg)
-            hbtn = wx.Button(self, label="Hide Frame")
+            hbtn = wx.Button(self, label = "Hide Frame")
             hbtn.Bind(wx.EVT_BUTTON, self.SendHideMsg)
 
             s = wx.BoxSizer(wx.VERTICAL)
@@ -777,39 +737,30 @@ def test():
             self.Layout()
 
         def SendShowMsg(self, evt):
-            print
-            "pressed show button"
-            pub.sendMessage('monitor.show', show=True)
+            print "pressed show button"
+            pub.sendMessage('monitor.show', show = True)
 
         def SendHideMsg(self, evt):
-            print
-            "pressed hide button"
+            print "pressed hide button"
             pub.sendMessage('monitor.hide')
 
     class myApp(wx.App, MonitorMixin):
         def OnInit(self):
-            print
-            "Making App"
+            print "Making App"
             MonitorMixin.Init(self)
             show = showFrame(None)
             self.SetTopWindow(show)
             show.Show()
             show.Raise()
-            print
-            "OnInit end"
+            print "OnInit end"
             return True
-
     a = myApp(False)
-    print
-    "Made app. Starting Mainloop"
+    print "Made app. Starting Mainloop"
     a.MainLoop()
-    print
-    "Done with main loop"
+    print "Done with main loop"
     a.Destroy()
     pub.delTopic('test')
 
-
-if __name__ == '__main__':
-    print
-    "testing"
+if __name__=='__main__':
+    print "testing"
     test()

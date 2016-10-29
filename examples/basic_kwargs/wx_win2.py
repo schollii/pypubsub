@@ -7,6 +7,7 @@ Widget from which money can be added or removed from account.
 
 import wx
 from pubsub import pub
+from pubsub.py2and3 import print_
 
 
 class ChangerWidget(wx.Frame):
@@ -27,11 +28,11 @@ class ChangerWidget(wx.Frame):
     self.remove.Bind(wx.EVT_BUTTON, self.onRemove)
 
   def onAdd(self, evt):
-      print('-----')
+      print_('-----')
       pub.sendMessage("money_changing", amount = self.CHANGE)
 
   def onRemove(self, evt):
-      print('-----')
+      print_('-----')
       pub.sendMessage("money_changing", amount = - self.CHANGE)
 
 

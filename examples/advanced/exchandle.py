@@ -5,15 +5,16 @@
 """
 
 from pubsub import pub
+from pubsub.py2and3 import print_
 
 
 # create one special notification handler that ignores all except
 # one type of notification
 class MyPubsubExcHandler(pub.IListenerExcHandler):
 
-    def __call__(self, listenerID: str):
-        print('Exception raised in listener %s during sendMessage()' % listenerID)
-        print(TracebackInfo())
+    def __call__(self, listenerID):
+        print_('Exception raised in listener %s during sendMessage()' % listenerID)
+        print_(TracebackInfo())
 
 
 pub.setListenerExcHandler( MyPubsubExcHandler() )

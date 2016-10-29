@@ -8,9 +8,10 @@
 import console_listeners
 import console_senders as senders
 
+from pubsub.py2and3 import print_
 
 def run():
-    print('Using "kwargs" messaging protocol of pubsub v3')
+    print_('Using "kwargs" messaging protocol of pubsub v3')
 
     senders.doSomething1()
     senders.doSomething2()
@@ -18,3 +19,4 @@ def run():
 
 if __name__ == '__main__':
     run()
+    

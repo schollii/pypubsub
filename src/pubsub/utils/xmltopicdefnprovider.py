@@ -1,9 +1,9 @@
 """
-Contributed by Joshua R English, adapted by Oliver Schoenborn to be
-consistent with pubsub API.
+Contributed by Joshua R English, adapted by Oliver Schoenborn to be 
+consistent with pubsub API. 
 
-An extension for pubsub (http://pubsub.sourceforge.net) so topic tree
-specification can be encoded in XML format rather than pubsub's default
+An extension for pubsub (http://pubsub.sourceforge.net) so topic tree 
+specification can be encoded in XML format rather than pubsub's default 
 Python nested class format.
 
 To use:
@@ -32,7 +32,7 @@ These topic definitions are loaded through an XmlTopicDefnProvider:
 
     pub.addTopicDefnProvider( XmlTopicDefnProvider(xml) )
 
-The XmlTopicDefnProvider also accepts a filename instead of XML string:
+The XmlTopicDefnProvider also accepts a filename instead of XML string: 
 
     provider = XmlTopicDefnProvider("path/to/XMLfile.xml", TOPIC_TREE_FROM_FILE)
     pub.addTopicDefnProvider( provider )
@@ -49,17 +49,19 @@ __author__ = 'Joshua R English'
 __revision__ = 6
 __date__ = '2013-07-27'
 
+
 from ..core.topictreetraverser import ITopicTreeVisitor
 from ..core.topicdefnprovider import (
     ITopicDefnProvider,
     ArgSpecGiven,
     TOPIC_TREE_FROM_STRING,
-)
+    )
+from .. import py2and3
 
 try:
     from elementtree import ElementTree as ET
 except ImportError:
-    try:  # for Python 2.4, must use cElementTree:
+    try: # for Python 2.4, must use cElementTree:
         from xml.etree import ElementTree as ET
     except ImportError:
         from cElementTree import ElementTree as ET
@@ -68,38 +70,35 @@ __all__ = [
     'XmlTopicDefnProvider',
     'exportTopicTreeSpecXml',
     'TOPIC_TREE_FROM_FILE'
-]
+    ]
 
-
+    
 def _get_elem(elem):
-    """
-    Assume an ETree.Element object or a string representation.
-    Return the ETree.Element object
-    """
+    """Assume an ETree.Element object or a string representation.
+    Return the ETree.Element object"""
     if not ET.iselement(elem):
         try:
             elem = ET.fromstring(elem)
         except:
-            print("Value Error", elem)
+            py2and3.print_("Value Error", elem)
             raise ValueError("Cannot convert to element")
     return elem
 
-
+    
 TOPIC_TREE_FROM_FILE = 'file'
 
 
 class XmlTopicDefnProvider(ITopicDefnProvider):
-    class XmlParserError(RuntimeError):
-        pass
 
-    class UnrecognizedSourceFormatError(ValueError):
-        pass
+    class XmlParserError(RuntimeError): pass
 
+    class UnrecognizedSourceFormatError(ValueError): pass
+    
     def __init__(self, xml, format=TOPIC_TREE_FROM_STRING):
         self._topics = {}
         self._treeDoc = ''
         if format == TOPIC_TREE_FROM_FILE:
-            self._parse_tree(_get_elem(open(xml, mode="r").read()))
+            self._parse_tree(_get_elem(open(xml,mode="r").read()))
         elif format == TOPIC_TREE_FROM_STRING:
             self._parse_tree(_get_elem(xml))
         else:
@@ -143,7 +142,7 @@ class XmlTopicDefnProvider(ITopicDefnProvider):
 
             specs[this_id] = this_desc
 
-            if this.get('optional', '').lower() not in ['true', 't', 'yes', 'y']:
+            if this.get('optional', '').lower() not in ['true', 't','yes','y']:
                 reqlist.append(this_id)
 
         defn = ArgSpecGiven(specs, tuple(reqlist))
@@ -155,16 +154,17 @@ class XmlTopicDefnProvider(ITopicDefnProvider):
         for subtopic in node.findall('topic'):
             self._parse_topic(subtopic, parents[:], specs.copy(), reqlist[:])
 
+
     def getDefn(self, topicNameTuple):
         return self._topics.get(topicNameTuple, (None, None))
 
     def topicNames(self):
-        return self._topics.keys()  # dict_keys iter in 3, list in 2
+        return py2and3.iterkeys(self._topics) # dict_keys iter in 3, list in 2
 
     def getTreeDoc(self):
         return self._treeDoc
 
-
+    
 class XmlVisitor(ITopicTreeVisitor):
     def __init__(self, elem):
         self.tree = elem
@@ -179,16 +179,16 @@ class XmlVisitor(ITopicTreeVisitor):
             return
         if self.roots:
             this_elem = ET.SubElement(self.roots[-1], 'topic',
-                                      {'id': topicObj.getNodeName()})
+                {'id':topicObj.getNodeName()})
         else:
-            this_elem = ET.Element('topic', {'id': topicObj.getNodeName()})
+            this_elem = ET.Element('topic', {'id':topicObj.getNodeName()})
         req, opt = topicObj.getArgs()
         req = req or ()
         opt = opt or ()
         desc_elem = ET.SubElement(this_elem, 'description')
         topicDesc = topicObj.getDescription()
         if topicDesc:
-            desc_elem.text = ' '.join(topicDesc.split())
+            desc_elem.text = ' '.join(topicDesc.split()) 
         else:
             desc_elem.text = "UNDOCUMENTED"
         argDescriptions = topicObj.getArgDescriptions()
@@ -216,7 +216,7 @@ class XmlVisitor(ITopicTreeVisitor):
             for arg in opt:
                 if arg in known_args:
                     continue
-                arg_elem = ET.SubElement(spec, 'arg', {'id': arg, 'optional': 'True'})
+                arg_elem = ET.SubElement(spec, 'arg', {'id': arg, 'optional':'True'})
                 arg_elem.text = ' '.join(argDescriptions.get(arg, 'UNDOCUMENTED').split())
 
         self.last_elem = this_elem
@@ -228,15 +228,15 @@ class XmlVisitor(ITopicTreeVisitor):
     def _endChildren(self):
         self.roots.pop()
 
-
+        
 ## http://infix.se/2007/02/06/gentlemen-indent-your-xml
 def indent(elem, level=0):
-    i = "\n" + level * "    "
+    i = "\n" + level*"    "
     if len(elem):
         if not elem.text or not elem.text.strip():
             elem.text = i + "  "
         for e in elem:
-            indent(e, level + 1)
+            indent(e, level+1)
             if not e.tail or not e.tail.strip():
                 e.tail = i + "  "
         if not e.tail or not e.tail.strip():
@@ -245,7 +245,7 @@ def indent(elem, level=0):
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
         else:
-            elem.tail = "\n"
+            elem.tail="\n"
 
 
 def exportTopicTreeSpecXml(moduleName=None, rootTopic=None, bak='bak', moduleDoc=None):
@@ -256,7 +256,7 @@ def exportTopicTreeSpecXml(moduleName=None, rootTopic=None, bak='bak', moduleDoc
     if rootTopic is None:
         from .. import pub
         rootTopic = pub.getDefaultTopicTreeRoot()
-    elif isinstance(rootTopic, str):
+    elif py2and3.isstring(rootTopic):
         from .. import pub
         rootTopic = pub.getTopic(rootTopic)
 
@@ -276,7 +276,11 @@ def exportTopicTreeSpecXml(moduleName=None, rootTopic=None, bak='bak', moduleDoc
         if bak:
             pub._backupIfExists(filename, bak)
 
-        fulltree = ET.ElementTree(tree)
+        fulltree= ET.ElementTree(tree)
         fulltree.write(filename, "utf-8", True)
 
     return ET.tostring(tree)
+
+
+
+

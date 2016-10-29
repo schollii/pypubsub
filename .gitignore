@@ -1,2 +1,3 @@
-__pycache__
-/build
+/.idea/workspace.xml
+/docs/html
+/src/PyPubSub.egg-info

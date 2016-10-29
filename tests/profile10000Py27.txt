@@ -1,0 +1,68 @@
+Run all performance tests
+Python version 2.7.4 (default, Apr  6 2013, 19:54:46) [MSC v.1500 32 bit (Intel)]
+   Ordered by: file name, line number
+
+Function                                          was called by...
+                                                      ncalls  tottime  cumtime
+<string>:1(<module>)                              <-
+listenerimpl.py:29(__call__)                      <-   19991    0.244    0.418  publishermixin.py:59(_mix_callListener)
+notificationmgr.py:64(notifySend)                 <-   20000    0.052    0.052  topicobj.py:360(_publish)
+                                                       19991    0.054    0.054  topicobj.py:383(__sendMessage)
+perf.py:92(listener1)                             <-   10000    0.038    0.038  listenerimpl.py:29(__call__)
+perf.py:93(listener2)                             <-    2062    0.007    0.007  listenerimpl.py:29(__call__)
+perf.py:94(listener3)                             <-    3934    0.015    0.015  listenerimpl.py:29(__call__)
+perf.py:95(listener4)                             <-    2041    0.007    0.007  listenerimpl.py:29(__call__)
+perf.py:96(listener5)                             <-    1954    0.007    0.007  listenerimpl.py:29(__call__)
+perf.py:98(sendMsg)                               <-   10000    0.079    4.084  <string>:1(<module>)
+perf.py:141(randVal)                              <-   29961    0.253    0.660  perf.py:148(<genexpr>)
+perf.py:146(setupTopicAndArgs)                    <-   10000    0.232    1.223  <string>:1(<module>)
+perf.py:148(<genexpr>)                            <-   39961    0.187    0.847  perf.py:146(setupTopicAndArgs)
+publisher.py:19(sendMessage)                      <-   10000    0.158    4.006  perf.py:98(sendMsg)
+publisherbase.py:27(getTopicMgr)                  <-   10000    0.025    0.025  publisher.py:19(sendMessage)
+publishermixin.py:23(publish)                     <-   10000    0.067    3.449  publisher.py:19(sendMessage)
+publishermixin.py:29(__init__)                    <-   10000    0.031    0.031  publishermixin.py:44(_mix_prePublish)
+publishermixin.py:33(checkMsgArgs)                <-   10000    0.071    0.154  publishermixin.py:44(_mix_prePublish)
+publishermixin.py:37(filterMsgArgs)               <-    9991    0.071    0.764  publishermixin.py:44(_mix_prePublish)
+publishermixin.py:44(_mix_prePublish)             <-   19991    0.232    1.236  topicobj.py:360(_publish)
+publishermixin.py:59(_mix_callListener)           <-   19991    0.156    0.574  topicobj.py:383(__sendMessage)
+py2and3.py:429(iterkeys)                          <-   19991    0.203    0.349  topicobj.py:262(getListeners)
+py2and3.py:606(isstring)                          <-   10000    0.056    0.083  topicutils.py:77(stringize)
+random.py:173(randrange)                          <-   29961    0.271    0.340  perf.py:141(randVal)
+                                                       10000    0.119    0.144  perf.py:146(setupTopicAndArgs)
+topicargspecimpl.py:82(isComplete)                <-    9991    0.028    0.028  topicargspecimpl.py:127(filterArgs)
+topicargspecimpl.py:85(getArgs)                   <-    9991    0.032    0.032  topicargspecimpl.py:127(filterArgs)
+topicargspecimpl.py:88(numArgs)                   <-    9991    0.077    0.120  topicargspecimpl.py:127(filterArgs)
+topicargspecimpl.py:107(check)                    <-   10000    0.084    0.084  publishermixin.py:33(checkMsgArgs)
+topicargspecimpl.py:127(filterArgs)               <-    9991    0.318    0.626  topicobj.py:174(filterMsgArgs)
+topicargspecimpl.py:148(<genexpr>)                <-   23890    0.068    0.068  topicargspecimpl.py:127(filterArgs)
+topicmgr.py:128(getTopic)                         <-   10000    0.090    0.256  topicmgr.py:167(getOrCreateTopic)
+topicmgr.py:167(getOrCreateTopic)                 <-   10000    0.117    0.373  publisher.py:19(sendMessage)
+topicobj.py:170(hasMDS)                           <-   10000    0.029    0.029  publishermixin.py:44(_mix_prePublish)
+topicobj.py:174(filterMsgArgs)                    <-    9991    0.067    0.692  publishermixin.py:37(filterMsgArgs)
+topicobj.py:210(getParent)                        <-   35966    0.113    0.113  topicobj.py:360(_publish)
+topicobj.py:257(hasListeners)                     <-   25966    0.094    0.094  topicobj.py:360(_publish)
+topicobj.py:262(getListeners)                     <-   19991    0.133    0.482  topicobj.py:383(__sendMessage)
+topicobj.py:356(_getListenerSpec)                 <-   10000    0.025    0.025  publishermixin.py:44(_mix_prePublish)
+topicobj.py:360(_publish)                         <-   10000    0.475    3.383  publishermixin.py:23(publish)
+topicobj.py:383(__sendMessage)                    <-   19991    0.303    1.413  topicobj.py:360(_publish)
+topicutils.py:77(stringize)                       <-   10000    0.056    0.140  topicmgr.py:128(getTopic)
+weakmethod.py:48(__call__)                        <-   19991    0.100    0.100  listenerimpl.py:29(__call__)
+{getattr}                                         <-   19991    0.051    0.051  py2and3.py:429(iterkeys)
+{method 'get' of 'dict' objects}                  <-   10000    0.026    0.026  topicmgr.py:128(getTopic)
+{method 'random' of '_random.Random' objects}     <-   39961    0.093    0.093  random.py:173(randrange)
+{iter}                                            <-   19991    0.048    0.048  py2and3.py:429(iterkeys)
+{method 'iterkeys' of 'dict' objects}             <-   19991    0.047    0.047  py2and3.py:429(iterkeys)
+{len}                                             <-   29961    0.067    0.067  perf.py:141(randVal)
+                                                       19982    0.043    0.043  topicargspecimpl.py:88(numArgs)
+                                                        9991    0.025    0.025  topicargspecimpl.py:127(filterArgs)
+{method 'intersection' of 'set' objects}          <-    9991    0.035    0.035  topicargspecimpl.py:127(filterArgs)
+{range}                                           <-       1    0.000    0.000  <string>:1(<module>)
+{isinstance}                                      <-   10000    0.027    0.027  py2and3.py:606(isstring)
+{method 'disable' of '_lsprof.Profiler' objects}  <-
+
+
+Run all performance tests
+Python version 2.7.4 (default, Apr  6 2013, 19:54:46) [MSC v.1500 32 bit (Intel)]
+Randomized topic send message: 10000 tests
+Time for kwargs protocol:    1.13
+Time for arg1 protocol:    0.84

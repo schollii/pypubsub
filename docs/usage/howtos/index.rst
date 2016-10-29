@@ -10,20 +10,24 @@ application from one pypubsub version or messaging protocol to another.
 Migrations
 -----------
 
-In the very first version of PyPubSub, v1, message data was transported via a
-single instance of a class called Message. This had several important limitations,
-most importantly the inability to validate whether the correct data fields
-were being included in a message sent.
+Section :ref:`label-pubsub_versions` describes the 2 mains versions of 
+pypubsub that have existed: v1 and v3. Section :ref:`label-msg_protocols`
+describes the two messaging protocols that exist in v3: kwargs (the default) 
+and arg1, compared to v1 which only support the arg1 protocol. The v1 API is no 
+longer part of pubsub, so two migrations of particular interest are:
 
-In PyPubSub v3, a new protocol was implemented, and was named kwargs. This was
-not compatible with v1, but v3 made it possible to configure the imported
-pubsub to select either the arg1 protocol or the kwargs protocol, and to configure
-PyPubSub to help with transition from one to the other.
+:v1 to v3/arg1: 
+    typically wxPython users (since v1 originated in wxPython) wanting to 
+    take advantage of the latest version of pypubsub, but without changing 
+    the messaging protocol, so as to minimize the amount of migration work.
+    See :ref:`label-upgrade_for_wx`.
 
-PyPubSub v4 only supports the kwargs protocol. If you want to upgrade your
-application from using PyPubSub v1 or v3 to v4 and it uses the arg1 protocol,
-you will have to do the transition via PyPubSub 3.3, as explained at length
-in the documentation for that version (specifically, see the section
-`label-migrations`)
+:v3/arg1 to v3/kwargs:
+    pypubsub users of arg1 messaging protocol wanting to take advantage of 
+    the more robust kwargs protocol. See section :ref:`label-trans_arg1_to_kwargs`.
 
-Please post on the list for any additional support needed on this topic.
+.. toctree:: 
+    :hidden:
+    
+    arg1_to_kwargs.rst
+    upgrade_v1tov3.rst

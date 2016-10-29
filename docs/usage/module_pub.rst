@@ -5,8 +5,8 @@ Pub Module
       
 .. autodata:: VERSION_API
 
-    The pubsub API version. This is deprecated. The only valid value currently is the integer 4.
-    Previously, versions 1, 2 and 3 API could also be activated in pubsub before importing pub, in
+    The pubsub API version. The only valid value currently is the integer 3. Previously, 
+    versions 1 and 2 API could also be activated in pubsub before importing pub, in 
     which case pub.VERSION_API had the corresponding value. 
     
     
@@ -32,6 +32,7 @@ if pubsub's default Publisher must be accessed, on or more separate instances of
 Publisher is required, and so forth. 
 
 .. autofunction:: getDefaultPublisher
+.. autofunction:: getMsgProtocol()
 .. autoclass::    pubsub.core.Publisher
     :noindex:
 
@@ -166,7 +167,7 @@ which may fit your requirements.
 Topic Specification 
 ----------------------
 
-Topic definition, documentation, and message data specification (MDS):
+Topic definition, documentation, and MDS:
 
 .. autoexception:: TopicDefnError
     :show-inheritance:

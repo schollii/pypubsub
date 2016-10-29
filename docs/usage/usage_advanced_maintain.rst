@@ -6,8 +6,6 @@ Maintainabiity
    :local:
 
 
-.. _label-topic_tree_def:
-
 Specify topic tree def
 ------------------------
 
@@ -30,8 +28,11 @@ optional as well, i.e. the signature of listener1 is wrong (it should provide a 
 value for arg1)? Or what if per chance listener2 gets subscribed first (could happen if 
 both are subscribed in different modules whose load order changes)?
 
-The only way to not depend on the order of subscription of listeners is to use
-*Topic definition providers* (TDP). This is described below.
+There are two ways to go about this: 
+
+- Call ``pub.getDefaultTopicMgr().newTopic()`` to explicitly create the topic; 
+  this must happen before any listener subscribes to it
+- Use one or more *Topic definition providers* (TDP). This is described below. 
 
 
 Topic Definition Providers

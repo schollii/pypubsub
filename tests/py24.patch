@@ -1,0 +1,266 @@
+Index: src/pubsub/core/callables.py
+===================================================================
+--- src/pubsub/core/callables.py	(revision 346)
++++ src/pubsub/core/callables.py	(working copy)
+@@ -14,7 +14,7 @@
+ 
+ from inspect import getargspec, ismethod, isfunction
+ 
+-from .. import py2and3 
++from .. import py2and3
+ 
+ AUTO_TOPIC    = '## your listener wants topic name ## (string unlikely to be used by caller)'
+ 
+@@ -32,26 +32,28 @@
+ 
+ def getID(callable_):
+     """Get name and module name for a callable, ie function, bound
+-    method or callable instance, by inspecting the callable. E.g. 
++    method or callable instance, by inspecting the callable. E.g.
+     getID(Foo.bar) returns ('Foo.bar', 'a.b') if Foo.bar was
+     defined in module a.b. """
+     sc = callable_
+     if ismethod(sc):
+-        module = getModule(sc.__self__)
+-        id = '%s.%s' % (sc.__self__.__class__.__name__, sc.__func__.__name__)
++        #module = getModule(sc.__self__)
++        module = getModule(sc.im_self)
++        #id = '%s.%s' % (sc.__self__.__class__.__name__, sc.__func__.__name__)
++        id = '%s.%s' % (module.__class__.__name__, sc.im_func.__name__)
+     elif isfunction(sc):
+         module = getModule(sc)
+         id = sc.__name__
+     else: # must be a functor (instance of a class that has __call__ method)
+         module = getModule(sc)
+         id = sc.__class__.__name__
+-        
++
+     return id, module
+ 
+ 
+ def getRawFunction(callable_):
+     """Given a callable, return (offset, func) where func is the
+-    function corresponding to callable, and offset is 0 or 1 to 
++    function corresponding to callable, and offset is 0 or 1 to
+     indicate whether the function's first argument is 'self' (1)
+     or not (0). Raises ValueError if callable_ is not of a
+     recognized type (function, method or has __call__ method)."""
+@@ -62,7 +64,8 @@
+     elif ismethod(callable_):
+         #print 'Method', getID(callable_)
+         func = callable_
+-        if func.__self__ is not None:
++        #if func.__self__ is not None:
++        if func.im_self is not None:
+             # Method is bound, don't care about the self arg
+             firstArg = 1
+     elif hasattr(callable_, '__call__'):
+@@ -72,19 +75,19 @@
+     else:
+         msg = 'type "%s" not supported' % type(callable_).__name__
+         raise ValueError(msg)
+-    
++
+     return func, firstArg
+ 
+-    
++
+ class ListenerMismatchError(ValueError):
+     """
+-    Raised when an attempt is made to subscribe a listener to 
++    Raised when an attempt is made to subscribe a listener to
+     a topic, but listener does not satisfy the topic's message data
+     specification (MDS). This specification is inferred from the first
+     listener subscribed to a topic, or from an imported topic tree
+     specification (see pub.addTopicDefnProvider()).
+     """
+-    
++
+     def __init__(self, msg, listener, *args):
+         idStr, module = getID(listener)
+         msg = 'Listener "%s" (from module "%s") inadequate: %s' % (idStr, module, msg)
+@@ -93,17 +96,17 @@
+         self.args   = args
+         self.module = module
+         self.idStr  = idStr
+-        
++
+     def __str__(self):
+         return self.msg
+ 
+ 
+ class CallArgsInfo:
+     """
+-    Represent the "signature" or protocol of a listener in the context of 
+-    topics. 
++    Represent the "signature" or protocol of a listener in the context of
++    topics.
+     """
+-    
++
+     def __init__(self, func, firstArgIdx): #args, firstArgIdx, defaultVals, acceptsAllKwargs=False):
+         """Inputs:
+         - Args and defaultVals are the complete set of arguments and
+@@ -112,8 +115,8 @@
+           args that is of use, so it is typically 0 if listener is a function,
+           and 1 if listener is a method.
+         - The acceptsAllKwargs should be true
+-          if the listener has **kwargs in its protocol. 
+-        
++          if the listener has **kwargs in its protocol.
++
+         After construction,
+         - self.allParams will contain the subset of 'args' without first
+           firstArgIdx items,
+@@ -121,7 +124,7 @@
+           (ie self.allParams[:self.numRequired] are the required args names);
+         - self.acceptsAllKwargs = acceptsAllKwargs
+         - self.autoTopicArgName will be the name of argument
+-          in which to put the topic object for which pubsub message is 
++          in which to put the topic object for which pubsub message is
+           sent, or None. This is identified by the argument that has a
+           default value of AUTO_TOPIC.
+ 
+@@ -141,7 +144,7 @@
+ 
+         self.acceptsAllKwargs      = (varOptParamName is not None)
+         self.acceptsAllUnnamedArgs = (varParamName    is not None)
+-        
++
+         self.allParams = allParams
+         del self.allParams[0:firstArgIdx] # does nothing if firstArgIdx == 0
+ 
+@@ -173,8 +176,8 @@
+                 firstKwargIdx = self.numRequired
+                 self.autoTopicArgName = self.allParams.pop(firstKwargIdx + indx)
+                 break
+-        
+ 
++
+ def getArgs(callable_):
+     """Returns an instance of CallArgsInfo for the given callable_.
+     Raises ListenerMismatchError if callable_ is not a callable."""
+Index: src/pubsub/core/weakmethod.py
+===================================================================
+--- src/pubsub/core/weakmethod.py	(revision 346)
++++ src/pubsub/core/weakmethod.py	(working copy)
+@@ -1,7 +1,7 @@
+ """
+-This module provides a basic "weak method" implementation, WeakMethod. It uses 
+-weakref.WeakRef which, used on its own, produces weak methods that are dead on 
+-creation, not very useful. Use the getWeakRef(object) module function to create the 
++This module provides a basic "weak method" implementation, WeakMethod. It uses
++weakref.WeakRef which, used on its own, produces weak methods that are dead on
++creation, not very useful. Use the getWeakRef(object) module function to create the
+ proper type of weak reference (weakref.WeakRef or WeakMethod) for given object.
+ 
+ :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
+@@ -17,26 +17,31 @@
+ 
+ 
+ class WeakMethod:
+-    """Represent a weak bound method, i.e. a method which doesn't keep alive the 
++    """Represent a weak bound method, i.e. a method which doesn't keep alive the
+     object that it is bound to. """
+-    
++
+     def __init__(self, method, notifyDead = None):
+-        """The method must be bound. notifyDead will be called when 
++        """The method must be bound. notifyDead will be called when
+         object that method is bound to dies. """
+         assert ismethod(method)
+-        if method.__self__ is None:
++        #if method.__self__ is None:
++        if method.im_self is None:
+             raise ValueError('Unbound methods cannot be weak-referenced.')
+-            
++
+         self.notifyDead = None
+         if notifyDead is None:
+-            self.objRef = WeakRef(method.__self__)
++            #self.objRef = WeakRef(method.__self__)
++            self.objRef = WeakRef(method.im_self)
+         else:
+             self.notifyDead = notifyDead
+-            self.objRef = WeakRef(method.__self__, self.__onNotifyDeadObj)
+-            
+-        self.fun = method.__func__
+-        self.cls = method.__self__.__class__
+-        
++            #self.objRef = WeakRef(method.__self__, self.__onNotifyDeadObj)
++            self.objRef = WeakRef(method.im_self, self.__onNotifyDeadObj)
++
++        #self.fun = method.__func__
++        self.fun = method.im_func
++        #self.cls = method.__self__.__class__
++        self.cls = method.im_self.__class__
++
+     def __onNotifyDeadObj(self, ref):
+         if self.notifyDead:
+             try:
+@@ -46,9 +51,9 @@
+                 traceback.print_exc()
+ 
+     def __call__(self):
+-        """Returns a MethodType if object for method still alive. 
+-        Otherwise return None. Note that MethodType causes a 
+-        strong reference to object to be created, so shouldn't save 
++        """Returns a MethodType if object for method still alive.
++        Otherwise return None. Note that MethodType causes a
++        strong reference to object to be created, so shouldn't save
+         the return value of this call. Note also that this __call__
+         is required only for compatibility with WeakRef.ref(), otherwise
+         there would be more efficient ways of providing this functionality."""
+@@ -56,33 +61,33 @@
+             return None
+         else:
+             return MethodType(self.fun, self.objRef())
+-        
++
+     def __eq__(self, method2):
+         """Two WeakMethod objects compare equal if they refer to the same method
+         of the same instance. Thanks to Josiah Carlson for patch and clarifications
+         on how dict uses eq/cmp and hashing. """
+         if not isinstance(method2, WeakMethod):
+-            return False 
+-            
+-        return (    self.fun      is method2.fun 
+-                and self.objRef() is method2.objRef() 
++            return False
++
++        return (    self.fun      is method2.fun
++                and self.objRef() is method2.objRef()
+                 and self.objRef() is not None )
+-    
++
+     def __hash__(self):
+-        """Hash is an optimization for dict searches, it need not 
++        """Hash is an optimization for dict searches, it need not
+         return different numbers for every different object. Some objects
+         are not hashable (eg objects of classes derived from dict) so no
+         hash(objRef()) in there, and hash(self.cls) would only be useful
+         in the rare case where instance method was rebound. """
+         return hash(self.fun)
+-    
++
+     def __repr__(self):
+         dead = ''
+-        if self.objRef() is None: 
++        if self.objRef() is None:
+             dead = '; DEAD'
+         obj = '<%s at %s%s>' % (self.__class__, id(self), dead)
+         return obj
+-        
++
+     def refs(self, weakRef):
+         """Return true if we are storing same object referred to by weakRef."""
+         return self.objRef == weakRef
+@@ -97,6 +102,6 @@
+         createRef = WeakMethod
+     else:
+         createRef = WeakRef
+-        
++
+     return createRef(obj, notifyDead)
+-    
++
