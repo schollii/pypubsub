@@ -42,6 +42,7 @@ def smartDedent(paragraph: str) -> str:
         lines = paragraph.split('\n')
         exceptFirst = dedent('\n'.join(lines[1:]))
         para = lines[0] + exceptFirst
+
     return para
 
 

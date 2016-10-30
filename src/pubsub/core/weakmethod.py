@@ -1,27 +1,24 @@
 """
-This module hides the source of implementation of weak method. WeakMethod is provided in pypubsub 4.0+ by either
-standard lib (Python >= 3.4) or weakrefmethod (Python < 3.4). Prior to pypubsub 4.0, WeakMethod was a custom
-class that adhered to the WeakRef API. Note that methods cannot be given to weakref.WeakRef because methods
-cannot be referenced, only a temporary "instance method" created for each reference can be used. This would cause
-WeakRef(method) to be "dead on creation".
+This module hides the source of implementation of weak ref to a method: for Python 3.4, it is
+Python's weakref module; for earlier Python, it is the weakrefmethod module from PyPI.
+Prior to pypubsub 4.0, WeakMethod was a custom class that adhered to the WeakRef API.
 
 Use the getWeakRef(object) module function to create the
 proper type of weak reference (weakref.WeakRef or WeakMethod) for given object.
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
-
 """
 
-# for function and method parameter counting:
 from inspect import ismethod
-# for weakly bound methods:
 from weakref import ref as WeakRef
-# WeakMethod was introduced in Python 3.4 but the weakrefmethod pypi module is a backport of it to earlier versions
+
+# for weakly bound methods:
 try:
     from weakref import WeakMethod
 except:
     from weakrefmethod import WeakMethod
+
 # type hinting:
 from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union, TextIO
 
