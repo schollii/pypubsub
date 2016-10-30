@@ -1,17 +1,17 @@
 Pub Module
-=====================
+==========
 
 .. automodule:: pubsub.pub
       
 .. autodata:: VERSION_API
 
-    The pubsub API version. This is deprecated. The only valid value currently is the integer 4.
-    Previously, versions 1, 2 and 3 API could also be activated in pubsub before importing pub, in
+    The Pypubsub API version. This is deprecated. The only valid value currently is the integer 4.
+    Previously, versions 1, 2 and 3 API could also be activated in Pypubsub before importing pub, in
     which case pub.VERSION_API had the corresponding value. 
     
     
 Sending Messages
--------------------------------
+----------------
 
 Sending messages is achieved via the following function: 
 
@@ -28,7 +28,7 @@ data does not comply with the Message Data Specification for the topic:
 **Advanced use:**
 
 The following would typically only be useful in special circumstances, such as 
-if pubsub's default Publisher must be accessed, on or more separate instances of 
+if Pypubsub's default Publisher must be accessed, on or more separate instances of
 Publisher is required, and so forth. 
 
 .. autofunction:: getDefaultPublisher
@@ -37,8 +37,9 @@ Publisher is required, and so forth.
 
     See :py:class:`pubsub.core.Publisher` for details.
 
+
 Receiving Messages
---------------------
+------------------
 
 The following functions are available for controlling what callable objects 
 (functions, methods, or class instances with a __call__ method) will get 
@@ -83,17 +84,17 @@ especially during debugging:
 
 
 Topics
--------
+------
 
 In most cases, topics are used by name in dotted string format. The following 
-may be useful for basic pubsub use: 
+may be useful for basic Pypubsub use:
 
 .. autoexception:: TopicNameError
     :show-inheritance:
 
 **Advanced use:**
 
-Some advanced uses of pubsub, especially (but not only) for debugging a pubsub-based 
+Some advanced uses of Pypubsub, especially (but not only) for debugging a Pypubsub-based
 application, could require access to the associated Topic instance, topic tree 
 manager, special topic-related constants, or other helper functions and classes. 
 
@@ -102,7 +103,7 @@ manager, special topic-related constants, or other helper functions and classes.
 .. py:data:: ALL_TOPICS
 
     Name of topic that is root of topic tree. Subscribe a listener
-    to this topic to get all pubsub messages. Use \**kwargs to receive
+    to this topic to get all Pypubsub messages. Use \**kwargs to receive
     all message data, regardless of topic. 
     
 .. py:data:: topicTreeRoot    
@@ -131,12 +132,12 @@ such as during debugging:
     See :py:class:`pubsub.core.Topic` for details.
                       
 Listener Exception Handling
-----------------------------
+---------------------------
 
 Listeners that leak exceptions are typically burried deep into the stacktrace, and 
 can cause an application to abort. The following may simplify the task of providing 
 useful error messages from misbehaved listeners, without interrupting the application
-or even the pubsub send-message:
+or even the Pypubsub send-message:
 
 .. autofunction::  getListenerExcHandler()
 .. autofunction::  setListenerExcHandler(handler)
@@ -148,10 +149,10 @@ See :mod:`pubsub.utils.exchandling` for ready-made exception handlers which may 
 requirements. 
 
 
-Pubsub Tracing (aka Notification)
-----------------------------------
+Pypubsub Tracing (aka Notification)
+-----------------------------------
 
-While debugging an application it may be useful to trap some of pubsub's activity: 
+While debugging an application it may be useful to trap some of Pypubsub's activity:
 
 .. autoclass::    INotificationHandler
 .. autofunction:: addNotificationHandler(handler)
@@ -164,7 +165,7 @@ which may fit your requirements.
 
 
 Topic Specification 
-----------------------
+-------------------
 
 Topic definition, documentation, and message data specification (MDS):
 
@@ -203,7 +204,7 @@ Topic definition, documentation, and message data specification (MDS):
 
 **Developer**: 
 
-The following are useful to extend the capabilities of pubsub to support more 
+The following are useful to extend the capabilities of Pypubsub to support more
 topic definition providers or serialization formats for the builtin provider:
 
 .. autoclass:: pubsub.core.ITopicDefnProvider

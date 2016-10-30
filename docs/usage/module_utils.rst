@@ -1,5 +1,5 @@
 Utils module
-======================
+============
 
 
 .. automodule:: pubsub.utils

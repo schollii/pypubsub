@@ -7,7 +7,8 @@ Provide the Topic class.
 
 from weakref import ref as weakref
 import sys
-from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union, TextIO, MutableMapping, Iterator
+from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union, TextIO, MutableMapping, \
+    Iterator
 
 from .listener import (
     Listener,

@@ -21,18 +21,19 @@ class Listener:
     def __call__(self, **kwargs):
         print('Listener instance received: ', kwargs)
 
+
 listenerObj = Listener()
 
 
 def listenerFn(msg, extra=None):
     print('Function listenerFn received: ', repr(msg), repr(extra))
 
+
 # ------------ subscribe listeners ------------------
 
-pub.subscribe(listenerObj, pub.ALL_TOPICS) # via its __call__
+pub.subscribe(listenerObj, pub.ALL_TOPICS)  # via its __call__
 
 pub.subscribe(listenerFn, 'topic1.subtopic11')
 pub.subscribe(listenerObj.onTopic11, 'topic1.subtopic11')
 
 pub.subscribe(listenerObj.onTopic1, 'topic1')
-

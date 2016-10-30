@@ -7,6 +7,7 @@ import os, re, inspect, io
 from textwrap import TextWrapper, dedent
 import sys
 from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union, TextIO
+
 try:
     from importlib.util import cache_from_source
 except ImportError:
@@ -17,9 +18,8 @@ try:
     from textwrap import indent
 except ImportError:
     def indent(text, prefix):
-        new_text =  ''.join(((prefix + line) if line.strip() else '\n') for line in text.splitlines(True))
+        new_text = ''.join(((prefix + line) if line.strip() else '\n') for line in text.splitlines(True))
         return new_text
-
 
 from .topicargspec import (
     topicArgsFromCallable,
@@ -318,7 +318,7 @@ class TopicDefnDeserialString(ITopicDefnDeserializer):
         version) will be deleted when the doneIter() method is called.
         """
 
-        source = "class TopicTree:\n" + indent(dedent(source), ' '*4)
+        source = "class TopicTree:\n" + indent(dedent(source), ' ' * 4)
         namespace = {}
         exec(source, namespace)
         self.__clsDeserial = TopicDefnDeserialClass(namespace['TopicTree'])

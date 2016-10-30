@@ -5,6 +5,8 @@
 
 """
 
+import sys
+
 from pubsub import pub
 from pubsub.utils.notification import useNotifyByWriteFile, IgnoreNotificationsMixin
 
@@ -12,7 +14,6 @@ from pubsub.utils.notification import useNotifyByWriteFile, IgnoreNotificationsM
 # create one special notification handler that ignores all except
 # one type of notification
 class MyPubsubNotifHandler(IgnoreNotificationsMixin):
-
     def notifySubscribe(self, pubListener, topicObj, newSub):
         newSubMsg = ''
         if not newSub:
@@ -21,9 +22,8 @@ class MyPubsubNotifHandler(IgnoreNotificationsMixin):
         print(msg % (pubListener.name(), newSubMsg, topicObj.getName()))
 
 
-pub.addNotificationHandler( MyPubsubNotifHandler() )
-
+pub.addNotificationHandler(MyPubsubNotifHandler())
 
 # print(all notifications to stdout)
-import sys
+
 useNotifyByWriteFile(sys.stdout, prefix='NotifyByWriteFile:')

@@ -1,40 +1,17 @@
 Contribute
-============
+==========
 
-This page is intended mostly for developers. 
+This page is intended for developers of (or contributing to) Pypubsub.
 
 .. contents:: In this section:
    :depth: 1
    :local:
 
 
-.. _label-roadmap:
-
-Roadmap
---------
-
-List of things I would like to add to pubsub:
-
-- completed implementation of support for pubsub over UDP sockets, which
-  would allow two pubsub-apps to publish and subscribe to messages of other
-  applications (pseudo-code already in src/contrib)
-- complete implementation of multi-threading helper class, no change
-  required to pubsub, rather just utility class to help user
-  (pseudo-code already in src/contrib)
-- figure out a good way to prevent wrapped listener subscriptions from being DOA
-  (pubsub only keeps weak reference to listener, so if listener subscribe like
-  ``pub.subscribe( wrapper(yourListener) )`` then listener will be unsubscribed
-  as soon as subscribe returns; you need
-  ``refListener = wrapper(yourListener); pub.subscribe(refListener)``)
-- finish the src/contrib/monitor implementation to monitor pubsub messages,
-  or some way of monitoring message sending
-
-If anyone is interested in helping, please contact me.
-
 .. _label-contributing:
 
 Contributing
--------------
+------------
 
 Contributions are welcome! There are many ways you could contribute:
 
@@ -42,79 +19,112 @@ Contributions are welcome! There are many ways you could contribute:
 - new features
 - test results on different platforms
 - documentation
-- screencasts! (of applications using pubsub with output when user clicks)
-- example topic trees (using ``pubsubutils.printTopicTree()`` in latest
+- screencasts! (of applications using Pypubsub with output when user clicks)
+- example topic trees (using ``pubsub.utils.printTopicTree()`` in latest
   version, or ``print Publisher`` in versions 1)
 - other improvements
 - money!
 
-Please contact me via email (schoenborno, at
-users.sf.net) or by posting on the forums (links in the
-:ref:`label-support` section).
+Please contact by posting on the forum pypubsub-dev forum (link in the
+:ref:`label-support` section) or via http://github/schollii/pypubsub.
 
 
 System Requirements
----------------------
+-------------------
 
 In addition to the :ref:`label-install-reqs`, the following are required:
 
 - To run unit tests:
 
-  - nose >= 0.10
-  - coverage >= 3.1b1
+  - pytest
 
+- To generate the docs:
 
-- To generate these docs:
-
-  - sphinx >= 0.6.3; note that sphinx must be patched as per post on
-    sphinx-dev:
+  - sphinx >= 1.4.8
+  - In Pypubsub 3.3, which used an older version of sphinx, sphinx had to be patched as per post on
+    sphinx-dev, but this no longer seems to be the required:
 
     .. literalinclude:: sphinx_patch1.txt
     .. literalinclude:: sphinx_patch2.txt
 
+- To change code: PyCharm is recommended (Community Edition is sufficient). Various
+  build configurations are available via the Pypubsub project when loaded into PyCharm.
 
 
 Scripts Available
-------------------
+-----------------
 
-The following is likely to be useful to pubsub developers and contributors only.
+*Unit Testing*:
+    The test suite is most conveniently run from PyCharm via the "py.test in suite"
+    build configuration. The tests can also be run automatically via pytest suite from
+    the :file:`tests` folder.
 
-*Testing*:
-    The package currently gets tested on Windows XP only. The tests can be
-    run automatically by running :command:`runtests.bat` from the :file:`tests`
-    folder of a source distribution.
+    Once this passes using the project's default interpreter, a Terminal can be
+    opened in PyCharm (or alternately a command shell from Windows), and from
+    the Pypubsub root folder, run :command:`tox`. This will
+    attempt to run the test suite on Python 3.3, 3.4 and 3.5.
 
-    If anyone is able to run the test suite on other platforms, please let
-    me know of the results. A Linux person will have no
-    trouble running the equivalent batch commands on Linux.
+    After changes are committed to github, the Travis CI will automatically
+    run the tests on a Linux platform, for all versions of Python supported
+    by Pypubsub. The results will be at https://travis-ci.org/schollii/pypubsub/builds.
+
+    There is also a buildbot maintained by Jerome Laheurte to test on additional
+    \*nix flavors, including OSX. Test results can be viewed at
+    https://jeromelaheurte.net/buildbot/pubsub/console.
+
+*Performance Test*:
+    A small performance test is available in the :file:`tests` folder.
+    It can be run from PyCharm via the perf build configuration. This will
+    generate a new :file:`.pstats` file which can be analysed.
+    The test can also be run directly from command shell via
+    :command:`python perf.py 1000`.
 
 *Documentation*:
-    The documentation can be generated on Windows by running
-    :command:`gendocs.bat` from the :file:`docs` folder of a source
-    distribution (but see the note about Sphinx patch in next section).
-    For Linux, again you should be able to
-    just copy the commands form the :file:`.bat` file to a shell window.
+    The documentation can be generated locally on Windows via the Gen Docs build
+    configuration in PyCharm. Alternatively, it can be generated by running
+    :command:`make html` from the :file:`docs` folder of source
+    distribution.
 
-*Performance*:
-    A small performance test is available in the :file:`tests` folder.
-    On Windows, run it via :command:`runperf.bat`. On Linux, you'll have
-    to convert the file to a bash script (the .bat file is very simple,
-    no branching etc), or run the commands manually.
+    The documentation is automatically built and available online at
+    http://pypubsub.readthedocs.io. The latest from master branch is at
+    http://pypubsub.readthedocs.io/en/master/. The stable (released)
+    documentation is at http://pypubsub.readthedocs.io/en/stable/.
 
 
-Packaging
-------------
+Releases
+--------
 
-PyPubSub requires setuptools to be packaged for distribution. 
+Pypubsub uses the latest stable Python packaging and distribution tools:
+wheel, twine, and pypi.
 
-For packaging py2exe or cx_Freeze, there is a separate section:
+Creating a new release involves the following sequence of steps:
+
+- Update src/pubsub/__init__.py for new version # (setup.py uses it)
+- Update src/pubsub/RELEASE_NOTES.txt: high-level summary of changes, handling incompatibilities, etc
+- In docs folder
+
+  - Update index.rst and docs/installation.rst
+  - Update docs/changelog.txt: list of specific changes
+  - Regenerate HTML docs, confirm ok (no warnings etc)
+
+- Confirm that pytest suite and tox pass
+- Confirm that examples all work (one of the examples requires wxpython)
+- Commit to remote master repository
+- Confirm that travis CI all pass
+- Generate the source and wheel distributions: from PyCharm, or from command line using
+  :command:`python setup.py sdist bdist_wheel`.
+- Upload the distributions to PyPI: :command:`twine dist`
+- Verify new release info and links on pypi.python.org
+- Create new branch (tag) in remote master repository
+- Confirm installation will work: attempt to install locally via PyPI, then import
+  from Python shell
+
+
+Py2Exe and cx_Freeze
+--------------------
+
+For packaging py2exe or cx_Freeze, see (possibly out of date):
 
 .. toctree::
 
    py2exe.rst
-   
-For packaging into .deb package, there is a separate section:
-
-.. toctree::
-
-   deb.rst

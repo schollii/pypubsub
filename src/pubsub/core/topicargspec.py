@@ -194,7 +194,7 @@ class ArgsInfo:
     def setArgsDocs(self, docs: ArgsDocs):
         """docs is a mapping from arg names to their documentation"""
         if not self.isComplete():
-            raise
+            raise RuntimeError('Topic MDS is not complete, cannot set docs!')
         for arg, doc in docs.items():
             self.allDocs[arg] = doc
 

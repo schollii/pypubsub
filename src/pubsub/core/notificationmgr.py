@@ -3,7 +3,6 @@
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 """
 
-import sys
 from typing import List, Mapping
 
 from .listener import Listener

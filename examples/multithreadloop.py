@@ -22,10 +22,6 @@ May 2009
 
 """
 
-
-__author__="schoenb"
-__date__ ="$31-May-2009 9:11:41 PM$"
-
 from queue import Queue
 import time
 import threading
@@ -33,8 +29,10 @@ import sys
 
 from pubsub import pub
 
+__author__ = "schoenb"
+__date__ = "$31-May-2009 9:11:41 PM$"
 
-resultStep = 1000000 # how many counts for thread "result" to be available
+resultStep = 1000000  # how many counts for thread "result" to be available
 
 
 def threadObserver(transfers, threadObj, count):
@@ -44,6 +42,7 @@ def threadObserver(transfers, threadObj, count):
     threadObserver is called and should indicate Main thread)."""
 
     print(transfers, threadObj, count / resultStep)
+
 
 pub.subscribe(threadObserver, 'testTopic')
 
@@ -66,10 +65,10 @@ class ParaFunction(threading.Thread):
 
     def __init__(self):
         threading.Thread.__init__(self)
-        self.running = False # set to True when thread should stop
-        self.count = 0       # our workload: keep counting!
-        self.queue = Queue() # to transfer data to main thread
-        self.transfer = 0    # count how many transfers occurred
+        self.running = False  # set to True when thread should stop
+        self.count = 0  # our workload: keep counting!
+        self.queue = Queue()  # to transfer data to main thread
+        self.transfer = 0  # count how many transfers occurred
 
     def run(self):
         print('aux thread started')
@@ -92,17 +91,17 @@ class ParaFunction(threading.Thread):
         self.transfer += 1
         while not self.queue.empty():
             pub.sendMessage('testTopic',
-                transfers = self.transfer,
-                threadObj = threading.currentThread(),
-                count     = self.queue.get())
+                            transfers=self.transfer,
+                            threadObj=threading.currentThread(),
+                            count=self.queue.get())
 
 
 thread = ParaFunction()
 
 
 def main():
-    idleFns = [] # list of functions to call when 'gui' idle
-    idleFns.append( onIdle )
+    idleFns = []  # list of functions to call when 'gui' idle
+    idleFns.append(onIdle)
 
     try:
         thread.start()
@@ -110,7 +109,7 @@ def main():
         print('starting event loop')
         eventLoop = True
         while eventLoop:
-            time.sleep(1) # pretend that main thread does other stuff
+            time.sleep(1)  # pretend that main thread does other stuff
             for idleFn in idleFns:
                 idleFn()
 
@@ -126,4 +125,3 @@ def main():
 
 
 main()
-

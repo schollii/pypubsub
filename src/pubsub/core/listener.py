@@ -1,8 +1,6 @@
 """
 Top-level functionality related to message listeners.
-"""
 
-"""
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 """
@@ -155,7 +153,7 @@ class Listener:
         if curriedArgs.keys() != self.curriedArgs.keys():
             raise ValueError(
                 "Listener '{}' already subscribed with a different set of pure curried args ({} != {})"
-                    .format(self, curriedArgs.keys(), self.curriedArgs.keys()))
+                .format(self, curriedArgs.keys(), self.curriedArgs.keys()))
 
         self.curriedArgs = curriedArgs
 
@@ -166,7 +164,7 @@ class Listener:
     def _calledWhenDead(self):
         raise RuntimeError('BUG: Dead Listener called, still subscribed!')
 
-    def __notifyOnDead(self, weakRef: WeakRef):
+    def __notifyOnDead(self, _: WeakRef):
         """This gets called when listener weak ref has died. Propagate info to Topic."""
         notifyDeath = self.__onDead
         self._unlinkFromTopic_()
@@ -181,10 +179,9 @@ class Listener:
         if id(self) == id(rhs):
             return True
 
+        c1 = self._callable()
         try:
-            c1 = self._callable()
             c2 = rhs._callable()
-
         except Exception:
             # then rhs is not a Listener, compare with c1
             return c1 == rhs

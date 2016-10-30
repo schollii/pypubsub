@@ -2,9 +2,9 @@
 .. _label-usage-basic:
 
 Basic Usage
-==============
+===========
 
-Basic usage of pubsub involves subscribing listeners, sending messages, and responding to 
+Basic usage of Pypubsub involves subscribing listeners, sending messages, and responding to
 messages. The :ref:`label-quick-start` subsection below provides examples. For details, 
 navigate to the :ref:`label-basic-tasks` subsection: 
 
@@ -16,7 +16,7 @@ navigate to the :ref:`label-basic-tasks` subsection:
 .. _label-quick-start:
 
 Quick Start
-------------
+-----------
 
 Simplest example of use:
 
@@ -33,20 +33,20 @@ distribution as helloworld.py) will produce the result::
 
       
 Other Examples 
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^
 
 There are several examples that can be found in the source distribution
 in the ``examples`` folder. Some focus on the basics, others on more 
-advanced aspects of pubsub usage. Some examples are GUI-based and may 
+advanced aspects of Pypubsub usage. Some examples are GUI-based and may
 require other packages (such as wxPython).
 
-The examples/basic_kwargs folder contains examples of basic usage of pubsub
+The examples/basic_kwargs folder contains examples of basic usage of Pypubsub
 "out of the box", i.e. using the default ("kwargs") messaging protocol. 
-The README.txt file in `examples/basic_kwargs`_ explains: 
+The README.txt file in `examples_basic_kwargs`_ explains:
 
 .. include:: ../../examples/basic_kwargs/README.txt
 
 
-.. _examples/basic_kwargs: http://svn.code.sf.net/p/pubsub/code/trunk/examples/basic_kwargs
+.. _examples_basic_kwargs: http://svn.code.sf.net/p/pubsub/code/trunk/examples/basic_kwargs
 
 

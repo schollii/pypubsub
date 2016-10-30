@@ -28,13 +28,13 @@ def getInstallRequires():
 
 
 setup(
-    name         = 'PyPubSub',
+    name         = 'PyPubsub',
     version      = getPubsubVersion(),
     description  = 'Python Publish-Subscribe Package',
     keywords     = "publish subscribe observer pattern signal signals event events message messages messaging dispatch dispatching",
-    author       = 'Oliver Schoenborn',
+    author       = 'Oliver Schoenborn (aka "schollii")',
     author_email = 'oliver.schoenborn@gmail.com',
-    url          = 'http://pypubsub.sourceforge.net',
+    url          = 'https://github.com/schollii/pypubsub',
     license      = "BSD",
     zip_safe     = False,
 

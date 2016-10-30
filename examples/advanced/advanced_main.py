@@ -13,14 +13,14 @@ import exchandle
 
 import kwargs_topics
 
-#***** actual application **********
+# ***** actual application **********
 
 print('Using "kwargs" messaging protocol of pubsub v3')
 
 try:
     print('------- init ----------')
 
-    pub.addTopicDefnProvider( kwargs_topics, pub.TOPIC_TREE_FROM_CLASS )
+    pub.addTopicDefnProvider(kwargs_topics, pub.TOPIC_TREE_FROM_CLASS)
     pub.setTopicUnspecifiedFatal()
 
     import kwargs_listeners
@@ -37,6 +37,7 @@ try:
 
 except Exception:
     import traceback
+
     traceback.print_exc()
     print(pub.exportTopicTreeSpec())
 

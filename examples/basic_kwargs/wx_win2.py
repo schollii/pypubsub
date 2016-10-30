@@ -10,28 +10,25 @@ from pubsub import pub
 
 
 class ChangerWidget(wx.Frame):
+    CHANGE = 10  # by how much money changes every time click
 
-  CHANGE = 10 # by how much money changes every time click
+    def __init__(self, parent=None):
+        wx.Frame.__init__(self, parent, -1, "Changer View")
 
-  def __init__(self, parent=None):
-    wx.Frame.__init__(self, parent, -1, "Changer View")
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        self.add = wx.Button(self, -1, "Add Money")
+        self.remove = wx.Button(self, -1, "Remove Money")
+        sizer.Add(self.add, 0, wx.EXPAND | wx.ALL)
+        sizer.Add(self.remove, 0, wx.EXPAND | wx.ALL)
+        self.SetSizer(sizer)
 
-    sizer = wx.BoxSizer(wx.VERTICAL)
-    self.add = wx.Button(self, -1, "Add Money")
-    self.remove = wx.Button(self, -1, "Remove Money")
-    sizer.Add(self.add, 0, wx.EXPAND|wx.ALL)
-    sizer.Add(self.remove, 0, wx.EXPAND|wx.ALL)
-    self.SetSizer(sizer)
+        self.add.Bind(wx.EVT_BUTTON, self.onAdd)
+        self.remove.Bind(wx.EVT_BUTTON, self.onRemove)
 
-    self.add.Bind(wx.EVT_BUTTON, self.onAdd)
-    self.remove.Bind(wx.EVT_BUTTON, self.onRemove)
+    def onAdd(self, evt):
+        print('-----')
+        pub.sendMessage("money_changing", amount=self.CHANGE)
 
-  def onAdd(self, evt):
-      print('-----')
-      pub.sendMessage("money_changing", amount = self.CHANGE)
-
-  def onRemove(self, evt):
-      print('-----')
-      pub.sendMessage("money_changing", amount = - self.CHANGE)
-
-
+    def onRemove(self, evt):
+        print('-----')
+        pub.sendMessage("money_changing", amount=- self.CHANGE)

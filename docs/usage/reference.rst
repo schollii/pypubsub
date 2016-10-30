@@ -1,6 +1,6 @@
    
 Reference
-==========
+=========
 
 The pubsub package contains the following:
 
