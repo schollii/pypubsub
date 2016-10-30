@@ -111,9 +111,8 @@ Creating a new release involves the following sequence of steps:
 - Confirm that examples all work (one of the examples requires wxpython)
 - Commit to remote master repository
 - Confirm that travis CI all pass
-- Generate the source and wheel distributions: from PyCharm, or from command line using
-  :command:`python setup.py sdist bdist_wheel`.
-- Upload the distributions to PyPI: :command:`twine dist`
+- Generate the source and wheel distributions and upload to PyPI (from command line:
+  :command:`release.bat`)
 - Verify new release info and links on pypi.python.org
 - Create new branch (tag) in remote master repository
 - Confirm installation will work: attempt to install locally via PyPI, then import

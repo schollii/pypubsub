@@ -1,18 +1,27 @@
+echo off
+
 REM Run this script: it indicates specific steps to follow,
 REM and generates the distributions.
 REM
 REM Oliver, Dec 2015
 
-echo off
+echo ==============================================================
+echo Before continuing, consult the instructions in Release
+echo section of Dev docs.
+echo ==============================================================
+echo Creating source distribution:
+python setup.py sdist
 
 echo ==============================================================
-echo Follow the instructions in Release section of Dev docs
-echo BEFORE continuing; pressing ENTER will create distributions
-echo for new version and UPLOAD them to PyPi:
+echo Creating wheel distribution:
+python setup.py sdist bdist_wheel
+
+echo ==============================================================
+echo To UPLOAD the dist/* distributions to PyPi, press ENTER,
+echo OTHERWISE, press ctrl-c:
 pause
 
-python setup.py sdist bdist_wheel
-twine dist
+twine upload dist/*
 
 echo ==============================================================
 echo Upload completed.
