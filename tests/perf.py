@@ -143,8 +143,7 @@ def runPerfTest():
 
     # ----------- time pubsub send message -------------
     from timeit import timeit
-    setupStr = 'from __main__ import prepTest; setupTopicAndArgs, tester = prep' \
-               'Test()'
+    setupStr = 'from __main__ import prepTest; setupTopicAndArgs, tester = prepTest()'
     totalTime = timeit('t, a = setupTopicAndArgs(); tester.sendMsg(t, a)',
                        setup=setupStr, number=numTests)
 
@@ -187,5 +186,5 @@ def runProfileTest():
 
 
 if __name__ == '__main__':
-    # runPerfTest()
-    runProfileTest()
+    runPerfTest()
+    # runProfileTest()

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# PyPubsub documentation build configuration file, created by
+# Pypubsub documentation build configuration file, created by
 # sphinx-quickstart on Sat Feb 21 17:20:55 2015.
 #
 # This file is execfile()d with the current directory set to its
@@ -50,7 +50,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'PyPubsub'
+project = 'Pypubsub'
 copyright = 'Oliver Schoenborn (since 2006)'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -230,7 +230,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ('index', 'PyPubsub.tex', 'PyPubsub Documentation',
+    ('index', 'Pypubsub.tex', 'Pypubsub Documentation',
      'Oliver Schoenborn', 'manual'),
 ]
 
@@ -260,7 +260,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'pypubsub', 'PyPubsub Documentation',
+    ('index', 'pypubsub', 'Pypubsub Documentation',
      ['Oliver Schoenborn'], 1)
 ]
 
@@ -274,8 +274,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'PyPubsub', 'PyPubsub Documentation',
-     'Oliver Schoenborn', 'PyPubsub', 'One line description of project.',
+    ('index', 'Pypubsub', 'Pypubsub Documentation',
+     'Oliver Schoenborn', 'Pypubsub', 'One line description of project.',
      'Miscellaneous'),
 ]
 
