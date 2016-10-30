@@ -6,3 +6,4 @@ __pycache__
 /src/PyPubSub.egg-info
 /tools/macrium
 /tools/ping
+/docs/_build
