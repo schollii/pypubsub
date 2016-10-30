@@ -8,6 +8,9 @@ and messages in larger applications.
 
 Install most recent with "pip install pypubsub".
 
-The latest documentation home page is at http://pypubsub.readthedocs.io/en/master/.
+The documentation for latest stable release is at
+http://pypubsub.readthedocs.io/en/stable/.
+The documentation for latest code is at
+http://pypubsub.readthedocs.io/en/master/.
 
 
