@@ -304,6 +304,11 @@ class TopicManager:
                 assocTopics.append(topicObj)
         return assocTopics
 
+    def clearTree(self):
+        """Remove every topic from the topic tree"""
+        for topic in list(self.__allTopics.subtopics):
+            self.delTopic(topic.name)
+
     def __getClosestParent(self, topicNameDotted: str) -> Topic:
         """
         Returns a pair, (closest parent, tuple path from parent). The

@@ -51,7 +51,7 @@ class TestTopicMgr0_Basic:
     def failTopicName(self, name):
         pytest.raises(TopicNameError, validateName, name)
 
-    def test10_GoodTopicNames(self):
+    def test_GoodTopicNames(self):
         #
         # Test that valid topic names are accepted by pubsub'
         #
@@ -60,7 +60,7 @@ class TestTopicMgr0_Basic:
         validateName('test.a')
         validateName('test.a.b')
 
-    def test10_BadTopicNames(self):
+    def test_BadTopicNames(self):
         #
         # Test that invalid topic names are rejected by pubsub
         #
@@ -76,6 +76,19 @@ class TestTopicMgr0_Basic:
         self.failTopicName( ('(aa',) )
 
         self.failTopicName( (ALL_TOPICS,) )
+
+    def test_clear(self):
+        topicMgr.getOrCreateTopic('topic1')
+        topicMgr.getOrCreateTopic('topic2')
+        topicMgr.getOrCreateTopic('topic3')
+        topicMgr.getOrCreateTopic('topic4')
+        topicMgr.getOrCreateTopic('topic3.topic31')
+        topicMgr.getOrCreateTopic('topic3.topic32')
+        topicMgr.getOrCreateTopic('topic4')
+
+        assert set(t.name for t in topicMgr.getRootAllTopics().subtopics) == set(['topic1', 'topic2', 'topic3', 'topic4'])
+        topicMgr.clearTree()
+        assert list(topicMgr.getRootAllTopics().subtopics) == []
 
 
 class TestTopicMgr1_GetOrCreate_NoDefnProv:
