@@ -460,6 +460,15 @@ class Topic:
 
         self._treeConfig.notificationMgr.notifySend('post', self)
 
+    name = property(getName)
+    parent = property(getParent)
+    subtopics = property(getSubtopics)
+    description = property(getDescription, setDescription)
+    listeners = property(getListeners)
+    numListeners = property(getNumListeners)
+    args = property(getArgs)
+    argDescriptions = property(getArgDescriptions, setArgDescriptions)
+
     #############################################################
     #
     # Impementation
