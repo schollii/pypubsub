@@ -104,24 +104,24 @@ def perf_send():
     Performance measurement for sending:
     listeners ['obs1', 'obs2', 'obs3', 'obs4', 'obs5', 'obs6', 'obs7', 'obs8']
     topic names ['t1', 't1.t2', ..., 't1.t2.t3.t4.t5.t6.t7.t8']
-    no subscriptions, no data 1.24
-    no subscriptions, 8 data 1.39
-    with 8 subscriptions, 8 data 9.62
-    with 8 subscriptions, 4 data 8.59
-    with 8 subscriptions, 2 data 8.11
-    with 8 subscriptions, 1 data 7.91
-    with 8 subscriptions, no data 7.98
-    ----------------------------------------
-    Performance measurement for sending:
-    listeners ['obs1', 'obs2', 'obs3', 'obs4', 'obs5', 'obs6', 'obs7', 'obs8']
-    topic names ['t1', 't1.t2', 't1.t2.t3', 't1.t2.t3.t4', 't1.t2.t3.t4.t5', 't1.t2.t3.t4.t5.t6', 't1.t2.t3.t4.t5.t6.t7', 't1.t2.t3.t4.t5.t6.t7.t8']
-    no subscriptions, no data 1.64
-    no subscriptions, 8 data 0.99
-    with 8 subscriptions, 8 data 4.73
-    with 8 subscriptions, 4 data 2.6
-    with 8 subscriptions, 2 data 1.6
-    with 8 subscriptions, 1 data 1.1
-    with 8 subscriptions, no data 0.53
+    with depth 8:
+        8 data 9.31
+        4 data 8.48
+        2 data 8.23
+        1 data 8.26
+        no data 8.05
+    with depth 4:
+        4 data 4.4
+        2 data 3.96
+        1 data 3.99
+        no data 4.1
+    with depth 2:
+        2 data 2.28
+        1 data 1.84
+        no data 2.18
+    with depth 1:
+        1 data 1.2
+        no data 1.24
     """
     print("-"*40)
     print("Performance measurement for sending:")
