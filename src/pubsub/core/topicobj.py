@@ -8,7 +8,7 @@ Provide the Topic class.
 from weakref import ref as weakref
 import sys
 from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union, TextIO, MutableMapping, \
-    Iterator
+    Iterator, ValuesView
 
 from .listener import (
     Listener,
@@ -65,22 +65,6 @@ class Topic:
     subscribed listeners, docstring for the topic. It allows Python-like
     access to subtopics (e.g. A.B is subtopic B of topic A).
     """
-
-    class IterState:
-        def __init__(self, msgData: MsgData):
-            self.filteredArgs = msgData
-            self.argsChecked = False
-
-        def checkMsgArgs(self, spec: ArgsInfo):
-            spec.check(self.filteredArgs)
-            self.argsChecked = True
-
-        def filterMsgArgs(self, topicObj: Topic):
-            if self.argsChecked:
-                self.filteredArgs = topicObj.filterMsgArgs(self.filteredArgs)
-            else:
-                self.filteredArgs = topicObj.filterMsgArgs(self.filteredArgs, True)
-                self.argsChecked = True
 
     def __init__(self, treeConfig: TreeConfig, nameTuple: Tuple[str, ...], description: str,
                  msgArgsInfo: ArgsInfo, parent: Topic = None):
@@ -140,7 +124,7 @@ class Topic:
             assert self.hasMDS()
         else:
             self.__parentTopic = weakref(parent)
-            assert self.__msgArgs.parentAI() is parent._getListenerSpec()
+            assert self.__msgArgs.parentAI() is parent.__msgArgs
             parent.__adoptSubtopic(self)
 
     def setDescription(self, desc: str):
@@ -172,7 +156,7 @@ class Topic:
             try:
                 specGiven = ArgSpecGiven(argsDocs, required)
                 self.__msgArgs = ArgsInfo(self.__tupleName, specGiven,
-                                          self.__parentTopic()._getListenerSpec())
+                                          self.__parentTopic().__msgArgs)
             except MessageDataSpecError:
                 # discard the lower part of the stack trace
                 exc = sys.exc_info()[1]
@@ -287,7 +271,7 @@ class Topic:
 
         return topicObj
 
-    def getSubtopics(self) -> List[Topic]:
+    def getSubtopics(self) -> ValuesView[Topic]:
         """Get a list of Topic instances that are subtopics of self."""
         return self.__subTopics.values()
 
@@ -444,19 +428,28 @@ class Topic:
         """
         self._treeConfig.notificationMgr.notifySend('pre', self)
 
-        # send to ourself
-        iterState = self.__prePublish(msgData)
-        self.__sendMessage(msgData, self, iterState)
+        # check the message data:
+        if self.__validator is not None:
+            self._getListenerSpec().check(msgData)
+        else:
+            assert not self.hasListeners()
 
-        # send up the chain
-        topicObj = self.getParent()
-        while topicObj is not None:
+        # get the list of topics from self to root (ALL_TOPICS)
+        topicStack = [self]
+        parent = self.__parentTopic
+        while parent is not None:
+            parent = parent()
+            topicStack.append(parent)
+            parent = parent.__parentTopic  # deref weakref
+
+        # for each topic, send to listeners:
+        msgDataSubset = {}
+        for topicObj in reversed(topicStack):
+            added_args = topicObj.__msgArgs.argsAddedToParent
+            add_to_parent = {k: msgData[k] for k in added_args if k in msgData}
+            msgDataSubset.update(add_to_parent)
             if topicObj.hasListeners():
-                iterState = self.__prePublish(msgData, topicObj, iterState)
-                self.__sendMessage(msgData, topicObj, iterState)
-
-            # done for this topic, continue up branch to parent towards root
-            topicObj = topicObj.getParent()
+                self.__sendMessage(msgData, topicObj, msgDataSubset)
 
         self._treeConfig.notificationMgr.notifySend('post', self)
 
@@ -479,29 +472,14 @@ class Topic:
         """Only to be called by pubsub package"""
         return self.__msgArgs
 
-    def __prePublish(self, msgData: MsgData, topicObj: Topic = None, iterState: IterState = None) -> IterState:
-        if iterState is None:
-            # do a first check that all args are there, costly so only do once
-            iterState = self.IterState(msgData)
-            if self.hasMDS():
-                iterState.checkMsgArgs(self._getListenerSpec())
-            else:
-                assert not self.hasListeners()
-
-        else:
-            iterState.filterMsgArgs(topicObj)
-
-        assert iterState is not None
-        return iterState
-
-    def __sendMessage(self, data: MsgData, topicObj: Topic, iterState: IterState):
+    def __sendMessage(self, allData: MsgData, topicObj: Topic, data: MsgData):
         # now send message data to each listener for current topic;
         # use list of listeners rather than iterator, so that if listeners added/removed during
-        # send loop, no runtime exception:
+        # send loop, no runtime exception (performance hit is marginal):
         for listener in topicObj.getListeners():
             try:
                 self._treeConfig.notificationMgr.notifySend('in', topicObj, pubListener=listener)
-                listener(iterState.filteredArgs, self, data)
+                listener(data, self, allData)
 
             except Exception:
                 # if exception handling is on, handle, otherwise re-raise

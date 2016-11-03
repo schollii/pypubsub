@@ -50,7 +50,6 @@ def perf_subscribe():
     - deep topics and no-args listeners: 6.83
     - root topics and many-args listeners: 6.8
     - deep topics and many-args listeners: 6.83
-
     """
     print("-"*40)
     print("Performance measurement for subscribing:")
@@ -104,24 +103,25 @@ def perf_send():
     Performance measurement for sending:
     listeners ['obs1', 'obs2', 'obs3', 'obs4', 'obs5', 'obs6', 'obs7', 'obs8']
     topic names ['t1', 't1.t2', ..., 't1.t2.t3.t4.t5.t6.t7.t8']
-    with depth 8:
-        8 data 9.31
-        4 data 8.48
-        2 data 8.23
-        1 data 8.26
-        no data 8.05
-    with depth 4:
-        4 data 4.4
-        2 data 3.96
-        1 data 3.99
-        no data 4.1
-    with depth 2:
-        2 data 2.28
-        1 data 1.84
-        no data 2.18
-    with depth 1:
-        1 data 1.2
-        no data 1.24
+    with depth 8:           with depth 8:         % less   X faster
+        8 data 9.31             8 data 4.76         49      2.0
+        4 data 8.48             4 data 4.48         47      1.9
+        2 data 8.23             2 data 4.5          45      1.8
+        1 data 8.26             1 data 4.31         48      1.9
+        no data 8.05            no data 4.27        47      1.8
+    with depth 4:           with depth 4:
+        4 data 4.4              4 data 2.63         40      1.7
+        2 data 3.96             2 data 2.56         35      1.5
+        1 data 3.99             1 data 2.51         37      1.6
+        no data 4.1             no data 2.43        40      1.7
+    with depth 2:           with depth 2:
+        2 data 2.28             2 data 1.61         29      1.4
+        1 data 1.84             1 data 1.57         15      1.2
+        no data 2.18            no data 1.52        30      1.4
+
+    with depth 1:           with depth 1:
+        1 data 1.2              1 data 1.1          8       1.1
+        no data 1.24            no data 1.05        15      1.2
     """
     print("-"*40)
     print("Performance measurement for sending:")
@@ -146,13 +146,6 @@ def perf_send():
     print('topic names', topic_names)
 
     num_messages = 100
-
-    # messages = [(topic_names[-1], {})] * num_messages
-    # print('no subscriptions, no data', loop_send([], messages))
-    #
-    # msg_data = dict(arg1=1, arg2=2, arg3=3, arg4=4, arg5=5, arg6=6, arg7=7, arg8=8)
-    # messages = [(topic_names[-1], msg_data)] * num_messages
-    # print('no subscriptions, 8 data', loop_send([], messages))
 
     def sub_test(topic_names):
         subscriptions = [(obs, name) for obs, name in zip(listeners, topic_names)]
@@ -188,9 +181,8 @@ def perf_send():
     sub_test(topic_names[:4])
     sub_test(topic_names[:2])
     sub_test(topic_names[:1])
-    # sub_test([])
 
 
 if __name__ == '__main__':
-    # perf_subscribe()
+    perf_subscribe()
     perf_send()

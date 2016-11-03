@@ -173,6 +173,14 @@ class ArgsInfo:
         if specGiven.isComplete():
             self.__setAllArgs(specGiven)
 
+        if parentArgsInfo is None:
+            assert self.argsAddedToParent is not None
+        else:
+            while not parentArgsInfo.isComplete():
+                parentArgsInfo = parentArgsInfo.parentAI()
+            self.argsAddedToParent = set(self.getArgs()).difference(parentArgsInfo.getArgs())
+
+
     def isComplete(self) -> bool:
         return self.argsSpecType == self.SPEC_COMPLETE
 
@@ -293,6 +301,19 @@ class ArgsInfo:
         if self.isComplete():
             # verify that our spec is compatible with parent's
             self.__validateArgsToParent()
+            self.argsAddedToParent = set(self.getArgs()).difference(self.parentAI().getArgs())
+        else:
+            for argsInfo in self.childrenAI:
+                argsInfo.__notifyAncestorCompleted(self.parentAI())
+
+    def __notifyAncestorCompleted(self, parentAI):
+        if self.isComplete():
+            # verify that our spec is compatible with parent's
+            self.__validateArgsToParent()
+            self.argsAddedToParent = set(self.getArgs()).difference(parentAI.getArgs())
+        else:
+            for argsInfo in self.childrenAI:
+                argsInfo.__notifyAncestorCompleted(parentAI)
 
     def __validateArgsToParent(self):
         # validate relative to parent arg spec
@@ -301,8 +322,7 @@ class ArgsInfo:
             # verify that parent args is a subset of spec given:
             topicName = stringize(self.topicNameTuple)
             verifySubset(self.getArgs(), closestParentAI.getArgs(), topicName)
-            verifySubset(self.allRequired, closestParentAI.getReqdArgs(),
-                         topicName, ' required args')
+            verifySubset(self.allRequired, closestParentAI.getReqdArgs(), topicName, ' required args')
 
     def __setAllArgs(self, specGiven: ArgSpecGiven):
         assert specGiven.isComplete()
@@ -311,8 +331,14 @@ class ArgsInfo:
         self.allDocs = specGiven.argsDocs.copy()  # doc for each arg
         self.argsSpecType = self.SPEC_COMPLETE
 
-        if self.parentAI() is not None:
+        parentArgsInfo = self.parentAI()
+        if parentArgsInfo is None:
+            self.argsAddedToParent = []
+        else:
             self.__validateArgsToParent()
+            while not parentArgsInfo.isComplete():
+                parentArgsInfo = parentArgsInfo.parentAI()
+            self.argsAddedToParent = set(self.getArgs()).difference(parentArgsInfo.getArgs())
 
         # notify our children
         for childAI in self.childrenAI:

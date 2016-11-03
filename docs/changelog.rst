@@ -3,13 +3,14 @@ Changelog
 
 High-level changelog. For details, consult the SVN logs.
 
-:4.0.0 (Oct 2016):
+:4.0.0 (Nov 2016):
 
 * Support Python 3.5
 * Distribution via wheel
 * Abandon support for Python 2.x and easy_install
 * Abandon support for long-ago deprecated arg1 messaging protocol
 * Added currying of subscribed listener args
+* Significant speed improvement for message delivery
 * Use PEP 484 style of annotations throughout
 * Use enum instead of constants when practical
 
