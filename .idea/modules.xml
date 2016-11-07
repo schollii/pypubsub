@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/pypubsub.iml" filepath="$PROJECT_DIR$/.idea/pypubsub.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../sandals/.idea/sandals.iml" filepath="$PROJECT_DIR$/../sandals/.idea/sandals.iml" />
     </modules>
   </component>
 </project>
