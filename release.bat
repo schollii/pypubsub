@@ -3,7 +3,7 @@ echo off
 REM Run this script: it indicates specific steps to follow,
 REM and generates the distributions.
 REM
-REM Oliver, Dec 2015
+REM Oliver, Dec 2016
 
 echo ==============================================================
 echo Before continuing, consult the instructions in Release
@@ -14,7 +14,7 @@ python setup.py sdist
 
 echo ==============================================================
 echo Creating wheel distribution:
-python setup.py sdist bdist_wheel
+python setup.py bdist_wheel
 
 echo ==============================================================
 echo To UPLOAD the dist/* distributions to PyPi, press ENTER,

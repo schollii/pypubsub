@@ -3,7 +3,7 @@ Changelog
 
 High-level changelog. For details, consult the SVN logs.
 
-:4.0.0 (Nov 2016):
+:4.0.0 (Dec 2016):
 
 * Support Python 3.5
 * Distribution via wheel
