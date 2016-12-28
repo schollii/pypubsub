@@ -20,8 +20,8 @@ Useful links:
 
 - Project on PyPI: https://pypi.python.org/pypi/PyPubSub
 - The documentation for latest stable release is at
-  http://pypubsub.readthedocs.io/en/stable/.
+  http://pypubsub.readthedocs.io/en/v4.0.0/.
 - The documentation for latest code is at
-  http://pypubsub.readthedocs.io/en/master/.
+  http://pypubsub.readthedocs.io/en/latest/.
 
 
