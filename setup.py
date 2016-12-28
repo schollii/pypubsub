@@ -58,7 +58,7 @@ setup(
     ],
 
     # use the module docs as the long description:
-    long_description = open('README.txt', 'r').read()
+    long_description = open('README.rst', 'r').read()
 )
 
 
