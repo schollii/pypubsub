@@ -1,3 +1,11 @@
+News
+====
+
+Dec 2016: pypubsub 4.0.0 released!
+
+Overview
+========
+
 PyPubSub provides a publish - subscribe API that facilitates the development of 
 event-based / message-based applications. PyPubSub supports sending and
 receiving messages between objects of an application. It is centered on the
