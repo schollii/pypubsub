@@ -1,3 +1,6 @@
+.. image:: https://badge.fury.io/py/PyPubSub.svg
+    :target: https://badge.fury.io/py/PyPubSub
+    
 News
 ====
 
