@@ -19,8 +19,8 @@
     <option name="USE_PATTERN" value="false" />
     <option name="testToRun" value="." />
     <option name="keywords" value="" />
-    <option name="params" value="" />
-    <option name="USE_PARAM" value="false" />
+    <option name="params" value="--cov=pubsub --cov-report html" />
+    <option name="USE_PARAM" value="true" />
     <option name="USE_KEYWORD" value="false" />
     <method />
   </configuration>
