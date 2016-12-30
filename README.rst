@@ -1,5 +1,7 @@
 .. image:: https://badge.fury.io/py/PyPubSub.svg
     :target: https://badge.fury.io/py/PyPubSub
+.. image:: https://img.shields.io/travis/schollii/pypubsub.svg
+    :target: https://img.shields.io/travis/schollii/pypubsub
     
 News
 ====
