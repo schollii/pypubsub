@@ -64,11 +64,11 @@ not be sent the message. Putting a try/except clause around every sendMessage is
 typically not practical. 
 
 Since exceptions are common during application development (bugs due to 
-invalid arguments, failed assertions, etc...), Pypubsub provides a hook to register
+invalid arguments, failed assertions, etc.), Pypubsub provides a hook to register
 a 'listener exception' handler: whenever a listener raises an exception, 
 Pypubsub then sends it to the handler, and continues with the send operation
 until all listeners have received the message. The handler might print it to
-a log file, output a message in a status bar, show an error box, etc... The 
+a log file, output a message in a status bar, show an error box, etc. The 
 handling itself is very application-specific, hence this strategy. 
 
 The handler must adhere to the ``pub.IListenerExcHandler`` protocol. An instance
@@ -85,7 +85,7 @@ its MDS must be empty.
 
 However, any listener that is a callable
 with a "catch-all" \**kwargs parameter will be given all message data. Moreover, 
-Pypubsub sends the topic object automatically with the message data, if it
+Pypubsub sends the topic object automatically with the message data if it
 finds that listener accepts a keyword argument with a default value of pub.AUTO_TOPIC. 
 Together, these can be used to obtain complete information about all messages::
 
