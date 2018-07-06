@@ -330,10 +330,11 @@ def useNotifyByWriteFile(fileObj: TextIO = None, prefix: str = None, publisher: 
     are those of pubsub's setNotificationFlags(), except that 'all' defaults to True.  See useNotifyByPubsubMessage()
     for an explanation of pubModule (typically only if pubsub inside wxPython's wx.lib)
     """
-    notifHandler = NotifyByWriteFile(fileObj, prefix)
 
     if publisher is None:
         from .. import pub
         publisher = pub.getDefaultPublisher()
+    notifHandler = NotifyByWriteFile(fileObj, prefix)
+    
     publisher.addNotificationHandler(notifHandler)
     publisher.setNotificationFlags(all=all, **kwargs)
