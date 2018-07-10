@@ -12,7 +12,7 @@ CallArgsInfo regarding its autoTopicArgName data member.
 
 """
 
-from inspect import getargspec, ismethod, isfunction
+from inspect import getfullargspec, ismethod, isfunction
 import sys
 from types import ModuleType
 from typing import Tuple, List, Sequence, Callable, Any
@@ -26,6 +26,11 @@ AUTO_TOPIC = '## your listener wants topic object ## (string unlikely to be used
 # i.e. the listener will be treated as though it is a Callable[..., None]. Also, the args, "...", must be
 # consistent with the MDS of the topic to which listener is being subscribed.
 UserListener = Callable[..., Any]
+
+class NO_DEFAULT:
+    """A placeholder for an arg or kwarg without a default."""
+    def __repr__(self):
+        return "NO_DEFAULT"
 
 
 def getModule(obj: Any) -> ModuleType:
@@ -144,63 +149,73 @@ class CallArgsInfo:
             self.autoTopicArgName = None.
         """
 
-        (allParams, varParamName, varOptParamName, defaultVals) = getargspec(func)
-        if defaultVals is None:
-            defaultVals = []
-        else:
-            defaultVals = list(defaultVals)
+        args, varParamName, varOptParamName, argsDefaults, kwargs, kwargsDefaults, annotations = inspect.getfullargspec(func)
+        self.allArgs = {}
+
+        if (argsDefaults != None):
+            argsDefaults_startsAt = len(args) - len(argsDefaults) - 1
+        for i, variable in enumerate(args):
+            if ((i == 0) and (firstArgIdx > 0)):
+                continue #skip self
+
+            if ((argsDefaults == None) or (i < argsDefaults_startsAt)):
+                self.allArgs[variable] = self.NO_DEFAULT()
+            else:
+                self.allArgs[variable] = argsDefaults[i - argsDefaults_startsAt - 1]
+
+        self.allKwargs = {}
+        for variable in kwargs:
+            if ((kwargsDefaults == None) or (variable not in kwargsDefaults)):
+                self.allKwargs[variable] = self.NO_DEFAULT()
+            else:
+                self.allKwargs[variable] = kwargsDefaults[variable]
 
         self.acceptsAllKwargs = (varOptParamName is not None)
         self.acceptsAllUnnamedArgs = (varParamName is not None)
-
-        self.allParams = allParams
-        del self.allParams[0:firstArgIdx]  # does nothing if firstArgIdx == 0
+        self.allParams = [*self.allArgs.keys(), *self.allKwargs.keys()]
 
         if ignoreArgs:
             for var_name in ignoreArgs:
-                required = len(self.allParams) - len(defaultVals)
-                index = self.allParams.index(var_name)
-                del self.allParams[index]
-                if index >= required:
-                    del defaultVals[index - required]
+                if (var_name in self.allArgs):
+                    del self.allArgs[var_name]
+                elif (var_name in self.allKwargs):
+                    del self.allKwargs[var_name]
 
-            if varOptParamName in ignoreArgs:
+            if (varOptParamName in ignoreArgs):
                 self.acceptsAllKwargs = False
-            if varParamName in ignoreArgs:
+            if (varParamName in ignoreArgs):
                 self.acceptsAllUnnamedArgs = False
 
-        self.numRequired = len(self.allParams) - len(defaultVals)
+        self.numRequired = sum([1 for value in [*self.allArgs.values(), *self.allKwargs.values()] if (isinstance(value, self.NO_DEFAULT))])
         assert self.numRequired >= 0
 
         # if listener wants topic, remove that arg from args/defaultVals
         self.autoTopicArgName = None
-        if defaultVals:
-            self.__setupAutoTopic(defaultVals)
+        self.__setupAutoTopic()
 
     def getAllArgs(self) -> List[str]:
         return tuple(self.allParams)
 
     def getOptionalArgs(self) -> List[str]:
-        return tuple(self.allParams[self.numRequired:])
+        return tuple([key for key, value in [*self.allArgs.items(), *self.allKwargs.items()] if (not isinstance(value, self.NO_DEFAULT))])
 
     def getRequiredArgs(self) -> List[str]:
         """
         Return a tuple of names indicating which call arguments
         are required to be present when pub.sendMessage(...) is called.
         """
-        return tuple(self.allParams[:self.numRequired])
+        return tuple([key for key, value in [*self.allArgs.items(), *self.allKwargs.items()] if (isinstance(value, self.NO_DEFAULT))])
 
     def __setupAutoTopic(self, defaults: List[Any]) -> int:
         """
         Does the listener want topic of message? Returns < 0 if not,
         otherwise return index of topic kwarg within args.
         """
-        for indx, defaultVal in enumerate(defaults):
-            if defaultVal == AUTO_TOPIC:
-                firstKwargIdx = self.numRequired
-                self.autoTopicArgName = self.allParams.pop(firstKwargIdx + indx)
-                break
-
+        for variable, value in {**self.allArgs, **self.allKwargs}.items():
+            if (value == AUTO_TOPIC):
+                self.autoTopicArgName = variable
+                del self.allArgs[variable]
+                return
 
 def getArgs(callable_: UserListener, ignoreArgs: Sequence[str] = None):
     """
