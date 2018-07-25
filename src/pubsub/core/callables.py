@@ -12,7 +12,7 @@ CallArgsInfo regarding its autoTopicArgName data member.
 
 """
 
-from inspect import getfullargspec, ismethod, isfunction
+from inspect import getfullargspec, getargspec, ismethod, isfunction
 import sys
 from types import ModuleType
 from typing import Tuple, List, Sequence, Callable, Any
@@ -149,7 +149,13 @@ class CallArgsInfo:
             self.autoTopicArgName = None.
         """
 
-        args, varParamName, varOptParamName, argsDefaults, kwargs, kwargsDefaults, annotations = getfullargspec(func)
+        if (self._versionCheck()):
+            args, varParamName, varOptParamName, argsDefaults, kwargs, kwargsDefaults, annotations = getfullargspec(func)
+        else:
+            args, varParamName, varOptParamName, argsDefaults = getargspec(func)
+            kwargs = []
+            kwargsDefaults = {}
+
         self.allArgs = {}
 
         if (argsDefaults != None):
@@ -206,12 +212,30 @@ class CallArgsInfo:
         """
         return tuple([key for key, value in [*self.allArgs.items(), *self.allKwargs.items()] if (isinstance(value, NO_DEFAULT))])
 
+    def _combinedDict(self):
+        """
+        Combines self.allArgs and self.allKwargs.
+        """
+        if (self._versionCheck()):
+            return {**self.allArgs, **self.allKwargs}
+        else:
+            newDict = {key: value for key, value in self.allArgs.items()}
+            for key, value in self.allKwargs.items():
+                newDict[key] = value
+            return newDict
+
+    def _versionCheck(self):
+        """
+        Returns True if the current python version is 3.5 or above.
+        """
+        return (sys.version_info[0] > 3) or ((sys.version_info[0] == 3) and (sys.version_info[1] > 4))
+
     def __setupAutoTopic(self) -> int:
         """
         Does the listener want topic of message? Returns < 0 if not,
         otherwise return index of topic kwarg within args.
         """
-        for variable, value in {**self.allArgs, **self.allKwargs}.items():
+        for variable, value in self._combinedDict().items():
             if (value == AUTO_TOPIC):
                 self.autoTopicArgName = variable
                 del self.allArgs[variable]

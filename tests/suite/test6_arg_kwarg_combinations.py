@@ -1,8 +1,10 @@
 import time
 import unittest
+
 from pubsub import pub
 from pubsub.core import topicargspec
-
+# from forks.pypubsub.src.pubsub import pub
+# from forks.pypubsub.src.pubsub.core import topicargspec
 
 class TestController(unittest.TestCase):
 	@classmethod

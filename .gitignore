@@ -7,3 +7,5 @@ __pycache__
 /tools/macrium
 /tools/ping
 /docs/_build
+/__init__.py
+src/__init__.py
