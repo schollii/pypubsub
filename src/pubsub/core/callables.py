@@ -12,7 +12,7 @@ CallArgsInfo regarding its autoTopicArgName data member.
 
 """
 
-from inspect import getargspec, ismethod, isfunction
+from inspect import getfullargspec, ismethod, isfunction
 import sys
 from types import ModuleType
 from typing import Tuple, List, Sequence, Callable, Any
@@ -144,7 +144,7 @@ class CallArgsInfo:
             self.autoTopicArgName = None.
         """
 
-        (allParams, varParamName, varOptParamName, defaultVals) = getargspec(func)
+        (allParams, varParamName, varOptParamName, defaultVals) = getfullargspec(func)[:4]
         if defaultVals is None:
             defaultVals = []
         else:

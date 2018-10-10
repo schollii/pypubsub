@@ -4,6 +4,7 @@ __pycache__
 /dist
 /docs/html
 /src/PyPubSub.egg-info
+/src/Pypubsub.egg-info
 /tools/macrium
 /tools/ping
 /docs/_build
