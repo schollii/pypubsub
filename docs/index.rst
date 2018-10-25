@@ -7,7 +7,7 @@ Welcome to Pypubsub's Home Page!
 This is the documentation for the Pypubsub project. This Python project defines
 a package called 'pubsub' which provides a publish - subscribe API to facilitate
 event-based programming and decoupling of components of an application via the
-Observer pattern. PyPybSub originated in wxPython around y2k but has been
+Observer pattern. PyPubSub originated in wxPython around y2k but has been
 standalone since 2006, and has been on PyPI since then. The code was hosted on
 SourceForget.net from 2007 to 2016, and the code is now hosted on github. The
 code is very mature and stable. See :ref:`label-history` for details on its history
