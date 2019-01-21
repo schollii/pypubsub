@@ -18,7 +18,7 @@ additional requirements:
 - Python 3.3: requires the same as 3.4 + enum34, pathlib and weakrefmethod (all on PyPI)
 
 Please post on pypubsub forum (see :ref:`label-support` section) if you have 
-successfully used Pypubsub with other combinations of Python and Platform.
+successfully used PyPubSub with other combinations of Python and Platform.
 
 Many thanks to Jerome Laheurte for providing a buildbot with Linux and OSX VM's 
 for continuous testing. 
@@ -38,11 +38,11 @@ Support
 
 The forums are currently hosted on google groups:
 
-- http://googlegroups.com/group/pypubsub: Pypubsub general help and support (hosted by Google Groups)
+- http://googlegroups.com/group/pypubsub: PyPubSub general help and support (hosted by Google Groups)
 
-- http://googlegroups.com/group/pypubsub_dev: Pypubsub bug reports, feature suggestions, patches, etc (hosted by Google Groups)
+- http://googlegroups.com/group/pypubsub_dev: PyPubSub bug reports, feature suggestions, patches, etc (hosted by Google Groups)
 
-Also, many Pypubsub users are on the `wxPython-users mailing list  <http://www.wxpython.org/maillist.php>`_.
+Also, many PyPubSub users are on the `wxPython-users mailing list  <http://www.wxpython.org/maillist.php>`_.
 
 
 Release Notes

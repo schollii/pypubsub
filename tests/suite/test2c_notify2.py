@@ -10,7 +10,7 @@ from pubsub.utils.notification import useNotifyByPubsubMessage
 topicMgr = pub.getDefaultTopicMgr()
 
 
-def test0_NotificationTopics():
+def test_NotificationTopics():
     assert not topicMgr.getTopic('pubsub', okIfNone=True)
     useNotifyByPubsubMessage()
     assert topicMgr.getTopic('pubsub')
@@ -25,7 +25,7 @@ def test0_NotificationTopics():
              'pubsub.newTopic',    'pubsub.delTopic']))
 
 
-def test1_SubscribeNotify():
+def test_SubscribeNotify():
     class MyListener:
         countSub = 0
         countUnsub = 0
@@ -69,7 +69,7 @@ def test1_SubscribeNotify():
     assert tmp.countUnsub == 2 # don't notify of self unsubscription
 
 
-def test2_SendNotify():
+def test_SendNotify():
     # trap the pubsub.sendMessage topic:
     class SendHandler:
         def __init__(self):

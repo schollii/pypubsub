@@ -3,6 +3,10 @@ Changelog
 
 High-level changelog. For details, consult the SVN logs.
 
+:4.1.0 (Feb 2019):
+
+* Cleanup for support Python 3.7
+
 :4.0.0 (Dec 2016):
 
 * Verified support Python 3.5 and 3.6
@@ -71,7 +75,7 @@ High-level changelog. For details, consult the SVN logs.
 - added some docs
 - more configurable importTopicTree
 - using importTopicTree now allows to use the topic hierarchy as topic names instead of
-  string, thereby enabling python editors to support Pypubsub-based development via
+  string, thereby enabling python editors to support PyPubSub-based development via
   code completion and sendMessage keyword arguments.
 
 :3.1.1b (2010):
@@ -86,7 +90,7 @@ High-level changelog. For details, consult the SVN logs.
   with "freezing" certain parts of tree
 - Helper functions to transition from *arg1* to *kwargs* messaging protocol
 - Improved error messages (in exceptions raised)
-- Pypubsub can be installed inside other packages and will not interfere with
+- PyPubSub can be installed inside other packages and will not interfere with
   system-wide pubsub
 - pubsubconf module moved inside pubsub package so manual install easier
 - Support !**kwargs in listeners
@@ -106,12 +110,12 @@ High-level changelog. For details, consult the SVN logs.
   wrong argument names).
 - Topic tree can be documented (including topic message arguments)
 - Support user-defined notification handling of certain events occuring in
-  Pypubsub such as "subscribe", "sendMessage".
+  PyPubSub such as "subscribe", "sendMessage".
 - Support user-defined exception handling of exceptions raised by
   listeners
 - Proto-Documentation on own website using Sphinx
 - Separate regression testing folder for nose-based automated testing
-- Configuration module for choosing which Pypubsub API to use in application,
+- Configuration module for choosing which PyPubSub API to use in application,
   useful for backwards compatibility
 
 :2.0 (2007):

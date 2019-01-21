@@ -12,7 +12,7 @@ CallArgsInfo regarding its autoTopicArgName data member.
 
 """
 
-from inspect import getfullargspec, ismethod, isfunction
+from inspect import ismethod, isfunction, signature, Parameter
 import sys
 from types import ModuleType
 from typing import Tuple, List, Sequence, Callable, Any
@@ -42,13 +42,13 @@ def getModule(obj: Any) -> ModuleType:
     return module
 
 
-def getID(callable_: UserListener) -> Tuple[str, ModuleType]:
+def getID(callable_obj: UserListener) -> Tuple[str, ModuleType]:
     """
     Get "ID" of a callable, in the form of its name and module in which it is defined
     E.g. getID(Foo.bar) returns ('Foo.bar', 'a.b') if Foo.bar was defined in module a.b.
-    :param callable\_: a callable, ie function, bound method or callable instance
+    :param callable_obj: a callable, ie function, bound method or callable instance
     """
-    sc = callable_
+    sc = callable_obj
     if ismethod(sc):
         module = getModule(sc.__self__)
         obj_name = '%s.%s' % (sc.__self__.__class__.__name__, sc.__func__.__name__)
@@ -62,33 +62,29 @@ def getID(callable_: UserListener) -> Tuple[str, ModuleType]:
     return obj_name, module
 
 
-def getRawFunction(callable_: UserListener) -> Tuple[Callable, int]:
+def getRawFunction(callable_obj: UserListener) -> Tuple[Callable]:
     """
     Get raw function information about a callable.
-    :param callable_: any object that can be called
-    :return: (func, offset) where func is the function corresponding to callable, and offset is 0 or 1 to
+    :param callable_obj: any object that can be called
+    :return: function corresponding to callable, and offset is 0 or 1 to
         indicate whether the function's first argument is 'self' (1) or not (0)
-    :raise ValueError: if callable_ is not of a recognized type (function, method or object with __call__ method).
+    :raise ValueError: if callable_obj is not of a recognized type (function, method or object with __call__ method).
     """
     firstArg = 0
-    if isfunction(callable_):
-        # print 'Function', getID(callable_)
-        func = callable_
-    elif ismethod(callable_):
-        # print 'Method', getID(callable_)
-        func = callable_
-        if func.__self__ is not None:
-            # Method is bound, don't care about the self arg
-            firstArg = 1
-    elif hasattr(callable_, '__call__'):
-        # print 'Functor', getID(callable_)
-        func = callable_.__call__
-        firstArg = 1  # don't care about the self arg
+    if isfunction(callable_obj):
+        # print 'Function', getID(callable_obj)
+        func = callable_obj
+    elif ismethod(callable_obj):
+        # print 'Method', getID(callable_obj)
+        func = callable_obj
+    elif hasattr(callable_obj, '__call__'):
+        # print 'Functor', getID(callable_obj)
+        func = callable_obj.__call__
     else:
-        msg = 'type "%s" not supported' % type(callable_).__name__
+        msg = 'type "%s" not supported' % type(callable_obj).__name__
         raise ValueError(msg)
 
-    return func, firstArg
+    return func
 
 
 class ListenerMismatchError(ValueError):
@@ -119,16 +115,14 @@ class CallArgsInfo:
     required vs optional.
     """
 
-    def __init__(self, func: UserListener, firstArgIdx: int, ignoreArgs: Sequence[str] = None):
+    def __init__(self, func: UserListener, ignoreArgs: Sequence[str] = None):
         """
         :param func: the callable for which to get paramaters info
-        :param firstArgIdx: 0 if listener is a function, 1 if listener is a method
         :param ignoreArgs: do not include the given names in the getAllArgs(), getOptionalArgs() and
             getRequiredArgs() return values
 
         After construction,
-        - self.allParams will contain the subset of 'args' without first
-          firstArgIdx items,
+        - self.allParams will contain the subset of 'args',
         - self.numRequired will indicate number of required arguments
           (ie self.allParams[:self.numRequired] are the required args names);
         - self.acceptsAllKwargs = acceptsAllKwargs
@@ -144,17 +138,23 @@ class CallArgsInfo:
             self.autoTopicArgName = None.
         """
 
-        (allParams, varParamName, varOptParamName, defaultVals) = getfullargspec(func)[:4]
-        if defaultVals is None:
-            defaultVals = []
-        else:
-            defaultVals = list(defaultVals)
+        allParams = []
+        defaultVals = []
+        varParamName = None
+        varOptParamName = None
+        for argName, param in signature(func).parameters.items():
+            if param.default != Parameter.empty:
+                defaultVals.append(param.default)
+            if param.kind == Parameter.VAR_POSITIONAL:
+                varParamName = argName
+            elif param.kind == Parameter.VAR_KEYWORD:
+                varOptParamName = argName
+            else:
+                allParams.append(argName)
 
         self.acceptsAllKwargs = (varOptParamName is not None)
         self.acceptsAllUnnamedArgs = (varParamName is not None)
-
         self.allParams = allParams
-        del self.allParams[0:firstArgIdx]  # does nothing if firstArgIdx == 0
 
         if ignoreArgs:
             for var_name in ignoreArgs:
@@ -170,6 +170,7 @@ class CallArgsInfo:
                 self.acceptsAllUnnamedArgs = False
 
         self.numRequired = len(self.allParams) - len(defaultVals)
+        assert len(self.allParams) >= len(defaultVals)
         assert self.numRequired >= 0
 
         # if listener wants topic, remove that arg from args/defaultVals
@@ -202,20 +203,20 @@ class CallArgsInfo:
                 break
 
 
-def getArgs(callable_: UserListener, ignoreArgs: Sequence[str] = None):
+def getArgs(callable_obj: UserListener, ignoreArgs: Sequence[str] = None):
     """
     Get the call paramters of a callable.
-    :param callable_: the callable for which to get call parameters
-    :param ignoreArgs: optional list of names of parameters of callable_ that should not be in the returned object
-    :return: an instance of CallArgsInfo for the given callable_
-    :raise ListenerMismatchError: if callable_ is not a callable, or ignoreArgs has an item that is not a call
+    :param callable_obj: the callable for which to get call parameters
+    :param ignoreArgs: optional list of names of parameters of callable_obj that should not be in the returned object
+    :return: an instance of CallArgsInfo for the given callable_obj
+    :raise ListenerMismatchError: if callable_obj is not a callable, or ignoreArgs has an item that is not a call
         param of callable
     """
     # figure out what is the actual function object to inspect:
     try:
-        func, firstArgIdx = getRawFunction(callable_)
+        func = getRawFunction(callable_obj)
     except ValueError:
         exc = sys.exc_info()[1]
-        raise ListenerMismatchError(str(exc), callable_)
+        raise ListenerMismatchError(str(exc), callable_obj)
 
-    return CallArgsInfo(func, firstArgIdx, ignoreArgs=ignoreArgs)
+    return CallArgsInfo(func, ignoreArgs=ignoreArgs)

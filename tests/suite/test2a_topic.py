@@ -20,7 +20,7 @@ rootTopic = None
 treeConfig = TreeConfig()
 
 
-def test0_CreateRoot():
+def test_CreateRoot():
     #
     # Test create and then modify state of a topic object
     #
@@ -56,7 +56,7 @@ def test0_CreateRoot():
     rootTopic = obj
 
 
-def test1_SubUnsub():
+def test_SubUnsub():
     #
     # Test subscription and unsubscription of listeners
     #
@@ -104,7 +104,7 @@ def test1_SubUnsub():
     assert obj.getNumListeners() == 0
 
 
-def test2_CreateChild():
+def test_CreateChild():
     #
     # Test creation of a child topic, subscription of listeners
     #

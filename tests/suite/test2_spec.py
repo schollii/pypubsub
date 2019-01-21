@@ -24,7 +24,7 @@ from pubsub.core import SenderUnknownMsgDataError
     #    self.foo.dispose()
     #    self.foo = None
 
-def test1_create():
+def test_create():
     # root
     td1 = ArgSpecGiven( dict() )
     ai1 = ArgsInfo(('t1',), td1, None)
@@ -61,7 +61,7 @@ def test1_create():
     assert ai5.hasSameArgs('arg1', 'arg2')
     assert ai5.getCompleteAI() is ai5
 
-def test2_update():
+def test_update():
     td1 = ArgSpecGiven( dict() )
     td2 = ArgSpecGiven()
     td4 = ArgSpecGiven()
@@ -104,7 +104,7 @@ def test2_update():
     assert ai2.hasSameArgs('arg1', 'arg2')
     assert ai5.hasSameArgs('arg1', 'arg2', 'arg3', 'arg4')
 
-def test3_filter():
+def test_filter():
     td = ArgSpecGiven(
         argsDocs = dict(arg1='doc for arg1', arg2='doc for arg2'),
         reqdArgs = ('arg2',))

@@ -69,19 +69,19 @@ class Listener:
     be given the Topic object for the message sent by sendMessage().
     Such a Listener will have wantsTopicObjOnCall() True.
 
-    Callables that have a '\**kargs' argument will receive all message data, not just that for
+    Callables that have a '** kargs' argument will receive all message data, not just that for
     the topic they are subscribed to. Such a listener will have wantsAllMessageData() True.
     """
 
     AUTO_TOPIC = _AUTO_ARG
 
-    def __init__(self, callable_: UserListener, argsInfo: CallArgsInfo, curriedArgs: Mapping[str, Any] = None,
+    def __init__(self, callable_obj: UserListener, argsInfo: CallArgsInfo, curriedArgs: Mapping[str, Any] = None,
                  onDead: Callable[[Listener], None] = None):
         """
-        Use callable_ as a listener of topicName. The argsInfo is the
+        Use callable_obj as a listener of topicName. The argsInfo is the
         return value from a Validator, ie an instance of callables.CallArgsInfo.
         If given, the onDead will be called with self as parameter, if/when
-        callable_ gets garbage collected (callable_ is held only by weak
+        callable_obj gets garbage collected (callable_obj is held only by weak
         reference).
         """
         # set call policies
@@ -89,15 +89,15 @@ class Listener:
         self.curriedArgs = curriedArgs
 
         self._autoTopicArgName = argsInfo.autoTopicArgName
-        self._callable = getWeakRef(callable_, self.__notifyOnDead)
+        self._callable = getWeakRef(callable_obj, self.__notifyOnDead)
         self.__onDead = onDead
 
         # save identity now in case callable dies:
-        name, mod = getID(callable_)  #
+        name, mod = getID(callable_obj)  #
         self.__nameID = name
         self.__module = mod
-        self.__id = str(id(callable_))[-4:]  # only last four digits of id
-        self.__hash = hash(callable_)
+        self.__id = str(id(callable_obj))[-4:]  # only last four digits of id
+        self.__hash = hash(callable_obj)
 
     def name(self) -> str:
         """
@@ -142,7 +142,7 @@ class Listener:
         return self._autoTopicArgName is not None
 
     def wantsAllMessageData(self) -> bool:
-        """True if this listener wants all message data: it has a \**kwargs argument"""
+        """True if this listener wants all message data: it has a ** kwargs argument"""
         return self.acceptsAllKwargs
 
     def setCurriedArgs(self, **curriedArgs):
@@ -210,7 +210,7 @@ class Listener:
         """
         Call the listener with **kwargs. Note that it raises RuntimeError
         if listener is dead. Should always return True (False would require
-        the callable_ be dead but self hasn't yet been notified of it...).
+        the callable_obj be dead but self hasn't yet been notified of it...).
         """
         if self.acceptsAllKwargs:
             kwargs = allKwargs or kwargs  # if allKwargs is None then use kwargs

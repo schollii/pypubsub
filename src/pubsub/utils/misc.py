@@ -32,8 +32,8 @@ class Callback:
     "self.a = Callback(func)", then "boo.a()" works as expected.
     """
 
-    def __init__(self, callable_):
-        self.__callable = callable_
+    def __init__(self, callable_obj):
+        self.__callable = callable_obj
 
     def __call__(self, *args, **kwargs):
         return self.__callable(*args, **kwargs)

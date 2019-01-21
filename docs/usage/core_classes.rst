@@ -1,7 +1,7 @@
 Core Classes
 ============
 
-The following classes are useful for advanced use of Pypubsub:
+The following classes are useful for advanced use of PyPubSub:
 
 - pubsub.core.Listener
 - pubsub.core.TopicObj
@@ -11,7 +11,7 @@ The following classes are useful for advanced use of Pypubsub:
 It is not typically necessary to know about or use these: the pub module instantiates a 
 default Publisher, which contains a TopicManager, which generates a Topic object
 for every topic used. The Publisher instance returns a Listener instance from subscribe, 
-wrapping the given callable with Pypubsub-relevant meta-data about the callable.
+wrapping the given callable with PyPubSub-relevant meta-data about the callable.
 
 
 Publisher

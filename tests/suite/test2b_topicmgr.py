@@ -95,7 +95,7 @@ class TestTopicMgr1_GetOrCreate_NoDefnProv:
     """Only tests TopicMgr methods. This must use some query methods on
     topic objects to validate that TopicMgr did it's job properly."""
 
-    def test10_NoProtoListener(self):
+    def test_NoProtoListener(self):
         #
         # Test the getOrCreateTopic without proto listener
         #
@@ -162,7 +162,7 @@ class TestTopicMgr1_GetOrCreate_NoDefnProv:
         tName = rootName + '.Undefined'
         pytest.raises(TopicNameError, topicMgr.getTopic, tName)
 
-    def test20_WithProtoListener(self):
+    def test_WithProtoListener(self):
         #
         # Test the getOrCreateTopic with proto listener
         #
@@ -208,7 +208,7 @@ class TestTopicMgr2_GetOrCreate_DefnProv:
     can provide for some topic definitions.
     """
 
-    def test10_DefnProvider(self):
+    def test_DefnProvider(self):
         #
         # Test the addition and clearing of definition providers
         #
@@ -232,7 +232,7 @@ class TestTopicMgr2_GetOrCreate_DefnProv:
         assert 1 == topicMgr.getNumDefnProviders()
         topicMgr.clearDefnProviders()
 
-    def test20_UseProvider(self):
+    def test_UseProvider(self):
         #
         # Test the use of definition providers for topics. We create
         # two so we can check that more than one can work together.
@@ -334,7 +334,7 @@ class TestTopicMgr2_GetOrCreate_DefnProv:
         testRaises('a.err3', 'Params [] missing inherited [arg1] for topic "a.err3" required args')
 
 
-    def test30_DelTopic(self):
+    def test_DelTopic(self):
         #
         # Test topic deletion
         #
@@ -353,13 +353,13 @@ class TestTopicMgr2_GetOrCreate_DefnProv:
 
 class TestTopicMgr3_TreeTraverser:
     expectedOutput = '''\
-\-- Topic "a2"
-    \-- Topic "a"
-        \-- Topic "a"
-        \-- Topic "b"
-    \-- Topic "b"
-        \-- Topic "a"
-        \-- Topic "b"'''
+\\-- Topic "a2"
+    \\-- Topic "a"
+        \\-- Topic "a"
+        \\-- Topic "b"
+    \\-- Topic "b"
+        \\-- Topic "a"
+        \\-- Topic "b"'''
 
     def test1(self):
         #
