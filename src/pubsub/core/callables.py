@@ -42,13 +42,13 @@ def getModule(obj: Any) -> ModuleType:
     return module
 
 
-def getID(callable_: UserListener) -> Tuple[str, ModuleType]:
+def getID(callable_obj: UserListener) -> Tuple[str, ModuleType]:
     """
     Get "ID" of a callable, in the form of its name and module in which it is defined
     E.g. getID(Foo.bar) returns ('Foo.bar', 'a.b') if Foo.bar was defined in module a.b.
-    :param callable\_: a callable, ie function, bound method or callable instance
+    :param callable_obj: a callable, ie function, bound method or callable instance
     """
-    sc = callable_
+    sc = callable_obj
     if ismethod(sc):
         module = getModule(sc.__self__)
         obj_name = '%s.%s' % (sc.__self__.__class__.__name__, sc.__func__.__name__)
@@ -62,26 +62,26 @@ def getID(callable_: UserListener) -> Tuple[str, ModuleType]:
     return obj_name, module
 
 
-def getRawFunction(callable_: UserListener) -> Tuple[Callable]:
+def getRawFunction(callable_obj: UserListener) -> Tuple[Callable]:
     """
     Get raw function information about a callable.
-    :param callable_: any object that can be called
+    :param callable_obj: any object that can be called
     :return: function corresponding to callable, and offset is 0 or 1 to
         indicate whether the function's first argument is 'self' (1) or not (0)
-    :raise ValueError: if callable_ is not of a recognized type (function, method or object with __call__ method).
+    :raise ValueError: if callable_obj is not of a recognized type (function, method or object with __call__ method).
     """
     firstArg = 0
-    if isfunction(callable_):
-        # print 'Function', getID(callable_)
-        func = callable_
-    elif ismethod(callable_):
-        # print 'Method', getID(callable_)
-        func = callable_
-    elif hasattr(callable_, '__call__'):
-        # print 'Functor', getID(callable_)
-        func = callable_.__call__
+    if isfunction(callable_obj):
+        # print 'Function', getID(callable_obj)
+        func = callable_obj
+    elif ismethod(callable_obj):
+        # print 'Method', getID(callable_obj)
+        func = callable_obj
+    elif hasattr(callable_obj, '__call__'):
+        # print 'Functor', getID(callable_obj)
+        func = callable_obj.__call__
     else:
-        msg = 'type "%s" not supported' % type(callable_).__name__
+        msg = 'type "%s" not supported' % type(callable_obj).__name__
         raise ValueError(msg)
 
     return func
@@ -203,20 +203,20 @@ class CallArgsInfo:
                 break
 
 
-def getArgs(callable_: UserListener, ignoreArgs: Sequence[str] = None):
+def getArgs(callable_obj: UserListener, ignoreArgs: Sequence[str] = None):
     """
     Get the call paramters of a callable.
-    :param callable_: the callable for which to get call parameters
-    :param ignoreArgs: optional list of names of parameters of callable_ that should not be in the returned object
-    :return: an instance of CallArgsInfo for the given callable_
-    :raise ListenerMismatchError: if callable_ is not a callable, or ignoreArgs has an item that is not a call
+    :param callable_obj: the callable for which to get call parameters
+    :param ignoreArgs: optional list of names of parameters of callable_obj that should not be in the returned object
+    :return: an instance of CallArgsInfo for the given callable_obj
+    :raise ListenerMismatchError: if callable_obj is not a callable, or ignoreArgs has an item that is not a call
         param of callable
     """
     # figure out what is the actual function object to inspect:
     try:
-        func = getRawFunction(callable_)
+        func = getRawFunction(callable_obj)
     except ValueError:
         exc = sys.exc_info()[1]
-        raise ListenerMismatchError(str(exc), callable_)
+        raise ListenerMismatchError(str(exc), callable_obj)
 
     return CallArgsInfo(func, ignoreArgs=ignoreArgs)

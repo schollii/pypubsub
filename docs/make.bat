@@ -1,7 +1,7 @@
 @ECHO OFF
 
 sphinx-build -b html -a . html
-exit
+exit /B
 
 # The rest is the original make.bat, which has too many options!
 

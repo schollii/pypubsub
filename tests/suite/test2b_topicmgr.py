@@ -353,13 +353,13 @@ class TestTopicMgr2_GetOrCreate_DefnProv:
 
 class TestTopicMgr3_TreeTraverser:
     expectedOutput = '''\
-\-- Topic "a2"
-    \-- Topic "a"
-        \-- Topic "a"
-        \-- Topic "b"
-    \-- Topic "b"
-        \-- Topic "a"
-        \-- Topic "b"'''
+\\-- Topic "a2"
+    \\-- Topic "a"
+        \\-- Topic "a"
+        \\-- Topic "b"
+    \\-- Topic "b"
+        \\-- Topic "a"
+        \\-- Topic "b"'''
 
     def test1(self):
         #
