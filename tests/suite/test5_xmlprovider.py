@@ -9,7 +9,7 @@ from pubsub.utils.xmltopicdefnprovider import (
 
 topicMgr = pub.getDefaultTopicMgr()
 
-def test0_xml_from_file():
+def test_xml_from_file():
     pub.clearTopicDefnProviders()
 
     provider = XmlTopicDefnProvider('xmlprovider_topics.xml', TOPIC_TREE_FROM_FILE)
@@ -19,7 +19,7 @@ def test0_xml_from_file():
     assert topicMgr.getOrCreateTopic('parent') is not None
     assert topicMgr.getOrCreateTopic('parent.child') is not None
 
-def test1_xml_import():
+def test_xml_import():
     pub.clearTopicDefnProviders()
     topicMgr.delTopic('parent')
     # verify pre:
@@ -36,7 +36,7 @@ def test1_xml_import():
     assert topicMgr.getTopic('parent') is not None
     assert topicMgr.getTopic('parent.child') is not None
 
-def test2_xml_string_import():
+def test_xml_string_import():
     xml="""<topicdefntree>
       <description>Test Topics showing hierarchy and topic inheritance</description>
       <topic id="parent">
@@ -68,7 +68,7 @@ def test2_xml_string_import():
     assert topicMgr.getTopic('parent') is not None
     assert topicMgr.getTopic('parent.child') is not None
 
-def test3_xml_topics():
+def test_xml_topics():
     # validate that topic specs were properly parsed
     def isValid(topicName, listener):
         topic = topicMgr.getTopic(topicName)
