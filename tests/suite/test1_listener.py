@@ -18,12 +18,12 @@ from pubsub.core.listener import (
     ListenerValidator)
 
 
-def test0_ArgsInfo():
+def test_ArgsInfo():
     def listener0(msgTopic = Listener.AUTO_TOPIC): pass
-    CallArgsInfo(listener0, 0)
+    CallArgsInfo(listener0)
 
     def listener1(arg1, msgTopic = Listener.AUTO_TOPIC): pass
-    CallArgsInfo(listener1, 1)
+    CallArgsInfo(listener1)
 
 
 class ArgsInfoMock:
@@ -32,7 +32,7 @@ class ArgsInfoMock:
         self.acceptsAllKwargs = False
 
 
-def test2_Validation0():
+def test_Validation0():
     # Test when ValidatorSameKwargsOnly used, ie when args in
     # listener and topic must be exact match (unless *arg).
     AA = Listener.AUTO_TOPIC
@@ -55,7 +55,7 @@ def test2_Validation0():
     validate(extraArg, curriedArgNames=('a',))  # ok: extra is curried
     validate(extraKwarg)  # ok: extra but AUTO_TOPIC
 
-def test2_Validation1():
+def test_Validation1():
     # one arg/kwarg in topic
     validator = ListenerValidator(['a'], ['b'])
     validate = validator.validate
@@ -87,7 +87,7 @@ def test2_Validation1():
     pytest.raises( ListenerMismatchError, validate, extra_arg2)    # E: extra arg
 
 
-def test3_IsCallable():
+def test_IsCallable():
     # Test the proper trapping of non-callable and certain types of
     # callable objects.
 
@@ -108,20 +108,30 @@ def test3_IsCallable():
     validator.validate(foo.meth)
 
 
-def test4_WantTopic():
+def test_WantTopic():
     # Test the correct determination of whether want topic
     # auto-passed during sendMessage() calls.
 
     # first check proper breakdown of listener args:
     def listener(a, b=1): pass
-    argsInfo = CallArgsInfo(listener, 0)
+    argsInfo = CallArgsInfo(listener)
     assert None == argsInfo.autoTopicArgName
 
     msgTopic = 'auto'
+
     class MyListener:
         def method(self, a, b=1, auto=Listener.AUTO_TOPIC): pass
+
     listener = MyListener()
     argsInfo = getArgs(listener.method)
+    assert msgTopic == argsInfo.autoTopicArgName
+    assert ['a','b'] == argsInfo.allParams
+
+    class MyFunctor:
+        def __call__(self, a, b=1, auto=Listener.AUTO_TOPIC): pass
+
+    listener = MyFunctor()
+    argsInfo = getArgs(listener)
     assert msgTopic == argsInfo.autoTopicArgName
     assert ['a','b'] == argsInfo.allParams
 
@@ -151,7 +161,7 @@ def test4_WantTopic():
     def noWant3(auto, b=1): pass
     checkWantTopic(validate, noWant3)
 
-def test5a_weakref():
+def test_weakref():
     from weakref import ref as weakref
     from inspect import isfunction, ismethod
 
@@ -188,7 +198,7 @@ def test5a_weakref():
     gc.collect()
     assert fooWR() is None, 'foo'
 
-def test5_DOAListeners_1():
+def test_DOAListeners_1():
     # Test "dead on arrival"
 
     # test DOA of unbound method
@@ -201,7 +211,7 @@ def test5_DOAListeners_1():
     assert not unbound.isDead()
 
 
-def test5_DOAListeners_2():
+def test_DOAListeners_2():
     # test DOA of tmp callable:
     def fn():
         pass
@@ -228,7 +238,7 @@ def test5_DOAListeners_2():
     pytest.raises(RuntimeError, doa2, None, {})
 
 
-def test6_ListenerEq():
+def test_ListenerEq():
     # Test equality tests of two listeners
 
     def listener1(): pass
@@ -266,7 +276,7 @@ def test6_ListenerEq():
     assert l4 == listener3.meth
 
 
-def test7_DyingListenersClass():
+def test_DyingListenersClass():
     # Test notification callbacks when listener dies
 
     # test dead listener notification
@@ -297,7 +307,7 @@ def test7_DyingListenersClass():
     assert len(lsrs) == 0
 
 
-def test8_getArgsBadListener():
+def test_getArgsBadListener():
     pytest.raises( ListenerMismatchError, getArgs, 1)
     try:
         getArgs(1)
@@ -307,7 +317,7 @@ def test8_getArgsBadListener():
         assert str(exc) == msg
 
 
-def test10_weakMethod():
+def test_weakMethod():
     class Foo:
         def meth(self): pass
     foo = Foo()
@@ -315,7 +325,7 @@ def test10_weakMethod():
     str(wm)
 
 
-def test11_testNaming():
+def test_testNaming():
     aiMock = ArgsInfoMock()
 
     # define various type of listeners
@@ -341,7 +351,7 @@ def test11_testNaming():
     assert ll.wantsTopicObjOnCall()
 
 
-def test15_call():
+def test_call():
     aiMock = ArgsInfoMock()
     result = []
 

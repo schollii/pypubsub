@@ -62,11 +62,11 @@ def getID(callable_: UserListener) -> Tuple[str, ModuleType]:
     return obj_name, module
 
 
-def getRawFunction(callable_: UserListener) -> Tuple[Callable, int]:
+def getRawFunction(callable_: UserListener) -> Tuple[Callable]:
     """
     Get raw function information about a callable.
     :param callable_: any object that can be called
-    :return: (func, offset) where func is the function corresponding to callable, and offset is 0 or 1 to
+    :return: function corresponding to callable, and offset is 0 or 1 to
         indicate whether the function's first argument is 'self' (1) or not (0)
     :raise ValueError: if callable_ is not of a recognized type (function, method or object with __call__ method).
     """
@@ -77,9 +77,6 @@ def getRawFunction(callable_: UserListener) -> Tuple[Callable, int]:
     elif ismethod(callable_):
         # print 'Method', getID(callable_)
         func = callable_
-        if func.__self__ is not None:
-            # Method is bound, don't care about the self arg
-            firstArg = 1
     elif hasattr(callable_, '__call__'):
         # print 'Functor', getID(callable_)
         func = callable_.__call__
@@ -88,7 +85,7 @@ def getRawFunction(callable_: UserListener) -> Tuple[Callable, int]:
         msg = 'type "%s" not supported' % type(callable_).__name__
         raise ValueError(msg)
 
-    return func, firstArg
+    return func
 
 
 class ListenerMismatchError(ValueError):
@@ -119,16 +116,14 @@ class CallArgsInfo:
     required vs optional.
     """
 
-    def __init__(self, func: UserListener, firstArgIdx: int, ignoreArgs: Sequence[str] = None):
+    def __init__(self, func: UserListener, ignoreArgs: Sequence[str] = None):
         """
         :param func: the callable for which to get paramaters info
-        :param firstArgIdx: 0 if listener is a function, 1 if listener is a method
         :param ignoreArgs: do not include the given names in the getAllArgs(), getOptionalArgs() and
             getRequiredArgs() return values
 
         After construction,
-        - self.allParams will contain the subset of 'args' without first
-          firstArgIdx items,
+        - self.allParams will contain the subset of 'args',
         - self.numRequired will indicate number of required arguments
           (ie self.allParams[:self.numRequired] are the required args names);
         - self.acceptsAllKwargs = acceptsAllKwargs
@@ -220,9 +215,9 @@ def getArgs(callable_: UserListener, ignoreArgs: Sequence[str] = None):
     """
     # figure out what is the actual function object to inspect:
     try:
-        func, firstArgIdx = getRawFunction(callable_)
+        func = getRawFunction(callable_)
     except ValueError:
         exc = sys.exc_info()[1]
         raise ListenerMismatchError(str(exc), callable_)
 
-    return CallArgsInfo(func, firstArgIdx, ignoreArgs=ignoreArgs)
+    return CallArgsInfo(func, ignoreArgs=ignoreArgs)
