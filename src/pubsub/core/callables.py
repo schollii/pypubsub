@@ -80,7 +80,6 @@ def getRawFunction(callable_: UserListener) -> Tuple[Callable]:
     elif hasattr(callable_, '__call__'):
         # print 'Functor', getID(callable_)
         func = callable_.__call__
-        firstArg = 1  # don't care about the self arg
     else:
         msg = 'type "%s" not supported' % type(callable_).__name__
         raise ValueError(msg)

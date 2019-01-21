@@ -33,7 +33,7 @@ Acknowledgements
 
 Thanks to SourceForge.net for hosting the project until September 2016.
 Thanks to Github.com for hosting the project from October 2016.
-Thanks to Robb Shechter for having
+Thanks to Robb Shecter for having
 given me the chance to take over this project from him many years ago (ca 2004!).
 Thanks to all those users of Pypubsub who ask questions, make suggestions, point out
 bugs, etc. 
@@ -42,7 +42,10 @@ bugs, etc.
 Pypubsub Users
 --------------
 
-Several users have donated a bit of their time to describe how they use
+The page at https://libraries.io/pypi/PyPubSub has useful statics on which other github
+projects use/watch/fork pypubsub.
+
+In addition, several users have donated a bit of their time to describe how they use/d
 Pypubsub in their Python projects.
 
 *Darin Gordon, for Yosai, since 2015*:

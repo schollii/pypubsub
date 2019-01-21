@@ -3,6 +3,10 @@ Changelog
 
 High-level changelog. For details, consult the SVN logs.
 
+:4.1.0 (Feb 2019):
+
+* Cleanup for support Python 3.7
+
 :4.0.0 (Dec 2016):
 
 * Verified support Python 3.5 and 3.6

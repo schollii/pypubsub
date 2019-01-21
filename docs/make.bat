@@ -1,5 +1,10 @@
 @ECHO OFF
 
+sphinx-build -b html -a . html
+exit
+
+# The rest is the original make.bat, which has too many options!
+
 REM Command file for Sphinx documentation
 
 if "%SPHINXBUILD%" == "" (

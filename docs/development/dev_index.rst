@@ -61,8 +61,8 @@ Scripts Available
 
     Once this passes using the project's default interpreter, a Terminal can be
     opened in PyCharm (or alternately a command shell from Windows), and from
-    the Pypubsub root folder, run :command:`tox`. This will
-    attempt to run the test suite on Python 3.3, 3.4 and 3.5.
+    the Pypubsub root folder, run :command:`tox`. This will attempt to run the
+    test suite in every 3.x version of Python, x>=3 (ie 3.3, 3.4, etc).
 
     After changes are committed to github, the Travis CI will automatically
     run the tests on a Linux platform, for all versions of Python supported
@@ -77,7 +77,9 @@ Scripts Available
     It can be run from PyCharm via the perf build configuration. This will
     generate a new :file:`.pstats` file which can be analysed.
     The test can also be run directly from command shell via
-    :command:`python perf.py 1000`.
+    :command:`python perf.py 1000`. The test is meant to compare the impact
+    of changes before/after and is designed to compare on results on the
+    same system (hardwards, OS).
 
 *Documentation*:
     The documentation can be generated locally on Windows via the Gen Docs build

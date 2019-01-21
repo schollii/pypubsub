@@ -4,32 +4,33 @@
 Welcome to Pypubsub's Home Page!
 ================================
 
-This is the documentation for the Pypubsub project. This Python project defines
-a package called 'pubsub' which provides a publish - subscribe API to facilitate
-event-based programming and decoupling of components of an application via the
-Observer pattern. PyPybSub originated in wxPython around y2k but has been
-standalone since 2006, and has been on PyPI since then. The code was hosted on
-SourceForget.net from 2007 to 2016, and the code is now hosted on github. The
-code is very mature and stable. See :ref:`label-history` for details on its history
-and :ref:`label-roadmap` for possible future work.
+This is the documentation for the PyPubSub project. This Python project defines
+a package called 'pypubsub' which provides a publish-subscribe API to facilitate
 
-Using the Observer pattern in your application
-can dramatically simplify its design and improve testability. Robin Dunn, the 
-creator of wxPython where the Pypubsub package was born, summerizes Pypubsub nicely:
+1. event-based programming
+2. decoupling an application's in-memory components
 
-    Basically you just have some part(s) of your program 
-    subscribe to a particular topic and have some other part(s) 
-    of your program publish messages with that topic.  All the 
-    plumbing is taken care of by Pypubsub.  -- *Robin Dunn, Jun 2007*
+PyPubSub provides the infrastructure for using the Observer pattern in your
+single-process application. It is pure Python and works on Python 3.3+.
 
-The Observer pattern mandates that listeners and senders be mutually "unaware" of
-each other: which listeners are in the set, how big is the set, "who" sent a message, etc.
-Basically the Observer pattern is like a radio broadcast: the emitter doesn't know which
-radios (receivers) are tuned to a frequency; radios are unaware of other radios; radios
-don't know what tower broadcasted a given message, just that the emission frequency is
-the one that carries information that the radio user wants.
+Using the Observer pattern in your single-process application can dramatically
+simplify its design and improve testability.
+The Observer allows code to observe "messages", without knowing anything about the source of
+the message (which Python object or function), and in turn allows code to emit messages
+without any regard for which code will receive the message (it may not be received at all),
+what the receiving code will do with the message, etc.
+Basically the Observer pattern is like a radio broadcast, it is a one-way message sent,
+the only contract is in the message content: the receiver/listener must have the ability
+to decode the message.
 
-The Publish - Subscribe API provided by Pypubsub has the following characteristics:
+A classic example where PyPubSub could be useful: a GUI application. How do components like
+views and dialogs communicate their changes to one another? Without a publish-subscribe
+mechanism, the code can become a real spaghetti.
+
+PyPubSub makes it easy for your code to emit messages, and other code, in the same process,
+to receive those messages. PyPubSub takes care of the plumbing.
+
+The Publish-Subscribe API provided by Pypubsub has the following characteristics:
 
 1. Message Sender: The sender of a Pypubsub message is the ccode that calls pub.sendMessage().
 2. Message Topic: 
@@ -80,7 +81,12 @@ Here is a schematic representation of the role of Pypubsub during message sendin
 
 ..
 
-Pypubsub does for
+PyPybSub was originally written by Robb Shecter as wx.lib.pubsub in wxPython 2.x, sometime
+around y2k. Robb and the wxPython author, Robin Dunn, allowed me to take over the package around
+2003, and I moved it out into a standalone package (no dependencies on wxPython) around 2006
+with their approval. I hosted the code on SourceForget.net for about 10 years, then moved it to
+github sometime in 2016. The code is very mature and stable. See :ref:`label-history` for
+details on its history and :ref:`label-roadmap` for possible future work.
 
 Contents:
 
