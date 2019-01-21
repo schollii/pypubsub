@@ -64,7 +64,7 @@ not be sent the message. Putting a try/except clause around every sendMessage is
 typically not practical. 
 
 Since exceptions are common during application development (bugs due to 
-invalid arguments, failed assertions, etc), PyPubSub provdes a hook to register
+invalid arguments, failed assertions, etc.), PyPubSub provdes a hook to register
 a 'listener exception' handler: whenever a listener raises an exception, 
 PyPubSub then sends it to the handler, and continues with the send operation
 until all listeners have received the message. The handler might print it to
@@ -78,7 +78,7 @@ of the handler can be given to ``pub.setListenerExcHandler()``.
 Listen for messages from all topics
 -----------------------------------
 
-PyPubSub defines a specia topic named pub.ALL_TOPICS. A listener that subscribes to
+PyPubSub defines a special topic named pub.ALL_TOPICS. A listener that subscribes to
 this topic will receives all messages of every topic. By default, the listener
 will not receive any data since pub.ALL_TOPICS is the parent of all root topics: 
 its MDS must be empty. 

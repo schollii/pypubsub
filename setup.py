@@ -56,7 +56,8 @@ setup(
         'Topic :: Software Development :: Libraries :: Application Frameworks',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-
+    python_requires = ">=3.3, <4",
+    
     # use the module docs as the long description:
     long_description = open('README.rst', 'r').read()
 )
