@@ -2,7 +2,7 @@ Packaging with py2exe and cxFreeze
 ==================================
 
 In this section we will see how to package applications that use
-Pypubsub, with `py2exe`_ and `cx_Freeze`_ packaging tools.
+PyPubSub, with `py2exe`_ and `cx_Freeze`_ packaging tools.
 
 Introduction
 ------------
@@ -17,10 +17,10 @@ are likely to be left out by the packaging tool. This can be a problem
 for some packaged applications.
 
 
-Packaging modules that use Pypubsub
+Packaging modules that use PyPubSub
 -----------------------------------
 
-Pypubsub supports two different messaging protocols namely ``args1`` and
+PyPubSub supports two different messaging protocols namely ``args1`` and
 ``kwargs``; choosing and switching between these protocols is done by
 modifying the module path dynamically. This can result in import error
 like this at runtime::
@@ -29,7 +29,7 @@ like this at runtime::
       ImportError: No module named listenerimpl
 
 In the following sections we show an example script that uses
-Pypubsub and discuss the setup script to package it using *py2exe* or
+PyPubSub and discuss the setup script to package it using *py2exe* or
 *cx_Freeze* packaging tools.
 
 .. _py2exe: http://www.py2exe.org

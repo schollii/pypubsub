@@ -1,7 +1,7 @@
 Contribute
 ==========
 
-This page is intended for developers of (or contributing to) Pypubsub.
+This page is intended for developers of (or contributing to) PyPubSub.
 
 .. contents:: In this section:
    :depth: 1
@@ -19,7 +19,7 @@ Contributions are welcome! There are many ways you could contribute:
 - new features
 - test results on different platforms
 - documentation
-- screencasts! (of applications using Pypubsub with output when user clicks)
+- screencasts! (of applications using PyPubSub with output when user clicks)
 - example topic trees (using ``pubsub.utils.printTopicTree()`` in latest
   version, or ``print Publisher`` in versions 1)
 - other improvements
@@ -41,14 +41,14 @@ In addition to the :ref:`label-install-reqs`, the following are required:
 - To generate the docs:
 
   - sphinx >= 1.4.8
-  - In Pypubsub 3.3, which used an older version of sphinx, sphinx had to be patched as per post on
+  - In PyPubSub 3.3, which used an older version of sphinx, sphinx had to be patched as per post on
     sphinx-dev, but this no longer seems to be the required:
 
     .. literalinclude:: sphinx_patch1.txt
     .. literalinclude:: sphinx_patch2.txt
 
 - To change code: PyCharm is recommended (Community Edition is sufficient). Various
-  build configurations are available via the Pypubsub project when loaded into PyCharm.
+  build configurations are available via the PyPubSub project when loaded into PyCharm.
 
 
 Scripts Available
@@ -61,12 +61,12 @@ Scripts Available
 
     Once this passes using the project's default interpreter, a Terminal can be
     opened in PyCharm (or alternately a command shell from Windows), and from
-    the Pypubsub root folder, run :command:`tox`. This will attempt to run the
+    the PyPubSub root folder, run :command:`tox`. This will attempt to run the
     test suite in every 3.x version of Python, x>=3 (ie 3.3, 3.4, etc).
 
     After changes are committed to github, the Travis CI will automatically
     run the tests on a Linux platform, for all versions of Python supported
-    by Pypubsub. The results will be at https://travis-ci.org/schollii/pypubsub/builds.
+    by PyPubSub. The results will be at https://travis-ci.org/schollii/pypubsub/builds.
 
     There is also a buildbot maintained by Jerome Laheurte to test on additional
     \*nix flavors, including OSX. Test results can be viewed at
@@ -96,7 +96,7 @@ Scripts Available
 Releases
 --------
 
-Pypubsub uses the latest stable Python packaging and distribution tools:
+PyPubSub uses the latest stable Python packaging and distribution tools:
 wheel, twine, and pypi.
 
 Creating a new release involves the following sequence of steps:

@@ -4,7 +4,7 @@
 Basic Usage
 ===========
 
-Basic usage of Pypubsub involves subscribing listeners, sending messages, and responding to
+Basic usage of PyPubSub involves subscribing listeners, sending messages, and responding to
 messages. The :ref:`label-quick-start` subsection below provides examples. For details, 
 navigate to the :ref:`label-basic-tasks` subsection: 
 
@@ -37,10 +37,10 @@ Other Examples
 
 There are several examples that can be found in the source distribution
 in the ``examples`` folder. Some focus on the basics, others on more 
-advanced aspects of Pypubsub usage. Some examples are GUI-based and may
+advanced aspects of PyPubSub usage. Some examples are GUI-based and may
 require other packages (such as wxPython).
 
-The examples/basic_kwargs folder contains examples of basic usage of Pypubsub
+The examples/basic_kwargs folder contains examples of basic usage of PyPubSub
 "out of the box", i.e. using the default ("kwargs") messaging protocol. 
 The README.txt file in `examples_basic_kwargs`_ explains:
 

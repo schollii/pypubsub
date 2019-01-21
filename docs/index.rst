@@ -1,7 +1,7 @@
-.. Pypubsub documentation master file, created by
+.. PyPubSub documentation master file, created by
    sphinx-quickstart on Mon May 20 21:24:10 2013.
 
-Welcome to Pypubsub's Home Page!
+Welcome to PyPubSub's Home Page!
 ================================
 
 This is the documentation for the PyPubSub project. This Python project defines
@@ -30,9 +30,9 @@ mechanism, the code can become a real spaghetti.
 PyPubSub makes it easy for your code to emit messages, and other code, in the same process,
 to receive those messages. PyPubSub takes care of the plumbing.
 
-The Publish-Subscribe API provided by Pypubsub has the following characteristics:
+The Publish-Subscribe API provided by PyPubSub has the following characteristics:
 
-1. Message Sender: The sender of a Pypubsub message is the ccode that calls pub.sendMessage().
+1. Message Sender: The sender of a PyPubSub message is the ccode that calls pub.sendMessage().
 2. Message Topic: 
    a. Every message is specific to a "topic", defined as a string name;
    b. Topics form a hierarchy. A parent topic is more generic than a child topic.
@@ -43,7 +43,7 @@ The Publish-Subscribe API provided by Pypubsub has the following characteristics
    b. The MDS of a child topic cannot be more restrictive than that of a parent topic;
    c. Once the MDS is set for a topic, it never changes during the runtime of an application.
 
-4. Message Listener: All message listeners are callables that get registered with Pypubsub
+4. Message Listener: All message listeners are callables that get registered with PyPubSub
    in order to receive messages of a given topic, and must have a signature that is
    compatible with the topic's MDS.
 5. Message Delivery:
@@ -61,21 +61,21 @@ The Publish-Subscribe API provided by Pypubsub has the following characteristics
    e. A message sent will be delivered to all registered listeners of the specified topic
       before control is returned to the sender.
 
-6. Message Immutability: message contents must be left unchanged by listeners, but Pypubsub
+6. Message Immutability: message contents must be left unchanged by listeners, but PyPubSub
    does not verify this.
-7. Message Direction: a message is one-way from sender to set-of-listeners; Pypubsub does not
+7. Message Direction: a message is one-way from sender to set-of-listeners; PyPubSub does not
    support "answering" with a response from each listener to the sender. This could, of course,
    be achieved by having the sender include a callback as message data, and each listener
    calling that callback with agreed-upon data, but this (typically) increases coupling.
-8. Message Source: Pypubsub does not provide any information to the listeners regarding the
+8. Message Source: PyPubSub does not provide any information to the listeners regarding the
    origin (aka source, or provenance) of a message. The sender could, of course, include such
    information with the message data, but this is *not* recommended as it defeats the purpose
    of the Observer pattern.
 
-Here is a schematic representation of the role of Pypubsub during message sending and delivery:
+Here is a schematic representation of the role of PyPubSub during message sending and delivery:
 
 .. image:: pubsub_concept.png
-   :alt: Sketch showing how Pypubsub fits into a Python application
+   :alt: Sketch showing how PyPubSub fits into a Python application
    :align: center
    :width: 450px
 

@@ -1,9 +1,9 @@
 .. _label-basic-tasks:
 
-Basic Pypubsub Tasks
+Basic PyPubSub Tasks
 ====================
 
-Several essential tasks supported by Pypubsub
+Several essential tasks supported by PyPubSub
 
 .. contents:: In this section:
    :depth: 2
@@ -13,7 +13,7 @@ Several essential tasks supported by Pypubsub
 Subscribing to Topics
 ---------------------
 
-Every message that can be sent via Pypubsub is of a specific topic, just as every
+Every message that can be sent via PyPubSub is of a specific topic, just as every
 object in Python is of a specific type. 
 
 Use ``pub.subscribe(callable, 'topic-path')`` to subscribe callable 
@@ -45,7 +45,7 @@ Hence given the following definitions::
         
     foo = Foo()
 
-the following callables could be subscribed to a Pypubsub message topic::
+the following callables could be subscribed to a PyPubSub message topic::
 
     function
     foo.method
@@ -53,16 +53,16 @@ the following callables could be subscribed to a Pypubsub message topic::
     Foo.staticMeth
     Foo.classMeth
 
-Pypubsub holds listeners by weak reference so that the lifetime of the callable
-is not affected by Pypubsub: once the application no longer references the callable,
-it can be garbage collected and Pypubsub can clean up so it is no longer registered
+PyPubSub holds listeners by weak reference so that the lifetime of the callable
+is not affected by PyPubSub: once the application no longer references the callable,
+it can be garbage collected and PyPubSub can clean up so it is no longer registered
 (this happens thanks to the weakref module). Without this, it would be imperative 
 to remember to unsubscribe certain listeners, which is error prone; they would end up 
 living until the application exited. 
 
 A nice example of this is a 
 user control (widget) in a GUI: if a method of the user control is registered 
-as listener in Pypubsub, and the control is discarded, the application need not
+as listener in PyPubSub, and the control is discarded, the application need not
 explicitly unregister the callable: the weak referencing will allow the widget
 to be garbage collected; otherwise, it would remain visible until explicit 
 unsubscription. 
@@ -70,7 +70,7 @@ unsubscription.
 .. warning::
 
     One caveat that results from this useful feature is that all callables 
-    that subscribe to topics must be referenced from outside Pypubsub. For instance,
+    that subscribe to topics must be referenced from outside PyPubSub. For instance,
     the following will silently unsubscribe on return from pub.subscribe()::
     
         def listener(): pass
@@ -80,7 +80,7 @@ unsubscription.
             return wrappedListener
         pub.subscribe(wrap(listener), 'topic')
         
-    since wrap() returns an object which only Pypubsub references: the wrappedListener
+    since wrap() returns an object which only PyPubSub references: the wrappedListener
     gets garbage collected upon return from subscribe(). It is 
     possible to verify that the stored listener is indeed dead::
     
@@ -140,7 +140,7 @@ Message Data
 Messages of a given topic can carry data. Which data is required and which 
 is optional is known as the *Message Data Specification* for the topic, or MDS for short.
 Unless your application explicitly defines the MDS for every topic in the hierarchy,
-Pypubsub infers the MDS of each topic based on the first pub.subscribe() or
+PyPubSub infers the MDS of each topic based on the first pub.subscribe() or
 the first pub.sendMessage() for the topic, whichever occurs first during 
 an application run. Once defined, a topic's MDS never changes (during a run).
 
@@ -160,7 +160,7 @@ Callable signature                           MDS (inferred)
 All subsequent calls to pub.subscribe() for the same topic or any subtopic 
 must be consistent with the topic's MDS.
 If a subscription specifies a callable that does not match the given topic's MDS,
-Pypubsub raises an exception. Therefore, the pub.subscribe() calls above
+PyPubSub raises an exception. Therefore, the pub.subscribe() calls above
 *could* be valid; they *will* be valid if the given callable satisfies the 
 given topic's MDS.
 
@@ -203,7 +203,7 @@ must return before the next listener can be called. The order of listeners
 (within a topic or up the tree) is not specified. The sender should not 
 make any assumptions about the order in which listeners will be called, 
 or even which ones will be called. If a listener leaks an exception, 
-Pypubsub catches it and interrupts the send operation, unless an exception
+PyPubSub catches it and interrupts the send operation, unless an exception
 handler has been defined. This is discussed in :ref:`label-exchandling`. 
 
 Message Data
@@ -234,7 +234,7 @@ get called with the arg1 parameter only. The less specific topics have less
 data. 
 
 Since messages of a given topic are sent not only to listeners of the topic 
-but also to listeners of topic up the topic tree, Pypubsub requires that subtopic
+but also to listeners of topic up the topic tree, PyPubSub requires that subtopic
 MDS be the same or more restrictive as that of its parent: optional arguments can become
 required, but required arguments cannot become optional. Indeed if 'root' 
 messages require arg1, then 'root.sub' must also require it; otherwise a 
@@ -260,7 +260,7 @@ Topic as Message Data
 
 If a listener requires to know the topic of the message, a specially named 
 default value ``pub.AUTO_TOPIC`` can be used for one of its call parameters:
-at call time, Pypubsub will replace the value by the pub.TopicObj object for the topic.
+at call time, PyPubSub will replace the value by the pub.TopicObj object for the topic.
 It can be queried to find the topic name via Topic.getName()::
 
     def listener(topic=pub.AUTO_TOPIC):
