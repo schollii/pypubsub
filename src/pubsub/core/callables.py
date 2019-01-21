@@ -12,7 +12,7 @@ CallArgsInfo regarding its autoTopicArgName data member.
 
 """
 
-from inspect import getargspec, ismethod, isfunction
+from inspect import ismethod, isfunction, signature, Parameter
 import sys
 from types import ModuleType
 from typing import Tuple, List, Sequence, Callable, Any
@@ -144,17 +144,23 @@ class CallArgsInfo:
             self.autoTopicArgName = None.
         """
 
-        (allParams, varParamName, varOptParamName, defaultVals) = getargspec(func)
-        if defaultVals is None:
-            defaultVals = []
-        else:
-            defaultVals = list(defaultVals)
+        allParams = []
+        defaultVals = []
+        varParamName = None
+        varOptParamName = None
+        for argName, param in signature(func).parameters.items():
+            if param.default != Parameter.empty:
+                defaultVals.append(param.default)
+            if param.kind == Parameter.VAR_POSITIONAL:
+                varParamName = argName
+            elif param.kind == Parameter.VAR_KEYWORD:
+                varOptParamName = argName
+            else:
+                allParams.append(argName)
 
         self.acceptsAllKwargs = (varOptParamName is not None)
         self.acceptsAllUnnamedArgs = (varParamName is not None)
-
         self.allParams = allParams
-        del self.allParams[0:firstArgIdx]  # does nothing if firstArgIdx == 0
 
         if ignoreArgs:
             for var_name in ignoreArgs:
@@ -170,6 +176,7 @@ class CallArgsInfo:
                 self.acceptsAllUnnamedArgs = False
 
         self.numRequired = len(self.allParams) - len(defaultVals)
+        assert len(self.allParams) >= len(defaultVals)
         assert self.numRequired >= 0
 
         # if listener wants topic, remove that arg from args/defaultVals
