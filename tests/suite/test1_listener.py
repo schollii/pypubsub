@@ -198,6 +198,7 @@ def test_weakref():
     gc.collect()
     assert fooWR() is None, 'foo'
 
+
 def test_DOAListeners_1():
     # Test "dead on arrival"
 

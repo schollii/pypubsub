@@ -105,6 +105,15 @@ def testSubscribe():
     pub.subscribe(listenToAll, pub.ALL_TOPICS)
     assert topicNames(listenToAll) == [pub.ALL_TOPICS]
 
+    # test type hints in listeners:
+    def listenerWithHints(a: int, b: bool, c: str = 2): pass
+    topicForHintedListeners = 'topicForHints'
+    topicMgr.getOrCreateTopic(topicForHintedListeners, listenerWithHints)
+    assert not pub.isSubscribed(listenerWithHints, topicForHintedListeners)
+    pub.subscribe(listenerWithHints, topicForHintedListeners)
+    assert pub.subscribe(listenerWithHints, topicForHintedListeners)
+    assert pub.isSubscribed(listenerWithHints, topicForHintedListeners)
+
 
 def testMissingReqdArgs():
     def proto(a, b, c=None): pass
@@ -143,6 +152,15 @@ def testSendTopicWithMessage():
     assert my.count == 3
     assert [] == [topic for topic in my.listen2Topics
         if topic not in ('testSendTopic', 'testSendTopic.subtopic')]
+
+    # type hints on listeners:
+    result = []
+    def listenerWithHints(a: int, b: bool, c: str = 2): result.append((a, b, c))
+    topicForHintedListeners = 'topicForHints'
+    pub.subscribe(listenerWithHints, topicForHintedListeners)
+    assert pub.subscribe(listenerWithHints, topicForHintedListeners)
+    pub.sendMessage(topicForHintedListeners, b=456, a=123, c='hello')
+    assert result == [(123, 456, 'hello')]
 
 
 def testAcceptAllArgs():
