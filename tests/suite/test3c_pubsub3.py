@@ -105,6 +105,15 @@ def testSubscribe():
     pub.subscribe(listenToAll, pub.ALL_TOPICS)
     assert topicNames(listenToAll) == [pub.ALL_TOPICS]
 
+    # test type hints in listeners:
+    def listenerWithHints(a: int, b: bool, c: str = 2): pass
+    topicForHintedListeners = 'topicForHints'
+    topicMgr.getOrCreateTopic(topicForHintedListeners, listenerWithHints)
+    assert not pub.isSubscribed(listenerWithHints, topicForHintedListeners)
+    pub.subscribe(listenerWithHints, topicForHintedListeners)
+    assert pub.subscribe(listenerWithHints, topicForHintedListeners)
+    assert pub.isSubscribed(listenerWithHints, topicForHintedListeners)
+
 
 def testMissingReqdArgs():
     def proto(a, b, c=None): pass
