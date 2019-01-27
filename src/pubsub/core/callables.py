@@ -115,7 +115,7 @@ class CallArgsInfo:
     required vs optional.
     """
 
-    def __init__(self, func: UserListener, ignoreArgs: Sequence[str] = None):
+    def __init__(self, func: UserListener, ignoreArgs: Sequence[str] = ()):
         """
         :param func: the callable for which to get paramaters info
         :param ignoreArgs: do not include the given names in the getAllArgs(), getOptionalArgs() and
@@ -138,72 +138,42 @@ class CallArgsInfo:
             self.autoTopicArgName = None.
         """
 
-        allParams = []
-        defaultVals = []
-        varParamName = None
-        varOptParamName = None
-        for argName, param in signature(func).parameters.items():
-            if param.default != Parameter.empty:
-                defaultVals.append(param.default)
-            if param.kind == Parameter.VAR_POSITIONAL:
-                varParamName = argName
-            elif param.kind == Parameter.VAR_KEYWORD:
-                varOptParamName = argName
-            else:
-                allParams.append(argName)
-
-        self.acceptsAllKwargs = (varOptParamName is not None)
-        self.acceptsAllUnnamedArgs = (varParamName is not None)
-        self.allParams = allParams
-
-        if ignoreArgs:
-            for var_name in ignoreArgs:
-                required = len(self.allParams) - len(defaultVals)
-                index = self.allParams.index(var_name)
-                del self.allParams[index]
-                if index >= required:
-                    del defaultVals[index - required]
-
-            if varOptParamName in ignoreArgs:
-                self.acceptsAllKwargs = False
-            if varParamName in ignoreArgs:
-                self.acceptsAllUnnamedArgs = False
-
-        self.numRequired = len(self.allParams) - len(defaultVals)
-        assert len(self.allParams) >= len(defaultVals)
-        assert self.numRequired >= 0
-
-        # if listener wants topic, remove that arg from args/defaultVals
+        self.requiredArgs = []
+        self.optionalArgs = []
         self.autoTopicArgName = None
-        if defaultVals:
-            self.__setupAutoTopic(defaultVals)
+        self.acceptsAllKwargs = False
+        for argName, param in signature(func).parameters.items():
+            if argName in ignoreArgs or param.kind == Parameter.VAR_POSITIONAL:
+                continue
 
-    def getAllArgs(self) -> List[str]:
-        return tuple(self.allParams)
+            if param.kind == Parameter.VAR_KEYWORD:
+                self.acceptsAllKwargs = True
+                continue
+
+            if param.default == Parameter.empty:
+                self.requiredArgs.append(argName)
+            else:
+                if param.default == AUTO_TOPIC:
+                    self.autoTopicArgName = argName
+                else:
+                    self.optionalArgs.append(argName)
+
+        self.requiredArgs = tuple(self.requiredArgs)
+        self.optionalArgs = tuple(self.optionalArgs)
+        self.allParams = self.requiredArgs + self.optionalArgs
 
     def getOptionalArgs(self) -> List[str]:
-        return tuple(self.allParams[self.numRequired:])
+        return self.optionalArgs
 
     def getRequiredArgs(self) -> List[str]:
         """
         Return a tuple of names indicating which call arguments
         are required to be present when pub.sendMessage(...) is called.
         """
-        return tuple(self.allParams[:self.numRequired])
-
-    def __setupAutoTopic(self, defaults: List[Any]) -> int:
-        """
-        Does the listener want topic of message? Returns < 0 if not,
-        otherwise return index of topic kwarg within args.
-        """
-        for indx, defaultVal in enumerate(defaults):
-            if defaultVal == AUTO_TOPIC:
-                firstKwargIdx = self.numRequired
-                self.autoTopicArgName = self.allParams.pop(firstKwargIdx + indx)
-                break
+        return self.requiredArgs
 
 
-def getArgs(callable_obj: UserListener, ignoreArgs: Sequence[str] = None):
+def getArgs(callable_obj: UserListener, ignoreArgs: Sequence[str] = ()):
     """
     Get the call paramters of a callable.
     :param callable_obj: the callable for which to get call parameters

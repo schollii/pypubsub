@@ -41,7 +41,7 @@ def verifySubset(all, sub, topicName, extraMsg=''):
         raise MessageDataSpecError(msg, tuple(notInAll))
 
 
-def topicArgsFromCallable(_callable: UserListener, ignoreArgs: Seq[str] = None) -> Tuple[ArgsDocs, List[str]]:
+def topicArgsFromCallable(_callable: UserListener, ignoreArgs: Seq[str] = ()) -> Tuple[ArgsDocs, List[str]]:
     """
     Get the topic message data names and list of those that are required,
     by introspecting given callable. Returns a pair, (args, required)
