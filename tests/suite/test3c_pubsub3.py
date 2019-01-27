@@ -153,6 +153,15 @@ def testSendTopicWithMessage():
     assert [] == [topic for topic in my.listen2Topics
         if topic not in ('testSendTopic', 'testSendTopic.subtopic')]
 
+    # type hints on listeners:
+    result = []
+    def listenerWithHints(a: int, b: bool, c: str = 2): result.append((a, b, c))
+    topicForHintedListeners = 'topicForHints'
+    pub.subscribe(listenerWithHints, topicForHintedListeners)
+    assert pub.subscribe(listenerWithHints, topicForHintedListeners)
+    pub.sendMessage(topicForHintedListeners, b=456, a=123, c='hello')
+    assert result == [(123, 456, 'hello')]
+
 
 def testAcceptAllArgs():
     def listen(arg1=None): pass
