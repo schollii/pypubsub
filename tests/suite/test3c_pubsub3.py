@@ -163,6 +163,73 @@ def testSendTopicWithMessage():
     assert result == [(123, 456, 'hello')]
 
 
+def testOptionalArgs():
+    # first function registered determines topic MDS (message data spec)
+    # here we first register a more "permissive" listener, ie one that has default values for args
+    # that the second listener does not; therefore pubsub should refuse subscribing second listener
+    # to same topic
+
+    def myFunction1(arg1, arg2=2, *, kwarg1, kwarg2=4, **kwargs): pass
+    def myFunction2(arg1, arg2,   *, kwarg1, kwarg2=4, **kwargs): pass
+
+    pub.subscribe(myFunction1, 'testKeywordOnlyArgs')
+    pytest.raises(ListenerMismatchError, pub.subscribe, myFunction2, 'testKeywordOnlyArgs')
+
+
+def testKeywordOnlyArgsStar():
+    def capture(funcName, *args):
+        result[funcName] = args
+
+    def myFunction1(arg1, arg2, *, kwarg1, kwarg2=4, **kwargs):
+        capture('myFunction1', arg1, arg2, kwarg1, kwarg2, kwargs)
+
+    def myFunction2(arg1, arg2, *arg3, kwarg1, kwarg2=4, **kwargs):
+        capture('myFunction2', arg1, arg2, arg3, kwarg1, kwarg2, kwargs)
+
+    pub.subscribe(myFunction1, 'testKeywordOnlyArgsStar')
+    pub.subscribe(myFunction2, 'testKeywordOnlyArgsStar')
+
+    result = {}
+    pub.sendMessage('testKeywordOnlyArgsStar', arg1=1, arg2=2, kwarg1=3)
+    assert result == dict(myFunction1=(1, 2, 3, 4, {}), myFunction2=(1, 2, (), 3, 4, {}))
+
+
+def testKeywordOnlyArgsStarAfterOpt():
+    def capture(funcName, *args):
+        result[funcName] = args
+
+    def myFunction1(arg1, arg2=2, *, kwarg1, kwarg2=4, **kwargs):
+        capture('myFunction1', arg1, arg2, kwarg1, kwarg2, kwargs)
+    def myFunction2(arg1, arg2=2, *arg3, kwarg1, kwarg2=4, **kwargs):
+        capture('myFunction2', arg1, arg2, arg3, kwarg1, kwarg2, kwargs)
+
+    pub.subscribe(myFunction1, 'testKeywordOnlyArgsStarAfterOpt')
+    pub.subscribe(myFunction2, 'testKeywordOnlyArgsStarAfterOpt')
+
+    result = dict()
+    pub.sendMessage('testKeywordOnlyArgsStarAfterOpt', arg1=1, kwarg1=3)
+    assert result == dict(myFunction1=(1, 2, 3, 4, {}), myFunction2=(1, 2, (), 3, 4, {}))
+
+
+def testKeywordOnlyArgsNoDefaults():
+    def capture(funcName, *args):
+        result[funcName] = args
+
+    def myFunction1(*, kwarg1, kwarg2): capture('myFunction1', kwarg1, kwarg2)
+    def myFunction2(*args, kwarg1, kwarg2): capture('myFunction2', args, kwarg1, kwarg2)
+    def myFunction3(*, kwarg1, kwarg2, **kwargs): capture('myFunction3', kwarg1, kwarg2, kwargs)
+    def myFunction4(*args, kwarg1, kwarg2, **kwargs): capture('myFunction4', args, kwarg1, kwarg2, kwargs)
+
+    pub.subscribe(myFunction1, 'testKeywordOnlyArgsNoDefaults')
+    pub.subscribe(myFunction2, 'testKeywordOnlyArgsNoDefaults')
+    pub.subscribe(myFunction3, 'testKeywordOnlyArgsNoDefaults')
+    pub.subscribe(myFunction4, 'testKeywordOnlyArgsNoDefaults')
+
+    result = {}
+    pub.sendMessage('testKeywordOnlyArgsNoDefaults', kwarg1=1, kwarg2=2)
+    assert result == dict(myFunction1=(1, 2), myFunction2=((), 1, 2), myFunction3=(1, 2, {}), myFunction4=((), 1, 2, {}))
+
+
 def testAcceptAllArgs():
     def listen(arg1=None): pass
     def listenAllArgs(arg1=None, **kwargs): pass

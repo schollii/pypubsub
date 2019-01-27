@@ -25,6 +25,22 @@ def test_ArgsInfo():
     def listener1(arg1, msgTopic = Listener.AUTO_TOPIC): pass
     CallArgsInfo(listener1)
 
+    def listenerWithHints(arg1, arg2, *, kwarg1, kwarg2=4, **kwargs): pass
+    c = CallArgsInfo(listenerWithHints)
+    assert c.acceptsAllKwargs == True
+    assert c.requiredArgs == ('arg1', 'arg2', 'kwarg1')
+    assert c.optionalArgs == ('kwarg2',)
+    assert c.getOptionalArgs() == c.optionalArgs
+    assert c.getRequiredArgs() == c.requiredArgs
+
+    def listenerWithHints2(arg1, arg2=2, *, kwarg1, kwarg2=4, **kwargs): pass
+    c = CallArgsInfo(listenerWithHints2)
+    assert c.acceptsAllKwargs == True
+    assert c.requiredArgs == ('arg1', 'kwarg1')
+    assert c.optionalArgs == ('arg2', 'kwarg2')
+    assert c.getOptionalArgs() == c.optionalArgs
+    assert c.getRequiredArgs() == c.requiredArgs
+
 
 class ArgsInfoMock:
     def __init__(self, autoTopicArgName=None):
@@ -125,7 +141,7 @@ def test_WantTopic():
     listener = MyListener()
     argsInfo = getArgs(listener.method)
     assert msgTopic == argsInfo.autoTopicArgName
-    assert ['a','b'] == argsInfo.allParams
+    assert ('a','b') == argsInfo.allParams
 
     class MyFunctor:
         def __call__(self, a, b=1, auto=Listener.AUTO_TOPIC): pass
@@ -133,7 +149,7 @@ def test_WantTopic():
     listener = MyFunctor()
     argsInfo = getArgs(listener)
     assert msgTopic == argsInfo.autoTopicArgName
-    assert ['a','b'] == argsInfo.allParams
+    assert ('a','b') == argsInfo.allParams
 
     # now some white box testing of validator that makes use of args info:
     def checkWantTopic(validate, listener, wantTopicAsArg=None):
