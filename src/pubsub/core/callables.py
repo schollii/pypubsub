@@ -20,7 +20,7 @@ from typing import Tuple, List, Sequence, Callable, Any
 # Opaque constant used to mark a kwarg of a listener as one to which pubsub should assign the topic of the
 # message being sent to the listener. This constant should be used by reference; its value is "unique" such that
 # pubsub can find such kwarg.
-AUTO_TOPIC = '## your listener wants topic object ## (string unlikely to be used by caller)'
+class AUTO_TOPIC: pass
 
 # In the user domain, a listener is any callable, regardless of signature. The return value is ignored,
 # i.e. the listener will be treated as though it is a Callable[..., None]. Also, the args, "...", must be
@@ -118,18 +118,13 @@ class CallArgsInfo:
     def __init__(self, func: UserListener, ignoreArgs: Sequence[str] = ()):
         """
         :param func: the callable for which to get paramaters info
-        :param ignoreArgs: do not include the given names in the getAllArgs(), getOptionalArgs() and
-            getRequiredArgs() return values
+        :param ignoreArgs: do not include the given names in the get*Args() return values
 
         After construction,
-        - self.allParams will contain the subset of 'args',
-        - self.numRequired will indicate number of required arguments
-          (ie self.allParams[:self.numRequired] are the required args names);
-        - self.acceptsAllKwargs = acceptsAllKwargs
-        - self.autoTopicArgName will be the name of argument
-          in which to put the topic object for which pubsub message is
-          sent, or None. This is identified by the argument that has a
-          default value of AUTO_TOPIC.
+        - self.acceptsAllKwargs = True if the listener has a **kwargs arg
+        - self.autoTopicArgName will be the name of argument in which to put the Topic
+          object for which pubsub message is sent, or None if auto off. This is identified
+          by a parameter that has a default value of AUTO_TOPIC.
 
         For instance,
         - listener(self, arg1, arg2=AUTO_TOPIC, arg3=None) will have self.allParams = (arg1, arg2, arg3),
@@ -138,8 +133,8 @@ class CallArgsInfo:
             self.autoTopicArgName = None.
         """
 
-        self.requiredArgs = []
-        self.optionalArgs = []
+        requiredArgs = []
+        optionalArgs = []
         self.autoTopicArgName = None
         self.acceptsAllKwargs = False
         for argName, param in signature(func).parameters.items():
@@ -151,31 +146,42 @@ class CallArgsInfo:
                 continue
 
             if param.default == Parameter.empty:
-                self.requiredArgs.append(argName)
+                requiredArgs.append(argName)
             else:
                 if param.default == AUTO_TOPIC:
                     self.autoTopicArgName = argName
                 else:
-                    self.optionalArgs.append(argName)
+                    optionalArgs.append(argName)
 
-        self.requiredArgs = tuple(self.requiredArgs)
-        self.optionalArgs = tuple(self.optionalArgs)
+        self.requiredArgs = tuple(requiredArgs)
+        self.optionalArgs = tuple(optionalArgs)
         self.allParams = self.requiredArgs + self.optionalArgs
 
-    def getOptionalArgs(self) -> List[str]:
+    def getAllArgs(self) -> Tuple[str]:
+        """
+        Return a tuple of names indicating the complete set of message data
+        (keyword args) that can be given to this listener
+        """
         return self.optionalArgs
 
-    def getRequiredArgs(self) -> List[str]:
+    def getOptionalArgs(self) -> Tuple[str]:
         """
-        Return a tuple of names indicating which call arguments
-        are required to be present when pub.sendMessage(...) is called.
+        Return a tuple of names indicating which message data (keyword args)
+        are optional when this listener is called.
+        """
+        return self.optionalArgs
+
+    def getRequiredArgs(self) -> Tuple[str]:
+        """
+        Return a tuple of names indicating which message data (keyword args)
+        are required when this listener is called.
         """
         return self.requiredArgs
 
 
-def getArgs(callable_obj: UserListener, ignoreArgs: Sequence[str] = ()):
+def getArgs(callable_obj: UserListener, ignoreArgs: Sequence[str] = ()) -> CallArgsInfo:
     """
-    Get the call paramters of a callable.
+    Get the call parameters of a callable to be used as listener.
     :param callable_obj: the callable for which to get call parameters
     :param ignoreArgs: optional list of names of parameters of callable_obj that should not be in the returned object
     :return: an instance of CallArgsInfo for the given callable_obj

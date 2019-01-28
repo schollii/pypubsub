@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Version Change" pattern="file:README.rst||file:docs/changelog.rst||file:src/pubsub/__init__.py||file:src/pubsub/RELEASE_NOTES.txt" />
+</component>

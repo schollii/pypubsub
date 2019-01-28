@@ -3,9 +3,10 @@ Changelog
 
 High-level changelog. For details, consult the SVN logs.
 
-:4.1.0 (Feb 2019):
+:4.0.3 (Jan 2019):
 
-* Cleanup for support Python 3.7
+* Cleanup for Python 3.7 (mostly add support for keyword-only args, use
+    Python 3 inspect signature/Parameter and add tests for
 
 :4.0.0 (Dec 2016):
 
