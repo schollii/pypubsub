@@ -108,10 +108,10 @@ Generating a new release involves the following sequence of steps:
   warnings on all versions of Python (3.x)
 - Update version number via a search-replace in the `Version Change` scope of PyCharm:
 
-    - src/pubsub/__init__.py: version
-    - docs/changelog.rst
-    - src/pubsub/RELEASE_NOTES.txt
-    - README.rst
+  - src/pubsub/__init__.py: version
+  - docs/changelog.rst
+  - src/pubsub/RELEASE_NOTES.txt
+  - README.rst
 
 - Add section at top of `docs/changelog.rst` with details of what changed (audience: pypubsub developers)
 - Update `src/pubsub/RELEASE_NOTES.txt` (audience: pypubsub end-users) to have high-level summary
