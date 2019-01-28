@@ -131,11 +131,12 @@ Distribute:
 
 - Clean out the `dist/` folder
 - Generate the source and wheel distributions: `python setup.py bdist_wheel sdist`
-- Upload to PyPI: twine upload dist/\*:
-- Verify new release info and links on pypi.python.org
-- Create new branch (tag) in remote master repository
+- Upload to PyPI: `twine upload dist/\*`
+- Verify new release info and links on https://pypi.python.org
+- Create new branch (tag) in github
+- Verify documentation updated on pypubsub.readthedocs.io
 - Confirm installation will work: attempt to install locally via PyPI, then import
-  from Python shell
+  from Python shell and verify version
 
 
 Py2Exe and cx_Freeze
