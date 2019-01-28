@@ -1,5 +1,5 @@
-.. image:: https://badge.fury.io/py/PyPubSub.svg
-    :target: https://badge.fury.io/py/PyPubSub
+.. image:: https://badge.fury.io/py/Pypubsub.svg
+    :target: https://badge.fury.io/py/Pypubsub
 .. image:: https://img.shields.io/travis/schollii/pypubsub.svg
     :target: https://img.shields.io/travis/schollii/pypubsub
     
