@@ -6,7 +6,7 @@
 News
 ====
 
-Feb 2019: pypubsub 4.1.0 released!
+January 2019: pypubsub 4.0.3 released!
 
 Overview
 ========
@@ -25,8 +25,8 @@ Useful links:
 
 - Project on PyPI: https://pypi.python.org/pypi/PyPubSub
 - The documentation for latest stable release is at
-  http://pypubsub.readthedocs.io/en/v4.0.0/.
+  http://pypubsub.readthedocs.io.
 - The documentation for latest code is at
-  http://pypubsub.readthedocs.io/en/latest/.
+  http://pypubsub.readthedocs.io/en/latest.
 
 

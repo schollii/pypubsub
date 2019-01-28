@@ -2,17 +2,17 @@
 
 For wxPython users who are using wx.lib.pubsub:
 
-Pubsub originated as a wxPython lib, but it is now a standalone project
-on github (previously on SourceForge). The code in wx/lib/pubsub folder
-is taken verbatim from the standalone PyPubSub project (each version of
-wxPython includes a different version of pypubsub) for convenience to
-wxPython users. Pypubsub does not have any external dependencies; it can be
-used with PyQt, PyGTK, etc. The version included with wxPython can be
-replaced with a compatible version of pypubsub, and in some cases
-(depending on your use of pubsub) by the latest version.
+Do not use wx.lib.pubsub: this package is an earlier version of PyPubSub that
+was copied into wxPython for legacy reasons. If you attempt to use wx.lib.pubsub
+in wxPython >= 4.0.4, you will get a deprecation message that you should install
+pubsub directly from PyPubSub.
 
-There is a wxPython example in wx/lib/pubsub/examples. The WxPython
-wiki also discusses usage of pubsub in wxPython.
+Note that PyPubSub does not have any external dependencies and can be
+used with PyQt, PyGTK, etc.
+
+There is a wxPython example in PyPubSub source distribution /examples folder,
+and wx/lib/pubsub/examples. The WxPython wiki also discusses usage of pubsub in
+wxPython, the latest docs are only maintained at pypubsub.readthedocs.org
 
 Oliver Schoenborn
-October 2016
+January 2019

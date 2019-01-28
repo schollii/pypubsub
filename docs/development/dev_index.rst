@@ -99,22 +99,39 @@ Releases
 PyPubSub uses the latest stable Python packaging and distribution tools:
 wheel, twine, and pypi.
 
-Creating a new release involves the following sequence of steps:
+Generating a new release involves the following sequence of steps:
 
-- Update src/pubsub/__init__.py for new version # (setup.py uses it)
-- Update src/pubsub/RELEASE_NOTES.txt: high-level summary of changes, handling incompatibilities, etc
-- In docs folder
+- Verify that tox, sphinx, wheel, twine, and setuptools are installed.
+- Ensure that pytest suite runs 100%, and that the examples run without error in
+  examples/ folder (one of the examples requires wxPython -- install latest stable)
+- Ensure that `tox` (run from pypubsub root folder) runs to completion without errors or
+  warnings on all versions of Python (3.x)
+- Update version number via a search-replace in the `Version Change` scope of PyCharm:
+
+    - src/pubsub/__init__.py: version
+    - docs/changelog.rst
+    - src/pubsub/RELEASE_NOTES.txt
+    - README.rst
+
+- Add section at top of `docs/changelog.rst` with details of what changed (audience: pypubsub developers)
+- Update `src/pubsub/RELEASE_NOTES.txt` (audience: pypubsub end-users) to have high-level summary
+  of changes for this release, handling incompatibilities, etc
+- Update the setup.py classifiers (such as adding a new version of Python supported)
+- In docs folder:
 
   - Update index.rst and docs/installation.rst
-  - Update docs/changelog.txt: list of specific changes
-  - Regenerate HTML docs, confirm ok (no warnings etc)
+  - Regenerate HTML docs via `make`, confirm ok (no warnings etc)
 
-- Confirm that pytest suite and tox pass
-- Confirm that examples all work (one of the examples requires wxpython)
-- Commit to remote master repository
+Persist to server:
+
+- Commit and push to remote master repository
 - Confirm that travis CI all pass
-- Generate the source and wheel distributions and upload to PyPI (from command line:
-  :command:`release.bat`)
+
+Distribute:
+
+- Clean out the `dist/` folder
+- Generate the source and wheel distributions: `python setup.py bdist_wheel sdist`
+- Upload to PyPI: twine upload dist/\*:
 - Verify new release info and links on pypi.python.org
 - Create new branch (tag) in remote master repository
 - Confirm installation will work: attempt to install locally via PyPI, then import

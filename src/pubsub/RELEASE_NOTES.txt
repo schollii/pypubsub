@@ -1,5 +1,5 @@
-Main changes in v4.0.0
-^^^^^^^^^^^^^^^^^^^^^^^
+Main changes in v4.0.3 (compared to 3.3)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Support Python 3.5 and 3.6
 * Distribution via wheel
@@ -8,6 +8,7 @@ Main changes in v4.0.0
 * Added currying of subscribed listener args
 * Significant speed improvement for message delivery
 * Use PEP 484 style of annotations throughout
+* Support listeners with keyword-only arguments
 
 Consequences of these changes:
 
@@ -30,5 +31,5 @@ Consequences of these changes:
 
 
 Oliver Schoenborn
-November 2016
+January 2019
 

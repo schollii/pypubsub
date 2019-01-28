@@ -30,6 +30,7 @@ With pip installed on your system, do :command:`pip install pypubsub`.
 
 If you want the developer version, you can try :command:`pip install --pre pypubsub`.
 
+You can also get a zip/tgz from https://github.com/schollii/pypubsub/releases.
 
 .. _label-support:
 
