@@ -15,7 +15,6 @@ CallArgsInfo regarding its autoTopicArgName data member.
 from inspect import getargspec, ismethod, isfunction
 import sys
 from types import ModuleType, FunctionType
-from typing import Tuple, List, Sequence, Callable, Any
 
 
 # Opaque constant used to mark a kwarg of a listener as one to which pubsub should assign the topic of the
@@ -23,13 +22,8 @@ from typing import Tuple, List, Sequence, Callable, Any
 # pubsub can find such kwarg.
 AUTO_TOPIC = '## your listener wants topic object ## (string unlikely to be used by caller)'
 
-# In the user-domain, a listener is any callable, regardless of signature. However, the return value is ignored,
-# i.e. the listener will be treated as thougn it is a Callable[..., None]. Also, the args, "...", must be
-# consistent with the MDS of the topic to which user-callable is being subscribed.
-UserListener = Callable[..., Any]
 
-
-def getModule(obj: Any) -> ModuleType:
+def getModule(obj):
     """
     Get the module in which an object was defined.
     :param obj: the object for which to get module
@@ -43,7 +37,7 @@ def getModule(obj: Any) -> ModuleType:
     return module
 
 
-def getID(callable_: UserListener) -> Tuple[str, ModuleType]:
+def getID(callable_):
     """
     Get "ID" of a callable, in the form of its name and module in which it is defined
     E.g. getID(Foo.bar) returns ('Foo.bar', 'a.b') if Foo.bar was defined in module a.b.
@@ -63,7 +57,7 @@ def getID(callable_: UserListener) -> Tuple[str, ModuleType]:
     return obj_name, module
 
 
-def getRawFunction(callable_: UserListener) -> Tuple[Callable, int]:
+def getRawFunction(callable_):
     """
     Get raw function information about a callable.
     :param callable_: any object that can be called
@@ -101,7 +95,7 @@ class ListenerMismatchError(ValueError):
     specification (see pub.addTopicDefnProvider()).
     """
 
-    def __init__(self, msg: str, listener: UserListener, *args):
+    def __init__(self, msg, listener, *args):
         idStr, module = getID(listener)
         msg = 'Listener "%s" (from module "%s") inadequate: %s' % (idStr, module, msg)
         ValueError.__init__(self, msg)
@@ -120,7 +114,7 @@ class CallArgsInfo:
     topics.
     """
 
-    def __init__(self, func: UserListener, firstArgIdx: int, ignoreArgs: Sequence[str]=None):
+    def __init__(self, func, firstArgIdx, ignoreArgs=None):
         """
         :param func: the callable for which to get paramaters info
         :param firstArgIdx: 0 if listener is a function, 1 if listener is a method
@@ -178,20 +172,20 @@ class CallArgsInfo:
         if defaultVals:
             self.__setupAutoTopic(defaultVals)
 
-    def getAllArgs(self) -> List[str]:
+    def getAllArgs(self):
         return tuple(self.allParams)
 
-    def getOptionalArgs(self) -> List[str]:
+    def getOptionalArgs(self):
         return tuple(self.allParams[self.numRequired:])
 
-    def getRequiredArgs(self) -> List[str]:
+    def getRequiredArgs(self):
         """
         Return a tuple of names indicating which call arguments
         are required to be present when pub.sendMessage(...) is called.
         """
         return tuple(self.allParams[:self.numRequired])
 
-    def __setupAutoTopic(self, defaults: List[Any]) -> int:
+    def __setupAutoTopic(self, defaults):
         """
         Does the listener want topic of message? Returns < 0 if not,
         otherwise return index of topic kwarg within args.
@@ -203,7 +197,7 @@ class CallArgsInfo:
                 break
 
 
-def getArgs(callable_: UserListener, ignoreArgs: Sequence[str]=None):
+def getArgs(callable_, ignoreArgs=None):
     """
     Get the call paramters of a callable.
     :param callable_: the callable for which to get call parameters

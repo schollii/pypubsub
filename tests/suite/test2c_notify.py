@@ -6,7 +6,7 @@ This one tests NotifyByWriteFile and custom notification handler
 
 """
 
-import io
+from StringIO import StringIO
 import gc
 from difflib import unified_diff
 
@@ -18,7 +18,7 @@ from pubsub.core import INotificationHandler
 topicMgr = pub.getDefaultTopicMgr()
 
 def captureStdout():
-    capture = io.StringIO()
+    capture = StringIO()
     useNotifyByWriteFile( fileObj = capture )
     return capture
 

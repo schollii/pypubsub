@@ -1,0 +1,5 @@
+*.pyc
+/.idea/*
+/.vscode
+src/PyPubSub.egg-info
+

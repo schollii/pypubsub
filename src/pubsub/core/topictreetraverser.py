@@ -16,7 +16,7 @@ class ITopicTreeVisitor:
     TopicTreeTraverser.
     """
 
-    def _accept(self, topicObj: Topic):
+    def _accept(self, topicObj):
         """
         Override this to filter nodes of topic tree. Must return
         True (accept node) of False (reject node). Note that rejected
@@ -70,15 +70,15 @@ class TopicTreeTraverser:
     therefore adhere to the ITopicTreeVisitor interface.
     """
 
-    def __init__(self, visitor: ITopicTreeVisitor = None):
+    def __init__(self, visitor=None):
         """The visitor, if given, must adhere to API of ITopicTreeVisitor."""
         self.__handler = visitor
 
-    def setVisitor(self, visitor: ITopicTreeVisitor):
+    def setVisitor(self, visitor):
         """The visitor must adhere to API of ITopicTreeVisitor."""
         self.__handler = visitor
 
-    def traverse(self, topicObj: Topic, how: TreeTraversal = TreeTraversal.DEPTH, onlyFiltered: bool = True):
+    def traverse(self, topicObj, how=TreeTraversal.DEPTH, onlyFiltered=True):
         """
         Start traversing tree at topicObj. Note that topicObj is a
         Topic object, not a topic name. The how defines if tree should
@@ -100,7 +100,7 @@ class TopicTreeTraverser:
 
         self.__handler._doneTraversal()
 
-    def __traverseBreadth(self, topicObj: Topic, onlyFiltered: bool):
+    def __traverseBreadth(self, topicObj, onlyFiltered):
         visitor = self.__handler
 
         def extendQueue(subtopics):
@@ -124,7 +124,7 @@ class TopicTreeTraverser:
                 extendQueue(topicObj.getSubtopics())
                 visitor._onTopic(topicObj)
 
-    def __traverseDepth(self, topicObj: Topic, onlyFiltered: bool):
+    def __traverseDepth(self, topicObj, onlyFiltered):
         visitor = self.__handler
 
         def extendStack(topicTreeStack, subtopics):

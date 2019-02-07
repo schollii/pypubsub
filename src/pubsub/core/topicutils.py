@@ -8,7 +8,6 @@ Various utilities used by topic-related modules.
 
 from textwrap import TextWrapper, dedent
 import sys
-from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union, TextIO
 from .topicexc import TopicNameError
 
 
@@ -29,7 +28,7 @@ class WeakNone:
         return None
 
 
-def smartDedent(paragraph: str) -> str:
+def smartDedent(paragraph):
     """
     Dedent paragraph using textwrap.dedent(), but properly dedents
     even if the first line of paragraph does not contain blanks.
@@ -50,7 +49,7 @@ import re
 _validNameRE = re.compile(r'[-0-9a-zA-Z]\w*')
 
 
-def validateName(topicName: str):
+def validateName(topicName):
     """Raise TopicNameError if nameTuple not valid as topic name."""
     topicNameTuple = tupleize(topicName)
     if not topicNameTuple:
@@ -77,7 +76,7 @@ def validateName(topicName: str):
             raise TopicNameError(topicNameTuple, reason)
 
 
-def stringize(topicName: Sequence[str]) -> str:
+def stringize(topicName):
     """
     If topicName is a string, just return it
     as is. If it is a topic definition object (ie an object that has
@@ -101,7 +100,7 @@ def stringize(topicName: Sequence[str]) -> str:
     return name
 
 
-def tupleize(topicName: str) -> Tuple[str, ...]:
+def tupleize(topicName):
     """
     If topicName is a tuple of strings, just return it as is. Otherwise,
     convert it to tuple, assuming dotted notation used for topicName. I.e.

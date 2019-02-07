@@ -115,9 +115,8 @@ The API version is different from the PyPubSub release version:
   problem, they could continue to use setupv1. WxPython Phoenix will use pubsub 3.3,
   with the default being the kwargs protocol, and no support for v1 API. 
   
-* API v2: <fill this out>
 * API v3: Starting with pypubsub version 3.3, the arg1 messaging protocol is 
-  officially deprecated. 
+  officially deprecated. It was finally removed in pypubsub 3.4.0.
 
   
 Receiving all data of a topic

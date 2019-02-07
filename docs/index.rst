@@ -4,11 +4,10 @@
 Welcome to PyPubSub's Home Page!
 ====================================
 
-.. note:: The latest API is v3.3.0, released February 2014
-
-.. note:: This site was updated for v3.3.0. The home page for the previous release 
-   v3.2.0 is at `this v3.2 URL <v3.2/index.html>`_. The home page for the release 
-   before that, v3.1.2, is at `this v3.1 URL <v3.1/index.html>`_.
+.. note:: This is a minor release of pypubsub API specific to Python 2.7. It 
+   was released in Feb 2019. 
+   
+.. note:: For Python 3+, use pypubsub 4+. For Python 2.x, use pypubsub 3.x
 
 The Pubsub package provides a publish - subscribe Python API that facilitates 
 event-based programming. Using the publish - subscribe pattern in your application 

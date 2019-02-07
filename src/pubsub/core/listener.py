@@ -8,7 +8,6 @@ Top-level functionality related to message listeners.
 """
 
 from types import ModuleType
-from typing import Callable, Mapping, Any, Sequence
 
 from .callables import (
     getID,
@@ -16,27 +15,14 @@ from .callables import (
     ListenerMismatchError,
     CallArgsInfo,
     AUTO_TOPIC as _AUTO_ARG,
-    UserListener,
 )
 from .weakmethod import getWeakRef, WeakRef
-from .annotations import annotationType
 
 __all__ = [
     'Listener',
     'IListenerExcHandler',
     'ListenerValidator'
 ]
-
-
-@annotationType
-class Topic:
-    pass
-
-
-@annotationType
-class Listener:
-    """Wrapper of a UserListener"""
-    pass
 
 
 class IListenerExcHandler:
@@ -56,13 +42,13 @@ class IListenerExcHandler:
     Without an exception handler, the sendMessage() will fail.
     """
 
-    def __call__(self, listenerID: int, topicObj: Topic):
+    def __call__(self, listenerID, topicObj):
         raise NotImplementedError('%s must override __call__()' % self.__class__)
 
 
 class Listener:
     """
-    Wraps a callable (UserListener) so it can be stored by weak reference and introspected
+    Wraps a callable so it can be stored by weak reference and introspected
     to verify that it adheres to a topic's MDS.
 
     A Listener instance has the same hash value as the callable that it wraps.
@@ -77,8 +63,8 @@ class Listener:
 
     AUTO_TOPIC = _AUTO_ARG
 
-    def __init__(self, callable_: UserListener, argsInfo: CallArgsInfo, curriedArgs: Mapping[str, Any] = None,
-                 onDead: Callable[[Listener], None] = None):
+    def __init__(self, callable_, argsInfo, curriedArgs = None,
+                 onDead = None):
         """
         Use callable_ as a listener of topicName. The argsInfo is the
         return value from a Validator, ie an instance of callables.CallArgsInfo.
@@ -101,7 +87,7 @@ class Listener:
         self.__id = str(id(callable_))[-4:]  # only last four digits of id
         self.__hash = hash(callable_)
 
-    def name(self) -> str:
+    def name(self):
         """
         Return a human readable name for listener, based on the
         listener's type name and its id (as obtained from id(listener)). If
@@ -113,20 +99,20 @@ class Listener:
         """
         return '%s_%s' % (self.__nameID, self.__id)
 
-    def typeName(self) -> str:
+    def typeName(self):
         """
         Get a type name for the listener. This is a class name or
         function name, as appropriate.
         """
         return self.__nameID
 
-    def module(self) -> ModuleType:
+    def module(self):
         """
         Get the module in which the callable was defined.
         """
         return self.__module
 
-    def getCallable(self) -> UserListener:
+    def getCallable(self):
         """
         Get the listener that was given at initialization. Note that
         this could be None if it has been garbage collected (e.g. if it was
@@ -135,15 +121,15 @@ class Listener:
         """
         return self._callable()
 
-    def isDead(self) -> bool:
+    def isDead(self):
         """Return True if this listener died (has been garbage collected)"""
         return self._callable() is None
 
-    def wantsTopicObjOnCall(self) -> bool:
+    def wantsTopicObjOnCall(self):
         """True if this listener wants topic object: it has a arg=pub.AUTO_TOPIC"""
         return self._autoTopicArgName is not None
 
-    def wantsAllMessageData(self) -> bool:
+    def wantsAllMessageData(self):
         """True if this listener wants all message data: it has a \**kwargs argument"""
         return self.acceptsAllKwargs
 
@@ -166,14 +152,14 @@ class Listener:
     def _calledWhenDead(self):
         raise RuntimeError('BUG: Dead Listener called, still subscribed!')
 
-    def __notifyOnDead(self, weakRef: WeakRef):
+    def __notifyOnDead(self, weakRef):
         """This gets called when listener weak ref has died. Propagate info to Topic."""
         notifyDeath = self.__onDead
         self._unlinkFromTopic_()
         if notifyDeath is not None:
             notifyDeath(self)
 
-    def __eq__(self, rhs: Listener):
+    def __eq__(self, rhs):
         """
         Compare for equality to rhs. This returns true if rhs has our id id(rhs) is same as
         id(self) or id(callable in self).
@@ -195,7 +181,7 @@ class Listener:
 
         return c1 == c2
 
-    def __ne__(self, rhs: Listener):
+    def __ne__(self, rhs):
         """Counterpart to __eq__ MUST be defined... equivalent to 'not (self == rhs)'."""
         return not self.__eq__(rhs)
 
@@ -209,7 +195,7 @@ class Listener:
         """String rep is the callable"""
         return self.__nameID
 
-    def __call__(self, kwargs: Mapping[str, Any], actualTopic: Topic, allKwargs: Mapping[str, Any] = None):
+    def __call__(self, kwargs, actualTopic, allKwargs = None):
         """
         Call the listener with **kwargs. Note that it raises RuntimeError
         if listener is dead. Should always return True (False would require
@@ -253,7 +239,7 @@ class ListenerValidator:
     have extra) of Topic.
     """
 
-    def __init__(self, topicArgs: Sequence[str], topicKwargs: Sequence[str]):
+    def __init__(self, topicArgs, topicKwargs):
         """
         :param topicArgs: list of argument names that will be required when sending
             a message to listener. Hence order of items in topicArgs matters.
@@ -262,7 +248,7 @@ class ListenerValidator:
         self._topicArgs = set(topicArgs)
         self._topicKwargs = set(topicKwargs)
 
-    def validate(self, listener: UserListener, curriedArgNames: Sequence[str] = None) -> CallArgsInfo:
+    def validate(self, listener, curriedArgNames=None):
         """
         Validate that listener (with, optionally, given curried parameters) satisfies the requirements of
         being a topic listener.
@@ -279,7 +265,7 @@ class ListenerValidator:
         return paramsInfo
 
     # noinspection PyIncorrectDocstring
-    def isValid(self, listener: UserListener, curriedArgNames: Sequence[str] = None) -> bool:
+    def isValid(self, listener, curriedArgNames=None):
         """Same as validate() but returns True/False instead of raising an exception."""
         try:
             self.validate(listener, curriedArgNames=curriedArgNames)
@@ -287,7 +273,7 @@ class ListenerValidator:
         except ListenerMismatchError:
             return False
 
-    def __validateArgs(self, listener: UserListener, paramsInfo: CallArgsInfo, curriedArgNames: Sequence[str]):
+    def __validateArgs(self, listener, paramsInfo, curriedArgNames):
         # accept **kwargs
         # accept *args
 

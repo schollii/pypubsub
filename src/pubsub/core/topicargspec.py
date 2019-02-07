@@ -6,15 +6,10 @@ Definitions related to message data specification.
 """
 
 import weakref
-from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union
 
 from .topicutils import stringize, WeakNone
-from .annotations import annotationType
 from .topicexc import MessageDataSpecError
-from .listener import getArgs as getListenerArgs, UserListener
-
-ArgsDocs = Dict[str, str]
-MsgData = Mapping[str, Any]
+from .listener import getArgs as getListenerArgs
 
 
 def verifyArgsDifferent(allArgs, allParentArgs, topicName):
@@ -36,7 +31,7 @@ def verifySubset(all, sub, topicName, extraMsg=''):
         raise MessageDataSpecError(msg, tuple(notInAll))
 
 
-def topicArgsFromCallable(_callable: UserListener, ignoreArgs: Sequence[str] = None) -> Tuple[ArgsDocs, List[str]]:
+def topicArgsFromCallable(_callable, ignoreArgs=None):
     """
     Get the topic message data names and list of those that are required,
     by introspecting given callable. Returns a pair, (args, required)
@@ -64,7 +59,7 @@ class ArgSpecGiven:
     SPEC_GIVEN_NONE = 1  # specification not given
     SPEC_GIVEN_ALL = 3  # all args specified
 
-    def __init__(self, argsDocs: ArgsDocs=None, reqdArgs: Sequence[str]=None):
+    def __init__(self, argsDocs=None, reqdArgs=None):
         self.reqdArgs = tuple(reqdArgs or ())
 
         if argsDocs is None:
@@ -80,16 +75,16 @@ class ArgSpecGiven:
                 msg = 'Params [%s] missing inherited required args [%%s]' % ','.join(argsDocs.keys())  # iter keys ok
                 raise MessageDataSpecError(msg, missingArgs)
 
-    def setAll(self, allArgsDocs: ArgsDocs, reqdArgs: Sequence[str]=None):
+    def setAll(self, allArgsDocs, reqdArgs=None):
         self.argsDocs = allArgsDocs
         self.reqdArgs = reqdArgs or ()
         self.argsSpecType = ArgSpecGiven.SPEC_GIVEN_ALL
 
-    def isComplete(self) -> bool:
+    def isComplete(self):
         """Returns True if the definition is usable, false otherwise."""
         return self.argsSpecType == ArgSpecGiven.SPEC_GIVEN_ALL
 
-    def getOptional(self) -> List[str]:
+    def getOptional(self):
         """Get the list of optional arguments"""
         return tuple(set(self.argsDocs.keys()).difference(self.reqdArgs))
 
@@ -103,7 +98,7 @@ class SenderMissingReqdMsgDataError(RuntimeError):
     'required' by pubsub topic of message.
     """
 
-    def __init__(self, topicName: str, argNames: Sequence[str], missing: Sequence[str]):
+    def __init__(self, topicName, argNames, missing):
         argsStr = ','.join(argNames)
         missStr = ','.join(missing)
         msg = "Some required args missing in call to sendMessage('%s', %s): %s" \
@@ -117,17 +112,12 @@ class SenderUnknownMsgDataError(RuntimeError):
     message data specification (MDS).
     """
 
-    def __init__(self, topicName: str, argNames: Sequence[str], extra: Sequence[str]):
+    def __init__(self, topicName, argNames, extra):
         argsStr = ','.join(argNames)
         extraStr = ','.join(extra)
         msg = "Some optional args unknown in call to sendMessage('%s', %s): %s" \
             % (topicName, argsStr, extraStr)
         RuntimeError.__init__(self, msg)
-
-
-@annotationType
-class ArgsInfo:
-    pass
 
 
 class ArgsInfo:
@@ -152,7 +142,7 @@ class ArgsInfo:
     SPEC_MISSING        = 10 # no args given
     SPEC_COMPLETE       = 12 # all args, but not confirmed via user spec
 
-    def __init__(self, topicNameTuple: Sequence[str], specGiven: ArgSpecGiven, parentArgsInfo: ArgsInfo):
+    def __init__(self, topicNameTuple, specGiven, parentArgsInfo):
         self.topicNameTuple = topicNameTuple
         self.allOptional = () # topic message optional arg names
         self.allDocs     = {} # doc for each arg
@@ -167,32 +157,32 @@ class ArgsInfo:
         if specGiven.isComplete():
             self.__setAllArgs(specGiven)
 
-    def isComplete(self) -> bool:
+    def isComplete(self):
         return self.argsSpecType == self.SPEC_COMPLETE
 
-    def getArgs(self) -> List[str]:
+    def getArgs(self):
         return self.allOptional + self.allRequired
 
-    def numArgs(self) -> int:
+    def numArgs(self):
         return len(self.allOptional) + len(self.allRequired)
 
-    def getReqdArgs(self) -> List[str]:
+    def getReqdArgs(self):
         return self.allRequired
 
-    def getOptArgs(self) -> List[str]:
+    def getOptArgs(self):
         return self.allOptional
 
-    def getArgsDocs(self) -> ArgsDocs:
+    def getArgsDocs(self):
         return self.allDocs.copy()
 
-    def setArgsDocs(self, docs: ArgsDocs):
+    def setArgsDocs(self, docs):
         """docs is a mapping from arg names to their documentation"""
         if not self.isComplete():
             raise
         for arg, doc in docs.items():
             self.allDocs[arg] = doc
 
-    def check(self, msgData: MsgData):
+    def check(self, msgData):
         """
         Check that the message arguments given satisfy the topic message
         data specification (MDS).
@@ -215,7 +205,7 @@ class ArgsInfo:
             raise SenderUnknownMsgDataError(self.topicNameTuple,
                                             list(msgData.keys()), optional - set(self.allOptional))
 
-    def filterArgs(self, msgData: MsgData) -> MsgData:
+    def filterArgs(self, msgData):
         """
         Returns a dict which contains only those items of msgData which are defined for topic.
         E.g. if msgData is {a:1, b:'b'} and topic arg spec is ('a',) then return {a:1}. The returned
@@ -242,7 +232,7 @@ class ArgsInfo:
 
         return newKwargs
 
-    def hasSameArgs(self, *argNames: Sequence[str]) -> bool:
+    def hasSameArgs(self, *argNames):
         """
         Returns true if self has all the message arguments given, no
         more and no less. Order does not matter. So if getArgs()
@@ -251,11 +241,11 @@ class ArgsInfo:
         """
         return set(argNames) == set( self.getArgs() )
 
-    def hasParent(self, argsInfo: ArgsInfo) -> bool:
+    def hasParent(self, argsInfo):
         """return True if self has argsInfo object as parent"""
         return self.parentAI() is argsInfo
 
-    def getCompleteAI(self) -> ArgsInfo:
+    def getCompleteAI(self):
         """
         Get the closest arg spec, starting from self and moving to parent,
         that is complete. So if self.isComplete() is True, then returns self,
@@ -268,7 +258,7 @@ class ArgsInfo:
             AI = AI.parentAI() # dereference weakref
         return None
 
-    def updateAllArgsFinal(self, topicDefn: ArgSpecGiven):
+    def updateAllArgsFinal(self, topicDefn):
         """
         This can only be called once, if the construction was done
         with ArgSpecGiven.SPEC_GIVEN_NONE
@@ -277,7 +267,7 @@ class ArgsInfo:
         assert topicDefn.isComplete()
         self.__setAllArgs(topicDefn)
 
-    def __addChildAI(self, childAI: ArgsInfo):
+    def __addChildAI(self, childAI):
         assert childAI not in self.childrenAI
         self.childrenAI.append(childAI)
 
@@ -298,7 +288,7 @@ class ArgsInfo:
             verifySubset(self.allRequired, closestParentAI.getReqdArgs(),
                          topicName, ' required args')
 
-    def __setAllArgs(self, specGiven: ArgSpecGiven):
+    def __setAllArgs(self, specGiven):
         assert specGiven.isComplete()
         self.allOptional = tuple( specGiven.getOptional() )
         self.allRequired = specGiven.reqdArgs

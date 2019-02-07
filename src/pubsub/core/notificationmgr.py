@@ -4,7 +4,6 @@
 """
 
 import sys
-from typing import List, Mapping
 
 
 class INotificationHandler:
@@ -92,7 +91,7 @@ class NotificationMgr:
     listeners, etc.
     """
 
-    def __init__(self, notificationHandler: INotificationHandler = None):
+    def __init__(self, notificationHandler=None):
         self.__notifyOnSend = False
         self.__notifyOnSubscribe = False
         self.__notifyOnUnsubscribe = False
@@ -107,12 +106,12 @@ class NotificationMgr:
 
         self.__atExitRegistered = False
 
-    def addHandler(self, handler: INotificationHandler):
+    def addHandler(self, handler):
         if not self.__atExitRegistered:
             self.__registerForAppExit()
         self.__handlers.append(handler)
 
-    def getHandlers(self) ->List[INotificationHandler]:
+    def getHandlers(self):
         return self.__handlers[:]
 
     def clearHandlers(self):
@@ -148,7 +147,7 @@ class NotificationMgr:
             for handler in self.__handlers:
                 handler.notifyDeadListener(*args, **kwargs)
 
-    def getFlagStates(self) -> Mapping[str, bool]:
+    def getFlagStates(self):
         """Return state of each notification flag, as a dict."""
         return dict(
             subscribe    = self.__notifyOnSubscribe,

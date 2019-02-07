@@ -3,19 +3,14 @@
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 """
 
-from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union
 
 from .topicmgr import (
     TopicManager,
     TreeConfig
 )
 
-from .listener import IListenerExcHandler, Listener, UserListener
+from .listener import IListenerExcHandler, Listener
 from .notificationmgr import INotificationHandler
-
-
-TopicFilter = Callable[[str], bool]
-ListenerFilter = Callable[[Listener], bool]
 
 
 class Publisher:
@@ -25,29 +20,29 @@ class Publisher:
     from topics.
     """
 
-    def __init__(self, treeConfig: TreeConfig = None):
+    def __init__(self, treeConfig=None):
         """
         :param treeConfig: the TreeConfig instance to use; if None, a new one is created
         """
         self.__treeConfig = treeConfig or TreeConfig()
         self.__topicMgr = TopicManager(self.__treeConfig)
 
-    def getTopicMgr(self) -> TopicManager:
+    def getTopicMgr(self):
         """Get the topic manager created for this publisher."""
         return self.__topicMgr
 
-    def getListenerExcHandler(self) -> IListenerExcHandler:
+    def getListenerExcHandler(self):
         """
         Get the listener exception handler that was registered
         via setListenerExcHandler(), or None of none registered.
         """
         return self.__treeConfig.listenerExcHandler
 
-    def setListenerExcHandler(self, handler: IListenerExcHandler):
+    def setListenerExcHandler(self, handler):
         """Set the function to call when a listener raises an exception during a sendMessage()."""
         self.__treeConfig.listenerExcHandler = handler
 
-    def addNotificationHandler(self, handler: INotificationHandler):
+    def addNotificationHandler(self, handler):
         """Add a handler for tracing pubsub activity."""
         self.__treeConfig.notificationMgr.addHandler(handler)
 
@@ -56,7 +51,7 @@ class Publisher:
         self.addNotificationHandler(). """
         self.__treeConfig.notificationMgr.clearHandlers()
 
-    def setNotificationFlags(self, **kwargs: Mapping[str, Optional[bool]]):
+    def setNotificationFlags(self, **kwargs):
         """
         Set the notification flags on or off for each type of
         pubsub activity. The kwargs keys can be any of the following:
@@ -80,11 +75,11 @@ class Publisher:
         """
         self.__treeConfig.notificationMgr.setFlagStates(**kwargs)
 
-    def getNotificationFlags(self) -> Mapping[str, bool]:
+    def getNotificationFlags(self):
         """Return a dictionary with the notification flag states."""
         return self.__treeConfig.notificationMgr.getFlagStates()
 
-    def setTopicUnspecifiedFatal(self, newVal: bool = True, checkExisting: bool = True) -> bool:
+    def setTopicUnspecifiedFatal(self, newVal = True, checkExisting = True):
         """
         Changes the creation policy for topics.
 
@@ -141,7 +136,7 @@ class Publisher:
         """
         raise NotImplementedError
 
-    def subscribe(self, listener: UserListener, topicName: str, **curriedArgs) -> Listener:
+    def subscribe(self, listener, topicName, **curriedArgs):
         """
         Subscribe listener to named topic. Raises ListenerMismatchError
         if listener isn't compatible with the topic's MDS. Returns
@@ -168,7 +163,7 @@ class Publisher:
         subscribedListener, success = topicObj.subscribe(listener, **curriedArgs)
         return subscribedListener, success
 
-    def unsubscribe(self, listener: UserListener, topicName: str):
+    def unsubscribe(self, listener, topicName):
         """
         Unsubscribe from given topic. Returns the pubsub.core.Listener
         instance that was used to wrap listener at subscription
@@ -182,13 +177,12 @@ class Publisher:
 
         return unsubdLisnr
 
-    def unsubAll(self, topicName: str = None, listenerFilter: ListenerFilter = None,
-                 topicFilter: Union[str, TopicFilter] = None) -> List[Listener]:
+    def unsubAll(self, topicName = None, listenerFilter = None, topicFilter = None):
         """
         Unsubscribe all listeners of a topic.
         :param topicName: if none given, unsub from all topics.
         :param listenerFilter: filter function to apply to listeners, unsubscribe only the listeners
-            that satisfy listenerFilter(listener: Listener) == True
+            that satisfy listenerFilter(listener) == True
         :param topicFilter: topic name, or a filter function to apply to topics; in latter case, only
             topics that satisfy topicFilter(topic name) == True will be affected
         :returns: list of all listeners (instances of pub.Listener) that were unsubscribed from the topic tree
@@ -212,7 +206,7 @@ class Publisher:
 
         return unsubdListeners
 
-    def sendMessage(self, topicName: str, **msgData):
+    def sendMessage(self, topicName, **msgData):
         """
         Send a message.
         :param topicName: name of message topic (dotted or tuple format)

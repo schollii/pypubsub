@@ -14,26 +14,13 @@ from inspect import ismethod
 # for weakly bound methods:
 from types import MethodType
 from weakref import ref as WeakRef
-# type hinting:
-from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union, TextIO
-from .annotations import annotationType
-
-
-@annotationType
-class WeakMethod:
-    pass
-
-
-WeakObjOrMethod = Union[WeakMethod, WeakRef]
-
-DeadRefObserver = Callable[[WeakObjOrMethod], None]
 
 
 class WeakMethod:
     """Represent a weak bound method, i.e. a method which doesn't keep alive the
     object that it is bound to. """
 
-    def __init__(self, method: Callable[..., None], notifyDead: DeadRefObserver = None):
+    def __init__(self, method, notifyDead=None):
         """
         The method must be bound. notifyDead will be called when
         object that method is bound to dies.
@@ -52,7 +39,7 @@ class WeakMethod:
         self.fun = method.__func__
         self.cls = method.__self__.__class__
 
-    def __onNotifyDeadObj(self, ref: WeakRef):
+    def __onNotifyDeadObj(self, ref):
         if self.notifyDead:
             try:
                 self.notifyDead(self)
@@ -104,12 +91,12 @@ class WeakMethod:
         obj = '<%s at %s%s>' % (self.__class__, id(self), dead)
         return obj
 
-    def refs(self, weakRef: WeakMethod):
+    def refs(self, weakRef):
         """Return true if we are storing same object referred to by weakRef."""
         return self.objRef == weakRef
 
 
-def getWeakRef(obj, notifyDead: DeadRefObserver=None):
+def getWeakRef(obj, notifyDead=None):
     """
     Get a weak reference to obj. If obj is a bound method, a WeakMethod
     object, that behaves like a WeakRef, is returned; if it is

@@ -5,11 +5,11 @@
 
 """
 
-import io
+from StringIO import StringIO
 from pubsub.utils import notification
 
 def testNotifications():
-    capture = io.StringIO()
+    capture = StringIO()
     logger = notification.useNotifyByWriteFile(capture)
     from pubsub import pub
     def block():

@@ -5,7 +5,7 @@
 
 """
 
-import io
+from StringIO import StringIO
 import sys
 
 import pytest
@@ -353,7 +353,7 @@ class TestTopicMgr3_TreeTraverser:
         topicMgr.getOrCreateTopic('a2.b.a')
         topicMgr.getOrCreateTopic('a2.b.b')
 
-        buffer = io.StringIO()
+        buffer = StringIO()
         printTreeDocs(rootTopic=root, width=70, fileObj=buffer)
         #print buffer.getvalue()
         assert buffer.getvalue() == self.expectedOutput

@@ -1,7 +1,16 @@
 Changelog
 ----------
 
-High-level changelog. For details, consult the SVN logs.
+High-level changelog. 
+
+:3.4.0 (May - Dec 2016, dev paused until Feb 2019):
+
+Pypubsub 3.x is henceforth ONLY for Python 2.x (actually 2.7); use pypubsub 4+ for Python 3+.
+
+* moved source code from SourceForge to github
+* Abandon support for easy_install and arg1 protocol
+* Added currying of subscribed listener args
+* make specific to Python 2.7
 
 :3.3.0 (Nov 2013):
 

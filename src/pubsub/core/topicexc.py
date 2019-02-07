@@ -3,15 +3,6 @@
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 """
 
-from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union, TextIO
-
-from .annotations import annotationType
-
-
-@annotationType
-class Topic:
-    pass
-
 
 class TopicNameError(ValueError):
     """
@@ -19,7 +10,7 @@ class TopicNameError(ValueError):
     no corresponding Topic object found.
     """
 
-    def __init__(self, name: str, msg: str):
+    def __init__(self, name, msg):
         ValueError.__init__(self, 'Topic name "%s": %s' % (name, msg))
 
 
@@ -29,7 +20,7 @@ class TopicDefnError(RuntimeError):
     See also pub.setTopicUnspecifiedFatal().
     """
 
-    def __init__(self, topicNameTuple: Sequence[str]):
+    def __init__(self, topicNameTuple):
         msg = "No topic specification for topic '%s'." % '.'.join(topicNameTuple)
         RuntimeError.__init__(self, msg +
                               " See pub.addTopicDefnProvider() and/or pub.setTopicUnspecifiedFatal()")
@@ -45,7 +36,7 @@ class MessageDataSpecError(RuntimeError):
     args, such as MessageDataSpecError('duplicate args %s', ('arg1', 'arg2')).
     """
 
-    def __init__(self, msg: str, args: Sequence[str]):
+    def __init__(self, msg, args):
         argsMsg = msg % ','.join(args)
         RuntimeError.__init__(self, 'Invalid message data spec: ' + argsMsg)
 
@@ -56,7 +47,7 @@ class ExcHandlerError(RuntimeError):
     raises an exception. The original exception is contained.
     """
 
-    def __init__(self, badExcListenerID: str, topicObj: Topic, origExc: Exception=None):
+    def __init__(self, badExcListenerID, topicObj, origExc=None):
         """
         The badExcListenerID is the name of the listener that raised
         the original exception that handler was attempting to handle.

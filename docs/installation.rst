@@ -10,8 +10,7 @@ Install
 System Requirements
 --------------------
 
-Requires any Python 2.6 to 3.4. PyPubSub will also work in Python 2.5 if the
-patch, available in the tests folder, is applied, and most likely with Pypy 2.1.
+Requires Python 2.6 to 2.7. DO NOT USE WITH PYTHON 3+. For Python 3+, use pypubsub 4+.
 
 The following table identifies on which
 combination of Python and Platform the unit tests have been run. The result
@@ -21,26 +20,10 @@ or "n/t" for "not tested":
     ============ =========== =========== =============
          \        Windows 7   Linux(++)     OSX
     ============ =========== =========== =============
-    Python 2.4.4  0/64(*)      n/t         n/t
-    Python 2.5    63/64(**)    n/t         n/t
-    Python 2.6    64/64        n/t         64/64
     Python 2.7    64/64        64/64       64/64
-    PyPy 2.1      63/64(+)     n/t         n/t
-    Python 3.2    64/64        64/64       n/t
-    Python 3.3    64/64        n/t         n/t
-    Python 3.4a4  64/64        n/t         n/t
     ============ =========== =========== =============
 
     Notes:
-    (*) Due to relative imports; also, required two test harness files (nose/failure.py 
-    and nose/capture.py) to be patched (one line each): change BaseException (introduced 
-    in Python 2.5) to Exception.
-    (**) A dozen failures could be easily corrected by replacing use of __self__, not 
-    available in py25, by im_self. Once the patch saved in tests folder is applied to root
-    of working copy, only one failure remains, related to listener naming, not something 
-    that would affect use of pypubsub in an application.
-    (+) All failures appear related to lifetime of weak references being longer than 
-    cpython's, need gc.collect() in tests so in practice likely ok.
     (++) Tested on Fedora, OpenSuse, and Ubuntu.
 
 Please post on pypubsub forum (see :ref:`label-support` section) if you have 

@@ -7,13 +7,11 @@ Provide the Topic class.
 
 from weakref import ref as weakref
 import sys
-from typing import Tuple, List, Sequence, Mapping, Dict, Callable, Any, Optional, Union, TextIO, MutableMapping
 
 from .listener import (
     Listener,
     ListenerValidator,
     CallArgsInfo,
-    UserListener,
 )
 
 from .topicutils import (
@@ -33,28 +31,11 @@ from .topicexc import (
 from .topicargspec import (
     ArgsInfo,
     ArgSpecGiven,
-    MsgData,
-    ArgsDocs,
     topicArgsFromCallable,
     MessageDataSpecError,
     SenderUnknownMsgDataError,
     SenderMissingReqdMsgDataError,
 )
-
-from .annotations import annotationType
-
-
-@annotationType
-class Topic:
-    pass
-
-
-@annotationType
-class TreeConfig:
-    pass
-
-
-ListenerFilter = Callable[[Listener], bool]
 
 
 class Topic:
@@ -66,23 +47,23 @@ class Topic:
     """
 
     class IterState:
-        def __init__(self, msgData: MsgData):
+        def __init__(self, msgData):
             self.filteredArgs = msgData
             self.argsChecked = False
 
-        def checkMsgArgs(self, spec: ArgsInfo):
+        def checkMsgArgs(self, spec):
             spec.check(self.filteredArgs)
             self.argsChecked = True
 
-        def filterMsgArgs(self, topicObj: Topic):
+        def filterMsgArgs(self, topicObj):
             if self.argsChecked:
                 self.filteredArgs = topicObj.filterMsgArgs(self.filteredArgs)
             else:
                 self.filteredArgs = topicObj.filterMsgArgs(self.filteredArgs, True)
                 self.argsChecked = True
 
-    def __init__(self, treeConfig: TreeConfig, nameTuple: Tuple[str, ...], description: str,
-                 msgArgsInfo: ArgsInfo, parent: Topic = None):
+    def __init__(self, treeConfig, nameTuple, description,
+                 msgArgsInfo, parent=None):
         """
         Create a topic. Should only be called by TopicManager via its
         getOrCreateTopic() method (which gets called in several places
@@ -142,17 +123,17 @@ class Topic:
             assert self.__msgArgs.parentAI() is parent._getListenerSpec()
             parent.__adoptSubtopic(self)
 
-    def setDescription(self, desc: str):
+    def setDescription(self, desc):
         """Set the 'docstring' of topic"""
         self.__description = desc
 
-    def getDescription(self) -> str:
+    def getDescription(self):
         """Return the 'docstring' of topic"""
         if self.__description is None:
             return None
         return smartDedent(self.__description)
 
-    def setMsgArgSpec(self, argsDocs: ArgsDocs, required: Sequence[str] = ()):
+    def setMsgArgSpec(self, argsDocs, required = ()):
         """
         Specify the message data for topic messages.
         :param argsDocs: a dictionary of keyword names (message data name) and data 'docstring'; cannot be None
@@ -181,7 +162,7 @@ class Topic:
         else:
             raise RuntimeError('Not allowed to call this: msg spec already set!')
 
-    def getArgs(self) -> Tuple[Sequence[str], Sequence[str]]:
+    def getArgs(self):
         """
         Returns a pair (reqdArgs, optArgs) where reqdArgs is tuple
         of names of required message arguments, optArgs is tuple
@@ -195,19 +176,19 @@ class Topic:
                     self.__msgArgs.allOptional)
         return None, None
 
-    def getArgDescriptions(self) -> ArgsDocs:
+    def getArgDescriptions(self):
         """Get a map of keyword names to docstrings: documents each MDS element. """
         return self.__msgArgs.getArgsDocs()
 
-    def setArgDescriptions(self, **docs: ArgsDocs):
+    def setArgDescriptions(self, **docs):
         """Set the docstring for each MDS datum."""
         self.__msgArgs.setArgsDocs(docs)
 
-    def hasMDS(self) -> bool:
+    def hasMDS(self):
         """Return true if this topic has a message data specification (MDS)."""
         return self.__validator is not None
 
-    def filterMsgArgs(self, msgData: MsgData, check: bool = False) -> MsgData:
+    def filterMsgArgs(self, msgData, check=False):
         """Get the MDS docstrings for each of the spedified kwargs."""
         filteredArgs = self.__msgArgs.filterArgs(msgData)
         # if no check of args yet, do it now:
@@ -215,14 +196,14 @@ class Topic:
             self.__msgArgs.check(filteredArgs)
         return filteredArgs
 
-    def isAll(self) -> bool:
+    def isAll(self):
         """
         Returns true if this topic is the 'all topics' topic. All root
         topics behave as though they are child of that topic.
         """
         return self.__tupleName == (ALL_TOPICS,)
 
-    def isRoot(self) -> bool:
+    def isRoot(self):
         """Returns true if this is a "root" topic, false otherwise. A
         root topic is a topic whose name contains no dots and which
         has pub.ALL_TOPICS as parent."""
@@ -232,20 +213,20 @@ class Topic:
         assert self.isAll()
         return False
 
-    def getName(self) -> str:
+    def getName(self):
         """Return dotted form of full topic name"""
         return stringize(self.__tupleName)
 
-    def getNameTuple(self) -> Tuple[str, ...]:
+    def getNameTuple(self):
         """Return tuple form of full topic name"""
         return self.__tupleName
 
-    def getNodeName(self) -> str:
+    def getNodeName(self):
         """Return the last part of the topic name (has no dots)"""
         name = self.__tupleName[-1]
         return name
 
-    def getParent(self) -> Topic:
+    def getParent(self):
         """
         Get Topic object that is parent of self (i.e. self is a subtopic
         of parent). Return none if self is the "all topics" topic.
@@ -254,7 +235,7 @@ class Topic:
             return None
         return self.__parentTopic()
 
-    def hasSubtopic(self, name: str = None) -> bool:
+    def hasSubtopic(self, name=None):
         """
         Return true only if name is a subtopic of self. If name not
         specified, return true only if self has at least one subtopic.
@@ -264,7 +245,7 @@ class Topic:
 
         return name in self.__subTopics
 
-    def getSubtopic(self, relName: Union[str, Tuple[str, ...]]) -> Topic:
+    def getSubtopic(self, relName):
         """
         Get the specified subtopic object. The relName can be a valid
         subtopic name, a dotted-name string, or a tuple.
@@ -284,11 +265,11 @@ class Topic:
 
         return topicObj
 
-    def getSubtopics(self) -> List[Topic]:
+    def getSubtopics(self):
         """Get a list of Topic instances that are subtopics of self."""
         return self.__subTopics.values()
 
-    def getNumListeners(self) -> int:
+    def getNumListeners(self):
         """
         Return number of listeners currently subscribed to topic. This is
         different from number of listeners that will get notified since more
@@ -296,18 +277,18 @@ class Topic:
         """
         return len(self.__listeners)
 
-    def hasListener(self, listener: UserListener) -> bool:
+    def hasListener(self, listener):
         """Return true if listener is subscribed to this topic."""
         return listener in self.__listeners
 
-    def hasListeners(self) -> bool:
+    def hasListeners(self):
         """
         Return true if there are any listeners subscribed to
         this topic, false otherwise.
         """
         return bool(self.__listeners)
 
-    def getListeners(self) -> Listener:
+    def getListeners(self):
         """
         Get a copy of list of listeners subscribed to this topic. Safe to iterate over while listeners
         get un/subscribed from this topics (such as while sending a message).
@@ -321,7 +302,7 @@ class Topic:
         """
         return self.__listeners.keys()
 
-    def validate(self, listener: UserListener, curriedArgNames: Sequence[str]=None) -> CallArgsInfo:
+    def validate(self, listener, curriedArgNames=None):
         """
         Checks whether listener could be subscribed to this topic:
         if yes, just returns; if not, raises ListenerMismatchError.
@@ -332,7 +313,7 @@ class Topic:
             raise TopicDefnError(self.__tupleName)
         return self.__validator.validate(listener, curriedArgNames=curriedArgNames)
 
-    def isValid(self, listener: UserListener, curriedArgNames: Sequence[str]=None) -> bool:
+    def isValid(self, listener, curriedArgNames=None):
         """
         Return True only if listener could be subscribed to this topic,
         otherwise returns False. Note that method raises TopicDefnError
@@ -342,7 +323,7 @@ class Topic:
             raise TopicDefnError(self.__tupleName)
         return self.__validator.isValid(listener, curriedArgNames=curriedArgNames)
 
-    def subscribe(self, listener: UserListener, **curriedArgs) -> Tuple[Listener, bool]:
+    def subscribe(self, listener, **curriedArgs):
         """
         Subscribe listener to this topic. Returns a pair (pub.Listener, success).
 
@@ -377,7 +358,7 @@ class Topic:
 
         return subdLisnr, newSub
 
-    def unsubscribe(self, listener: UserListener) -> Listener:
+    def unsubscribe(self, listener):
         """
         Unsubscribe the specified listener from this topic. Returns
         the pub.Listener object associated with the listener that was
@@ -398,7 +379,7 @@ class Topic:
 
         return unsubdLisnr
 
-    def unsubscribeAllListeners(self, filter: ListenerFilter=None) -> List[Listener]:
+    def unsubscribeAllListeners(self, filter=None):
         """
         Clears list of subscribed listeners. If filter is given, it must
         be a function that takes a listener and returns true if the listener
@@ -463,11 +444,11 @@ class Topic:
     #
     #############################################################
 
-    def _getListenerSpec(self) -> ArgsInfo:
+    def _getListenerSpec(self):
         """Only to be called by pubsub package"""
         return self.__msgArgs
 
-    def __prePublish(self, msgData: MsgData, topicObj: Topic=None, iterState: IterState=None) -> IterState:
+    def __prePublish(self, msgData, topicObj=None, iterState=None):
         if iterState is None:
             # do a first check that all args are there, costly so only do once
             iterState = self.IterState(msgData)
@@ -482,7 +463,7 @@ class Topic:
         assert iterState is not None
         return iterState
 
-    def __sendMessage(self, data: MsgData, topicObj: Topic, iterState: IterState):
+    def __sendMessage(self, data, topicObj, iterState):
         # now send message data to each listener for current topic;
         # use list of listeners rather than iterator, so that if listeners added/removed during
         # send loop, no runtime exception:
@@ -524,13 +505,13 @@ class Topic:
         self.__validator = ListenerValidator(required, list(optional))
         assert not self.__listeners
 
-    def _undefineSelf_(self, topicsMap: MutableMapping[str, Topic]):
+    def _undefineSelf_(self, topicsMap):
         """Called by topic manager when deleting a topic."""
         if self.__parentTopic is not None:
             self.__parentTopic().__abandonSubtopic(self.__tupleName[-1])
         self.__undefineBranch(topicsMap)
 
-    def __undefineBranch(self, topicsMap: MutableMapping[str, Topic]):
+    def __undefineBranch(self, topicsMap):
         """
         Unsubscribe all our listeners, remove all subtopics from self,
         then detach from parent. Parent is not notified, because method
@@ -548,18 +529,18 @@ class Topic:
         self.__subTopics = {}
         del topicsMap[self.getName()]
 
-    def __adoptSubtopic(self, topicObj: Topic):
+    def __adoptSubtopic(self, topicObj):
         """Add topicObj as child topic."""
         assert topicObj.__parentTopic() is self
         attrName = topicObj.getNodeName()
         self.__subTopics[attrName] = topicObj
 
-    def __abandonSubtopic(self, name: str):
+    def __abandonSubtopic(self, name):
         """The given subtopic becomes orphan (no parent)."""
         topicObj = self.__subTopics.pop(name)
         assert topicObj.__parentTopic() is self
 
-    def __onDeadListener(self, listener: Listener):
+    def __onDeadListener(self, listener):
         """One of our subscribed listeners has died, so remove it and notify"""
         pubListener = self.__listeners.pop(listener)
         self._treeConfig.notificationMgr.notifyDeadListener(pubListener, self)

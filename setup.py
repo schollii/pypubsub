@@ -19,16 +19,21 @@ def getPubsubVersion():
     import pubsub
     return pubsub.__version__
 
+
 setup(
     name         = 'PyPubSub',
     version      = getPubsubVersion(),
     description  = 'Python Publish-Subscribe Package',
     author       = 'Oliver Schoenborn',
     author_email = 'oliver.schoenborn@gmail.com',
-    url          = 'http://pubsub.sourceforge.net',
-    download_url = 'http://downloads.sourceforge.net/pubsub',
+    url          = 'https://github.com/schollii/pypubsub',
+    download_url = 'https://github.com/schollii/pypubsub/releases',
     license      = "BSD",
     zip_safe     = False,
+    install_requires=[
+        'pathlib',
+        'enum34',
+    ],
 
     packages     = getPackagesToDistribute(),
     package_dir  = {'': 'src'},

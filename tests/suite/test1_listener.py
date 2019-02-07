@@ -161,9 +161,9 @@ def test5a_weakref():
         def classMethod(cls): pass
         def __call__(self): pass
 
-    assert isfunction(Foo.instanceMethod)
+    assert ismethod(Foo.instanceMethod)
     wr = weakref(Foo.instanceMethod)
-    assert wr() is not None, 'Foo.instanceMethod'
+    assert wr() is None, 'Foo.instanceMethod'
 
     assert ismethod(Foo.classMethod)
     wr = weakref(Foo.classMethod)
@@ -197,8 +197,7 @@ def test5_DOAListeners_1():
             def tmpFn(self): pass
         return Listener( DOA.tmpFn, ArgsInfoMock() )
 
-    unbound = getListener1()
-    assert not unbound.isDead()
+    pytest.raises(ValueError, getListener1)
 
 
 def test5_DOAListeners_2():
