@@ -2,4 +2,5 @@
 /.idea/*
 /.vscode
 src/PyPubSub.egg-info
+docs/_build
 
