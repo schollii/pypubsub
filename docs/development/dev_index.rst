@@ -57,13 +57,13 @@ In addition to the :ref:`label-install-reqs`, the following are required:
 
 - To run unit tests:
 
-  - nose >= 0.10
+  - pytest >= 3.3
   - coverage >= 3.1b1
 
 
 - To generate these docs:
 
-  - sphinx >= 0.6.3; note that sphinx must be patched as per post on
+  - sphinx >= 1.6; note that sphinx must be patched as per post on
     sphinx-dev:
 
     .. literalinclude:: sphinx_patch1.txt
