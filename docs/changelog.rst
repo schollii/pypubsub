@@ -11,6 +11,7 @@ Pypubsub 3.x is henceforth ONLY for Python 2.x (actually 2.7); use pypubsub 4+ f
 * Abandon support for easy_install and arg1 protocol
 * Added currying of subscribed listener args
 * make specific to Python 2.7
+* use pytest instead of nose
 
 :3.3.0 (Nov 2013):
 
