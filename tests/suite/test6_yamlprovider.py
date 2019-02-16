@@ -10,7 +10,15 @@ from pubsub.utils.topictreeprinter import printTreeDocs
 
 topicMgr = pub.getDefaultTopicMgr()
 
+def remove_all_topics():
+    names = []
+    for topic in topicMgr.getRootAllTopics().subtopics:
+        names.append(topic.getName())
+    for name in names:
+        topicMgr.delTopic(name)
+
 def test_yaml_from_file():
+    remove_all_topics()
     pub.clearTopicDefnProviders()
 
     provider = YamlTopicDefnProvider('yamlprovider_topics.yaml', TOPIC_TREE_FROM_FILE)
@@ -22,6 +30,7 @@ def test_yaml_from_file():
     assert topicMgr.getOrCreateTopic('parent.child') is not None
 
 def test_yaml_import():
+    remove_all_topics()
     pub.clearTopicDefnProviders()
     topicMgr.delTopic('parent')
     # verify pre:
@@ -39,6 +48,7 @@ def test_yaml_import():
     assert topicMgr.getTopic('parent.child') is not None
 
 def test_yaml_string_import():
+    remove_all_topics()
     str_yaml="""ALL_TOPICS:
   description: Root of all topics
   topics:
