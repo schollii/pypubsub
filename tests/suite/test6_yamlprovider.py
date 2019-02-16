@@ -14,6 +14,8 @@ def test_yaml_from_file():
     pub.clearTopicDefnProviders()
 
     provider = YamlTopicDefnProvider('yamlprovider_topics.yaml', TOPIC_TREE_FROM_FILE)
+    printTreeDocs()
+    print(topicMgr.getTopic('parent', True))
     assert topicMgr.getTopic('parent', True) is None
     assert topicMgr.getTopic('parent.child', True) is None
     assert topicMgr.getOrCreateTopic('parent') is not None
