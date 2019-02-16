@@ -72,16 +72,16 @@ def test_yaml_string_import():
     assert topicMgr.getTopic('parent') is not None
     assert topicMgr.getTopic('parent.child') is not None
 
-# def test_yaml_topics():
-#     # validate that topic specs were properly parsed
-#     def isValid(topicName, listener):
-#         topic = topicMgr.getTopic(topicName)
-#         assert topic.getDescription() is not None
-#         assert topic.hasMDS()
-#         return topic.isValid(listener)
+def test_yaml_topics():
+    # validate that topic specs were properly parsed
+    def isValid(topicName, listener):
+        topic = topicMgr.getTopic(topicName)
+        assert topic.getDescription() is not None
+        assert topic.hasMDS()
+        return topic.isValid(listener)
 
-#     def hello(lastname, name=None): pass
-#     def friend(lastname, nick, name=None): pass
+    def hello(lastname, name=None): pass
+    def friend(lastname, nick, name=None): pass
 
-#     assert isValid('parent', hello)
-#     assert isValid('parent.child', friend)
+    assert isValid('parent', hello)
+    assert isValid('parent.child', friend)
