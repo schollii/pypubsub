@@ -6,6 +6,7 @@
 import os, re, inspect
 from StringIO import StringIO
 from textwrap import TextWrapper, dedent
+from pathlib import Path
 import sys
 
 from .topicargspec import (
@@ -330,11 +331,15 @@ class TopicDefnDeserialString(ITopicDefnDeserializer):
         os.remove(self.__filename)
         try:  # py3.2+ uses special folder/filename for .pyc files
             from imp import cache_from_source
-            os.remove(cache_from_source(self.__filename))
         except ImportError:
-            os.remove(self.__filename + 'c')
-        except FileNotFoundError:
-            pass  # don't care if file already removed
+            compiled = Path(self.__filename + 'c')
+            if compiled.exists():
+                compiled.unlink()
+            compiled = Path(self.__filename + 'o')
+            if compiled.exists():
+                compiled.unlink()
+        else:
+            os.remove(cache_from_source(self.__filename))
 
     def resetIter(self):
         self.__modDeserial.resetIter()
