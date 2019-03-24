@@ -37,13 +37,13 @@ def getModule(obj):
     return module
 
 
-def getID(callable_):
+def getID(callable_obj):
     """
     Get "ID" of a callable, in the form of its name and module in which it is defined
     E.g. getID(Foo.bar) returns ('Foo.bar', 'a.b') if Foo.bar was defined in module a.b.
-    :param callable_: a callable, ie function, bound method or callable instance
+    :param callable_obj: a callable, ie function, bound method or callable instance
     """
-    sc = callable_
+    sc = callable_obj
     if ismethod(sc):
         module = getModule(sc.__self__)
         obj_name = '%s.%s' % (sc.__self__.__class__.__name__, sc.__func__.__name__)

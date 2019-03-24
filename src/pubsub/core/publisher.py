@@ -127,15 +127,6 @@ class Publisher:
 
         return oldVal
 
-    def sendMessage(self, topicName, *args, **kwargs):
-        """
-        Send a message for topic name with given data (args and kwargs).
-        This will be overridden by derived classes that implement
-        message-sending for different messaging protocols; not all
-        parameters may be accepted.
-        """
-        raise NotImplementedError
-
     def subscribe(self, listener, topicName, **curriedArgs):
         """
         Subscribe listener to named topic. Raises ListenerMismatchError
@@ -181,10 +172,10 @@ class Publisher:
         """
         Unsubscribe all listeners of a topic.
         :param topicName: if none given, unsub from all topics.
-        :param listenerFilter: filter function to apply to listeners, unsubscribe only the listeners
-            that satisfy listenerFilter(listener) == True
-        :param topicFilter: topic name, or a filter function to apply to topics; in latter case, only
-            topics that satisfy topicFilter(topic name) == True will be affected
+        :param listenerFilter: filter function to apply to listeners, unsubscribe only the listeners that 
+        satisfy listenerFilter(listener) == True
+        :param topicFilter: topic name, or a filter function to apply to topics; in latter case, only 
+        topics that satisfy topicFilter(topic name) == True will be affected
         :returns: list of all listeners (instances of pub.Listener) that were unsubscribed from the topic tree
 
         Note: this method will generate one 'unsubcribe' notification message

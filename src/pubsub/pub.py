@@ -33,7 +33,7 @@ VERSION_API = 3  #: major API version
 VERSION_SVN = "$Rev: 243 $".split()[1]  # DO NOT CHANGE: automatically updated by VCS
 
 from .core import (
-    Publisher as _Publisher,
+    Publisher,
 
     AUTO_TOPIC,
 
@@ -46,8 +46,12 @@ from .core import (
     TopicDefnError,
     TopicNameError,
     UnrecognizedSourceFormatError,
+    SenderUnknownMsgDataError,
+    SenderMissingReqdMsgDataError,
 
+    TopicManager,
     ALL_TOPICS,
+    Topic,
 
     MessageDataSpecError,
     exportTopicTreeSpec,
@@ -80,9 +84,10 @@ __all__ = [
     # topic stuff:
 
     'ALL_TOPICS',
+    'Topic',
     'topicTreeRoot',
     'topicsMap',
-
+    'TopicManager',
     'getDefaultTopicMgr',
 
     # topioc defn provider stuff
@@ -94,7 +99,7 @@ __all__ = [
     'TOPIC_TREE_FROM_CLASS',
     'TOPIC_TREE_FROM_STRING',
     'exportTopicTreeSpec',
-    'instantiateAllDefinedTopics'
+    'instantiateAllDefinedTopics',
 
     'TopicDefnError',
     'TopicNameError',
@@ -104,6 +109,7 @@ __all__ = [
     # publisher stuff:
 
     'sendMessage',
+
     # misc:
 
     'addNotificationHandler',
@@ -118,7 +124,7 @@ __all__ = [
 
 # --------- Publisher singleton and bound methods ------------------------------------
 
-_publisher = _Publisher()
+_publisher = Publisher()
 
 subscribe   = _publisher.subscribe
 unsubscribe = _publisher.unsubscribe

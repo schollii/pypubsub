@@ -135,8 +135,9 @@ class Listener:
 
     def setCurriedArgs(self, **curriedArgs):
         """
-        Curry the wrapped listener so it appears to *not* have **curriedArgs among its parameters.
-        The curriedArgs key-value pairs will be given to wrapped listener at call time.
+        Curry the wrapped listener so it appears to *not* have the keys of curriedArgs 
+        among its parameters. The curriedArgs key-value pairs will be given to wrapped 
+        listener at call time.
         """
         if curriedArgs.keys() != self.curriedArgs.keys():
             raise ValueError(

@@ -27,7 +27,7 @@ migrating from it to v3 or v4, post on github.
 In PyPubSub v3, a new messaging protocol was added to address shortcomings
 of arg1: it was named kwargs since it was based on Python's support for keyword
 arguments. This made it possible for those using v1 to move to v3: just change
-a couple of lines of code to satisfy the updated pypubsub API, including a
+a couple of lines of code to satisfy the updated PyPubSub API, including a
 line that "configured" PyPubSub to use the arg1 protocol. The v3 of PyPubSub 
 also included, as a temporary measure, some helper functions to support a 
 step-wise transition from arg1 to the kwargs protocol possible. The v3 of 

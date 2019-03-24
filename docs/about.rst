@@ -30,16 +30,15 @@ form are welcome. Even questions help progress the project.
 Acknowledgements
 ----------------
 
-Thanks to SourceForge.net for hosting the project, to Robb Shechter to have 
-given me the chance to take over this project from him many years ago, to 
-all those users of pubsub who ask questions, make suggestions, point out 
-bugs, etc. 
+Thanks to 
 
-.. image:: http://sflogo.sourceforge.net/sflogo.php?group_id=197063&amp;type=2
-   :alt: SourceForge.net Logo
-   :width: 125
-   :height: 37
-   :target: http://sourceforge.net
+- github.com for hosting the project since 2016
+- SourceForge.net for having hosted the original PyPubSub project when it was
+  first moved out of wxPython, until 2016
+- Robb Shechter for having given me the chance to take over this project 
+  from him many years ago (ca. 2004)
+- All those users of PyPubSub who ask questions, make suggestions, point 
+  out bugs, etc. 
 
 
 Pubsub Users
@@ -47,6 +46,14 @@ Pubsub Users
 
 Several users have donated a bit of their time to describe how they use
 pubsub in their Python projects.
+
+*Darin Gordon, for Yosai, since 2015*:
+    Yosai (https://github.com/YosaiProject) is a security framework for python
+    applications, offering authentication,
+    authorization, and session management from a common API.  Yosai uses PyPubSub to
+    facilitate event-driven responses to security-related changes.  For instance,
+    when a session expires, valuable information is logged and cached authorization
+    info is cleared.
 
 *Jerome Laheurte, for Task Coach, since Feb 2012*:
     Task Coach (https://sourceforge.net/projects/taskcoach/) is a 
@@ -191,7 +198,7 @@ pubsub in their Python projects.
     through the code.
     
     Last time I had to build or maintain a Python event-based
-    application was 2009, but I'm dedicated to maintaining pypubsub for other 
+    application was 2009, but I'm dedicated to maintaining PyPubSub for other 
     developers. When I make or incorporate improvements based on user 
     feedback, I rely on the high % coverage of the unit regression 
     tests, the useful examples, and the exception messages which give a 
@@ -274,15 +281,25 @@ event-based Python application so I didn't have any reason to update PyPubSub. I
 did accumulate about a dozen tickets on SF.net involving bugs or patches 
 contributed by users in that period. 
 
-Prompted by the overhaul of wxPython 
-'Phoenix' in 2013, I removed all the code that was there just to support the old 
-version 1 API. I took the opportunity to address the dozen tickets during the 
-summer of 2013, and redesign the docs. During that period I also found a user 
-who had clone PyPubSub to github without mentioning intent, giving credit etc; 
-but no code edits either so was probably to have as a backup for one of his 
-projects that required a specific version of it, but still, there are already 
-enough pubsub's on the net, no need to confuse developers even more. Also found
-recent project with same name, much smaller scale, hopefully the author will change it and just join this project. And the sf.net/projects/pypubsub is still 
-there but hasn't been maintained since 2008.  
+The overhaul of wxPython 'Phoenix' in 2013 was the perfect opportunity to make
+pubsub version 3 API the default, and to make version 1 API accessible only on demand
+(via the setuparg1.py configuration module).
+I also removed all the code that was there just to support the old
+version 1 API, leaving just a version 3 API with two message protocols available.
+I took the opportunity to address the dozen tickets during the
+summer of 2013, and to improve the docs.
 
+In early 2016 I started work to remove the deprecated code and support only the
+original messaging protocol that I had designed in 3.0. With two busy kids,
+it is not easy to find the time to do this, so it took me till October 2016 for me to
+get my act together and finally release 4.0: a nice simple design with no import
+magic needed, no configuration, no complicated docs to explain the mulitple APIs,
+use of wheels instead of eggs, use of annotations, etc.
 
+In early 2019 I made an update to support Python 3's star operator in function 
+signatures. It was also brought to my attention (thanks Horea!) that source
+distribution for PyPubSub 3.3 was broken (the Python wheel distribution was fine). 
+So I created version 3.4, from one of the first commits that I made when I moved 
+PyPubSub code base from SourceForge to github. This version is deprecated and will 
+not be further extended (so only 3.4.x releases when critical issues indentified
+and fixed).

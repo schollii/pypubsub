@@ -110,8 +110,3 @@ For packaging py2exe or cx_Freeze, there is a separate section:
 
    py2exe.rst
    
-For packaging into .deb package, there is a separate section:
-
-.. toctree::
-
-   deb.rst

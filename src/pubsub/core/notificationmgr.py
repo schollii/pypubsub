@@ -58,7 +58,7 @@ class INotificationHandler:
         :param description: docstring for the topic.
         :param required: list of message data names (keys in argsDocs) that are required.
         :param argsDocs: dictionary of all message data names, with the
-        corresponding docstring.
+            corresponding docstring.
         """
         raise NotImplementedError
 

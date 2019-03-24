@@ -10,7 +10,7 @@ Install
 System Requirements
 --------------------
 
-Requires Python 2.6 to 2.7. DO NOT USE WITH PYTHON 3+. For Python 3+, use pypubsub 4+.
+Requires Python 2.7. DO NOT USE WITH PYTHON 3+. For Python 3+, use PyPubSub 4+.
 
 The following table identifies on which
 combination of Python and Platform the unit tests have been run. The result
@@ -26,68 +26,39 @@ or "n/t" for "not tested":
     Notes:
     (++) Tested on Fedora, OpenSuse, and Ubuntu.
 
-Please post on pypubsub forum (see :ref:`label-support` section) if you have 
+Please post on PyPubSub forum (see :ref:`label-support` section) if you have 
 successfully used pubsub with other combinations of Python and Platform.
 
 Many thanks to Jerome Laheurte for providing a buildbot with Linux and OSX VM's 
 for continuous testing. 
 
 How-to
---------------
+------
 
-Several methods are available: egg distribution, Windows installer, zip file with source, or
-directly from source code repository.
+Several methods are available.
 
 Method 1. Using pip
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
 
-With pip installed on your system, do :command:`pip install pypubsub`.
-
-If you want the developer version, you can try :command:`pip install --pre pypubsub`.
-
-
-Method 2. Using setuptools (easy_install)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-With setuptools installed on your machine, do :command:`easy_install -Z pypubsub` in a console/shell window.
-
-If for whatever reason easy_install can't find the pypubsub download, you could try manually
-downloading the `egg distribution
-<http://sourceforge.net/projects/pubsub/files/pubsub/>`_
-from SourceForge.net. Then do :command:`easy_install -Z <downloaded_egg>`
+With pip installed on your system, do :command:`pip install pypubsub==3.4` (if you have 
+both Python 2 and 3 on your system, you may have to specify pip2 instead of pip).
 
 
-Method 3. Using Installer (Windows only)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Method 2. From source distribution
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Download the `Installer (PyPubSub-xxx.win32.exe)
-<http://sourceforge.net/projects/pubsub/files/pubsub/>`_
-from SourceForge.net and run it.
-
-Method 4. From source distribution
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-1. Download the appropriate `ZIP file
-   <http://sourceforge.net/projects/pubsub/files/pubsub/>`_
-   from SourceForge.net.
+1. Download the appropriate zip file from https://github.com/schollii/pypubsub/releases
 2. Extract the contents
-3. From a console window, cd'd to extracted folder, do :command:`python setup.py install`
+3. From a console window, cd to extracted folder, then do :command:`python setup.py install`
 
 
-Method 5. From source code repository
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Method 3. From source code repository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1. Using a subversion client, do an SVN checkout of
-   **svn://svn.code.sf.net/p/pubsub/code/trunk** or
-   **http://svn.code.sf.net/p/pubsub/code/trunk**
-2. From a console window, cd to working copy
-3. In console, do :command:`python setup.py install`
-
-.. image:: http://sflogo.sourceforge.net/sflogo.php?group_id=197063&amp;type=2
-   :alt: SourceForge.net Logo
-   :width: 125
-   :height: 37
-   :target: http://sourceforge.net
+1. Browse to https://github.com/schollii/pypubsub/tree/v3.4.0
+2. Click on the "Clone or Download" button, then "Download zip"
+3. Extract the contents
+4. From a console window, cd to extracted folder, then do :command:`python setup.py install`
 
 
 .. _label-support:
@@ -95,13 +66,12 @@ Method 5. From source code repository
 Support
 --------
 
-The forums are currently hosted on google groups:
+- use tag ``pypubsub`` on stackoverflow.com
+- post on pypubsub's Gitter channel: https://gitter.im/pypubsub/community
+- post bug reports, feature suggestions, pull requests: https://github.com/schollii/pypubsub
+- older but still used google group: http://googlegroups.com/group/pypubsub
 
-- http://googlegroups.com/group/pypubsub: PyPubSub general help and support (hosted by Google Groups)
-
-- http://googlegroups.com/group/pypubsub_dev: PyPubSub bug reports, feature suggestions, patches, etc (hosted by Google Groups)
-
-Also, many pypubsub users are on the `wxPython-users mailing list  <http://www.wxpython.org/maillist.php>`_.
+Also, many PyPubSub users are on the `wxPython-users mailing list  <http://www.wxpython.org/maillist.php>`_.
 
 
 Release Notes

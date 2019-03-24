@@ -2,7 +2,7 @@
 Contributed by Joshua R English, adapted by Oliver Schoenborn to be
 consistent with pubsub API.
 
-An extension for pypubsub (https://github.com/schollii/pypubsub) so topic tree
+An extension for PyPubSub (https://github.com/schollii/pypubsub) so topic tree
 specification can be encoded in XML format rather than pubsub's default
 Python nested class format.
 

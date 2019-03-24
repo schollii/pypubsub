@@ -3,8 +3,7 @@
 /.vscode
 /src/PyPubSub.egg-info
 /tests/.cache
-/docs/_build
+/docs/html
 /build
 /dist
 
-docs/usage_old

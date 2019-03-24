@@ -9,7 +9,7 @@ PyPubSub 3.4 was created because I somehow did not include all source files (for
 testing and docs) in the source distribution of 3.3 when I moved it from SourceForge 
 to github, and Python 2.7 has lived on longer than I expected when I created the 4.0 
 release a couple of years ago (where I dropped support for Python 2.x). As mentioned 
-root README.txt, PyPubSub is only for Python 2.7. Use pypubsub 4+ for Python 3+.
+root README.txt, PyPubSub is only for Python 2.7. Use PyPubSub 4+ for Python 3+.
 
 * moved source code from SourceForge to github
 * Abandon support for easy_install and arg1 protocol

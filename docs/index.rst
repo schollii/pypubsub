@@ -1,17 +1,17 @@
 .. PyPubSub documentation master file, created by
    sphinx-quickstart on Mon May 20 21:24:10 2013.
 
-Welcome to PyPubSub's Home Page!
-====================================
+Welcome to PyPubSub 3.4 Home Page!
+==================================
 
-.. note:: This is a minor release of PyPubSub API. 
-
-.. note:: The PyPubSub 3.x branch is henceforth *specific to Python 2.7*. It 
-   was released in March 2019. 
+.. note:: This version of PyPubSub is DEPRECATED. Whereas PyPubSub 3.3 
+   supported both Python 2.7 and 3.x, PyPubSub 3.4 only supports Python 2.7, 
+   and PyPubSub 4+ only supports Python 3+. Also, whereas PyPubSub 3.3 supported 
+   both arg1 and kwargs messaging protocols, PyPubSub 3.4.x and 4+ support only
+   one messaging protocol, namely kwargs.
    
-.. note:: There will NOT be a PyPubSub 3.5, only 3.4.x to address critical bugs. 
-
-.. note:: For Python 3+, use PyPubSub 4+. For Python 2.x, use PyPubSub 3.4.x.
+.. note:: Use this version of PyPubSub *ONLY* for Python 2.7. For Python 3+, use 
+   PyPubSub 4+.
 
 The Pubsub package provides a publish - subscribe Python API that facilitates 
 event-based programming. Using the publish - subscribe pattern in your application 
