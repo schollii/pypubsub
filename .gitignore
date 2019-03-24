@@ -1,9 +1,10 @@
 *.pyc
-/.idea/*
+/.idea
 /.vscode
-src/PyPubSub.egg-info
-docs/_build
-build
-dist
+/src/PyPubSub.egg-info
+/tests/.cache
+/docs/_build
+/build
+/dist
 
 docs/usage_old
