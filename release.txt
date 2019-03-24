@@ -1,0 +1,17 @@
+Do these manually:
+
+- Update src/pubsub/__init__.py for new version # (setup.py uses it)
+- Update src/pubsub/RELEASE_NOTES.txt
+- Update docs/changelog.txt: more details than release notes
+- Update docs/index.rst and docs/installation.rst
+- Verify all tests passe: cd <pypubsub-root>tests/suite/; pytest
+- In examples folder, run all and verify no exceptions
+- Ensue all version tags are correct: __version__, etc
+- In docs folder: sphinx-build -b html -a . html
+- Confirm docs ok
+- Remove the dist folder in root
+- In root folder: python setup.py bdist_wheel
+- Commit to github
+- Upload to pypi: twine upload dist/*
+- Verify new release on pypi.org
+- Create new source release in github
