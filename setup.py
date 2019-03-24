@@ -46,10 +46,12 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Python Software Foundation License',
         'Natural Language :: English',
-        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
+
+    python_requires = "==2.7.*",
 
     # use the module docs as the long description:
     long_description = open('README.txt', 'r').read()

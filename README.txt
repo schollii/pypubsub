@@ -4,8 +4,11 @@ receiving messages between objects of an application, as well as a variety of
 advanced features that facilitate debugging and maintaining topics and messages
 in larger applications. 
 
-Note: ONLY USE the 3.x branch with Python 2.x! (actually, 2.7 only).
+ATTENTION: the 3.x branch of pypubsub is DEPRECATED! It only exists to support 
+Python 2.7 applications. Upgrade your app to Python 3.6+ ASAP and use pypubsub 
+4+. Post on https://github.com/schollii/pypubsub for any issues. 
 
-Install with "pip install pypubsub=3.4".
+Install from current distro with "pip setup.py install" (ensure that pip runs
+with Python 2.7).
 
 

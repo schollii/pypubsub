@@ -23,7 +23,7 @@ echo.
 echo ######################## basic - kwargs - console #########################
 echo.
 
-pushd basic_kwargs
+pushd basic
 %PYTHON_EXE% console_main.py
 popd
 pause
@@ -34,7 +34,7 @@ echo.
 echo ######################## basic - kwargs - wx #########################
 echo.
 
-pushd basic_kwargs
+pushd basic
 %PYTHON_EXE% wx_main.py
 popd
 pause

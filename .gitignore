@@ -3,4 +3,7 @@
 /.vscode
 src/PyPubSub.egg-info
 docs/_build
+build
+dist
 
+docs/usage_old

@@ -4,22 +4,26 @@
 Welcome to PyPubSub's Home Page!
 ====================================
 
-.. note:: This is a minor release of pypubsub API specific to Python 2.7. It 
-   was released in Feb 2019. 
+.. note:: This is a minor release of PyPubSub API. 
+
+.. note:: The PyPubSub 3.x branch is henceforth *specific to Python 2.7*. It 
+   was released in March 2019. 
    
-.. note:: For Python 3+, use pypubsub 4+. For Python 2.x, use pypubsub 3.x
+.. note:: There will NOT be a PyPubSub 3.5, only 3.4.x to address critical bugs. 
+
+.. note:: For Python 3+, use PyPubSub 4+. For Python 2.x, use PyPubSub 3.4.x.
 
 The Pubsub package provides a publish - subscribe Python API that facilitates 
 event-based programming. Using the publish - subscribe pattern in your application 
 can dramatically simplify its design and improve testability. Robin Dunn, the 
-creator of wxPython where the pubsub package was born, summerizes Pubsub nicely:
+creator of wxPython where the pubsub package was born, summerizes PyPubSub nicely:
 
     Basically you just have some part(s) of your program 
     subscribe to a particular topic and have some other part(s) 
     of your program publish messages with that topic.  All the 
-    plumbing is taken care of by pubsub.  -- *Robin Dunn, Jun 2007*
+    plumbing is taken care of by PyPubSub.  -- *Robin Dunn, Jun 2007*
 
-The Publish - Subscribe pattern, as implemented by pubsub, provides the following 
+The Publish - Subscribe pattern, as implemented by PyPubSub, provides the following 
 contract between sender and receiver: 
 
 1. Message Sending: A message can be sent (aka broadcast) from any code that can 
@@ -27,7 +31,7 @@ contract between sender and receiver:
 2. Message Topic: 
    a. Every message has a "type": it corresponds to its "topic", a string name
    b. Topics form a hierarchy. A parent topic is more generic than a child topic. 
-3. Message Handling: All message handlers must register with pubsub in order to 
+3. Message Handling: All message handlers must register with PyPubSub in order to 
    receive messages of a given topic
 4. Message Delivery: 
 

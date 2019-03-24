@@ -1,6 +1,6 @@
    
 Reference
-==========
+=========
 
 The pubsub package contains the following:
 
@@ -8,5 +8,4 @@ The pubsub package contains the following:
 
    module_pub
    module_utils
-   setup_modules
    core_classes

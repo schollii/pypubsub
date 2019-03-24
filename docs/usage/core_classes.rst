@@ -1,7 +1,7 @@
 Core Classes
-====================
+============
 
-The following classes are useful for advanced use of PyPubSub: 
+The following classes are useful for advanced use of PyPubSub:
 
 - pubsub.core.Listener
 - pubsub.core.TopicObj
@@ -11,35 +11,32 @@ The following classes are useful for advanced use of PyPubSub:
 It is not typically necessary to know about or use these: the pub module instantiates a 
 default Publisher, which contains a TopicManager, which generates a Topic object
 for every topic used. The Publisher instance returns a Listener instance from subscribe, 
-wrapping the given callable with pubsub-relevant meta-data about the callable. 
+wrapping the given callable with PyPubSub-relevant meta-data about the callable.
 
-.. note:: The following subsections provide the documentation for those classes 
-    when the kwargs messaging protocol is used (the default). When arg1 is used, 
-    the replace any ``**kwargs`` by ``data``.
 
 Publisher
------------
+---------
 
 .. autoclass::  pubsub.core.Publisher
     :members:
     :inherited-members:
 
 TopicManager
---------------
+------------
 
 .. autoclass::  pubsub.core.TopicManager
     :members:
     :inherited-members:
 
 Topic
-----------
+-----
 
 .. autoclass::  pubsub.core.Topic
     :members:
     :inherited-members:
 
 Listener
-----------
+--------
 
 .. autoclass::  pubsub.core.Listener
     :members:

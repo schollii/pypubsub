@@ -3,12 +3,18 @@
 For wxPython users: 
 
 The code in wx/lib/pubsub folder was originally part of the wxPython source base, 
-but was eventually moved into its own project, PyPubSub, hosted on SourceForge. 
-The code in that folder is now taken from the repository on SourceForge. It is 
-included as part of wxPython distribution for convenience to wxPython users, but 
-pubsub can also be installed standalone (see installation notes at http://pypubsub.sourceforge.net). The PyPubSub website also has extensive documentation.
+but was eventually moved into its own project, PyPubSub, first hosted on 
+SourceForget.net and eventually (2016) moved to github. 
+The code in wx/lib/pubsub is actually a snapshot taken from pypubsub on github,
+included as part of the wxPython distribution for convenience to wxPython users.
+but it may not be the latest, or the right version for you. It is highly 
+recommended that you install pypubsub from pypi: 
 
-The WxPython wiki also discusses usage of pubsub in wxPython, but some of the code is date. 
+- With Python 2.7, install pypubsub 3.4 from pypi: `pip install pypubsub=3.4`
+- With Python 3+, install pypubsub 4+ from pypi: `pip install pypubsub`
+
+Although the wxPython wiki discusses usage of pubsub in wxPython, some of the code
+there is dated. Prefer the official pypubsub documentation.
 
 Oliver Schoenborn
-December 2016
+March 2019

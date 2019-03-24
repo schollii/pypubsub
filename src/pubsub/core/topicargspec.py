@@ -48,12 +48,11 @@ def topicArgsFromCallable(_callable, ignoreArgs=None):
 class ArgSpecGiven:
     """
     The message data specification (MDS) for a topic.
+    
     This consists of each argument name that listener should have in its
     call protocol, plus which ones are required in any sendMessage(), and a
     documentation string for each argument. This instance will be transformed
-    into an ArgsInfo object which is basically a superset of that information,
-    needed to ensure that the arguments specifications satisfy
-    pubsub policies for chosen API version.
+    into an ArgsInfo object.
     """
 
     SPEC_GIVEN_NONE = 1  # specification not given

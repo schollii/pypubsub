@@ -1,12 +1,20 @@
 For PyPubSub v3.4.0
 ^^^^^^^^^^^^^^^^^^^^^
 
-* pypubsub 3.x is henceforth ONLY for Python 2.x (actually 2.6+); use pypubsub 4+ for Python 3+
-* Abandon support for easy_install and arg1 protocol
-* Added currying of subscribed listener args
+PyPubSub 3.3 *source* distro was incomplete, and had more API than necessary. Hence,
+regenerated code base from a github commit that was post 3.3 but pre-4.0. This release
+therefore
+
+* Abandons support for easy_install
+* Abandons support for arg1 protocol
+* Addeds currying of subscribed listener args
+* Cleans up docs
+
+Moreover, made this release specific to Python 2.7, docs updated, and release
+marked deprecated. 
 
 Oliver Schoenborn
-Jan 2016
+Mar 2019
 
 
 For PyPubSub v3.3.0

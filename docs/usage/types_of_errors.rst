@@ -1,7 +1,7 @@
 Types of Errors
-------------------
+---------------
 
-While developing an application that uses pubsub, calls to pubsub 
+While developing an application that uses PyPubSub, calls to PyPubSub
 functions and methods may raise an exception, in the following 
 circumstances: 
 
@@ -38,50 +38,50 @@ circumstances:
     - :py:class:`pub.MessageDataSpecError`
     - :py:class:`pub.UnrecognizedSourceFormatError`
     
-For basic pubsub usage, the most common ones are ``ListenerMismatchError``
+For basic PyPubSub usage, the most common ones are ``ListenerMismatchError``
 and the ``Sender...`` exceptions. All others are relevant to usage of
-more advanced pubsub features such as topic tree specification, 
-listener exception trapping, and pubsub notification trapping. 
+more advanced PyPubSub features such as topic tree specification,
+listener exception trapping, and PyPubSub notification trapping.
 
 
 Listener Mismatch Errors
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 The most common type of error results from attempting to subscribe an invalid 
 listener: one that does not have a signature (call protocol) compatible with the 
-topic's MDS. When this happens, pubsub raises a 
+topic's MDS. When this happens, PyPubSub raises a
 :py:class:`pub.ListenerMismatchError` exception. 
 
-By default, pubsub infers topic MDSs. In that case, the error typically happens 
+By default, PyPubSub infers topic MDSs. In that case, the error typically happens
 when more than one listener is registered for a given topic, and introspection of 
 the listener identifies that it does not satisfy the topic's MDS. For example, 
 consider :: 
 
-	def listener0(arg1, arg2=default0): pass
-	def listener1(arg1=val, arg2=default3): pass
-	def listener2(arg1): pass
-	def listener3(arg1, arg2): pass
-	
-	pub.subscribe(listener0, "topic") // OK: infers MDS
-	pub.subscribe(listener1, "topic") // OK: satisfies MDS
-	pub.subscribe(listener2, "topic") // FAIL: violates MDS
-	
-Pubsub will raise a ListenerMismatchError exception on the last line since arg2 was 
+    def listener0(arg1, arg2=default0): pass
+    def listener1(arg1=val, arg2=default3): pass
+    def listener2(arg1): pass
+    def listener3(arg1, arg2): pass
+    
+    pub.subscribe(listener0, "topic") // OK: infers MDS
+    pub.subscribe(listener1, "topic") // OK: satisfies MDS
+    pub.subscribe(listener2, "topic") // FAIL: violates MDS
+    
+PyPubSub will raise a ListenerMismatchError exception on the last line since arg2 was
 inferred in the first subscription, from listener0, as being part of the MDS, yet 
 listener2 does not accept this data. 
 
 Similarly, if the last line had been ::
 
-	pub.subscribe(listener3, "topic")
+    pub.subscribe(listener3, "topic")
     
 a ``pub.ListenerMismatchError`` exception would get raised because listener3 
 *requires* arg2, 
 yet the MDS inferred from listener0 has it as optional, indicating the sender
-may not provide it. Pubsub is flagging the fact that listener3 is "more demanding"
+may not provide it. PyPubSub is flagging the fact that listener3 is "more demanding"
 than the MDS can guarantee.
 
 Sender Exceptions
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^
 
 The sender exceptions are very useful as they indicate clearly what message 
 data is wrong: 
@@ -94,22 +94,13 @@ For example, given the previous code involving a topic "topic" MDS inferred
 from listener0, the following code would raise a 
 ``pub.SenderUnknownMsgDataError`` ::
 
-	pub.sendMessage("topic", arg1=1, arg3=3) 
+    pub.sendMessage("topic", arg1=1, arg3=3) 
 
 because arg3 is not part of the MDS. 
 
-When transitioning from arg1 to kwargs messaging protocol, 
-two more exceptions are possible: 
-     
-    - ``pub.SenderTooManyKwargs``
-    - ``pub.SenderWrongKwargName``
-
-See section :ref:`label-trans_arg1_to_kwargs` as well as functions
-:py:func:`pubsub.setuparg1.enforceArgName` and 
-:py:func:`pubsub.setupkwargs.transitionFromArg1`.
 
 Topic Name Errors
-^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^
 
 A topic name must satisfy the following: 
 
@@ -120,9 +111,9 @@ A topic name must satisfy the following:
 This applies to all levels of a topic path, i.e. the items between '.'. For example 
 the following are not allowed: 'a.', '.a', '.', 'a..b', etc.
 
-If a topic name does not satisfy the above, pubsub raises ``pub.TopicNameError``.
+If a topic name does not satisfy the above, PyPubSub raises ``pub.TopicNameError``.
 
-Some functions in pubsub raise an exception if the topic doesn't exist: 
+Some functions in PyPubSub raise an exception if the topic doesn't exist:
 
 - :py:func:`pub.isValid(listener, topicName)`
 - :py:func:`pub.validate(listener, topicName)`
@@ -135,7 +126,7 @@ to test if given listener is valid if topic does not exist!
 
 By default, 
 
-- pubsub does *not* complain about topic names that have never
+- PyPubSub does *not* complain about topic names that have never
   been subscribed to. 
 - subscribing a listener to a topic never used before 'creates'
   the topic. 
@@ -154,7 +145,7 @@ These can lead to hard-to-isolate bugs as some listeners never get the messages.
 To trap such typos, use :py:func:`pub.setTopicUnspecifiedFatal(true)`, and 
 specify all allowed topics at application startup by registering a Topic 
 Definition Provider via :py:func:`pub.addTopidDefnProvider()`. Both above 
-typos will then lead to pubsub 
+typos will then lead to PyPubSub
 raising :py:class:`TopicDefnError`. Note: a provider can easily be created via the 
 :py:func:`pub.exportTopicTreeSpec()`.
 
