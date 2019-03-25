@@ -26,22 +26,41 @@ for continuous testing.
 How-to
 ------
 
-With pip installed on your system, do :command:`pip install pypubsub`.
+Several methods are available.
 
-If you want the developer version, you can try :command:`pip install --pre pypubsub`.
+Method 1. Using pip
+^^^^^^^^^^^^^^^^^^^
 
-You can also get a zip/tgz from https://github.com/schollii/pypubsub/releases.
+With pip installed on your system, do :command:`pip install pypubsub` (if you have 
+both Python 2 and 3 on your system, you may have to specify pip3 instead of pip).
+
+
+Method 2. From source distribution
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1. Download the appropriate zip file from https://github.com/schollii/pypubsub/releases
+2. Extract the contents
+3. From a console window, cd to extracted folder, then do :command:`python setup.py install`
+
+
+Method 3. From source code repository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1. Browse to https://github.com/schollii/pypubsub
+2. Click on the "Clone or Download" button, then "Download zip"
+3. Extract the contents
+4. From a console window, cd to extracted folder, then do :command:`python setup.py install`
+
 
 .. _label-support:
 
 Support
 -------
 
-The forums are currently hosted on google groups:
-
-- http://googlegroups.com/group/pypubsub: PyPubSub general help and support (hosted by Google Groups)
-
-- http://googlegroups.com/group/pypubsub_dev: PyPubSub bug reports, feature suggestions, patches, etc (hosted by Google Groups)
+- use tag ``pypubsub`` on stackoverflow.com
+- post on pypubsub's Gitter channel: https://gitter.im/pypubsub/community
+- post bug reports, feature suggestions, pull requests: https://github.com/schollii/pypubsub
+- older but still used google group: http://googlegroups.com/group/pypubsub
 
 Also, many PyPubSub users are on the `wxPython-users mailing list  <http://www.wxpython.org/maillist.php>`_.
 

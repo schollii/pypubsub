@@ -28,7 +28,7 @@ def getInstallRequires():
 
 
 setup(
-    name         = 'Pypubsub',
+    name         = 'PyPubSub',
     version      = getPubsubVersion(),
     description  = 'Python Publish-Subscribe Package',
     keywords     = "publish subscribe observer pattern signal signals event events message messages messaging dispatch dispatching",

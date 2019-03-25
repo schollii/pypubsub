@@ -333,9 +333,10 @@ class Topic:
         """
         Subscribe listener to this topic. Returns a pair (pub.Listener, success).
 
-        :param curriedArgs: keyword argument to curry the listener arguments at message time; the listener(args) is
-            treated essentially as ``listener(**(args - curriedArgs))``. If the listener was already subscribed,
-            the pure curried args names (curriendArgs.keys() - _overrides_) must be unchanged.
+        :param curriedArgs: keyword argument to curry the listener arguments at message time. 
+            Ex: given a listener(a, b, c) which therefore has 3 params that do not have default 
+            values, then someTopic.subscribe(listener, a=1, b=2) will allow 
+            sendMessage('someTopic', c=3): the listener will get a=1, b=2, c=3. 
         :return: True only if listener was not already subscribed; False if it was already subscribed.
         """
         if listener in self.__listeners:

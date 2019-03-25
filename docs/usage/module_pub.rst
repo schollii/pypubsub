@@ -5,9 +5,7 @@ Pub Module
       
 .. autodata:: VERSION_API
 
-    The PyPubSub API version. This is deprecated. The only valid value currently is the integer 4.
-    Previously, versions 1, 2 and 3 API could also be activated in PyPubSub before importing pub, in
-    which case pub.VERSION_API had the corresponding value. 
+    The PyPubSub API version. This is 4 for this version of PyPubSub.
     
     
 Sending Messages

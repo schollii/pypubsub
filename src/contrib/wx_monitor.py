@@ -23,7 +23,7 @@ pub.setNotificationFlags(all=True)
 
 
 ### MonitorTopics
-###  Three topics for Pypubsub messages to control the monitor
+###  Three topics for PyPubSub messages to control the monitor
 class MonitorTopics(utils.TopicTreeDefnSimple):
     class monitor:
         """Messages controlling the monitor"""
@@ -388,7 +388,7 @@ class SendMessageDialog(wx.Dialog):
     create a dialog with the topic description panel and
     a check and send and cancel options.
     Currently can only check the arguments, and even that
-    does not work (as of Pypubsub rev 126) because topic.checkArgs does
+    does not work (as of PyPubSub rev 126) because topic.checkArgs does
     not return the boolean value the docs claim it returns.
     To get OnSendMessage to work, there needs to be a better
     way to know what the listener expects for each argument.

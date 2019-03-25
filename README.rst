@@ -1,5 +1,5 @@
-.. image:: https://badge.fury.io/py/Pypubsub.svg
-    :target: https://badge.fury.io/py/Pypubsub
+.. image:: https://badge.fury.io/py/PyPubSub.svg
+    :target: https://badge.fury.io/py/PyPubSub
 .. image:: https://img.shields.io/travis/schollii/pypubsub.svg
     :target: https://img.shields.io/travis/schollii/pypubsub
     
@@ -23,10 +23,10 @@ Install most recent stable with "pip install pypubsub".
 
 Useful links:
 
-- Project on PyPI: https://pypi.python.org/pypi/PyPubSub
-- The documentation for latest stable release is at
-  http://pypubsub.readthedocs.io.
-- The documentation for latest code is at
-  http://pypubsub.readthedocs.io/en/latest.
+- Project on PyPI: https://pypi.org/project/PyPubSub
+- The documentation for latest stable release is at http://pypubsub.readthedocs.io
+- The documentation for latest code is at http://pypubsub.readthedocs.io/en/latest
+- If you are using Python 2.7, use the deprecated version of PyPubSub, 3.4: 
+  https://pypi.org/project/PyPubSub/3.4.0/
 
 

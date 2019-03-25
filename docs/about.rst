@@ -31,12 +31,15 @@ form are welcome. Even questions help progress the project.
 Acknowledgements
 ----------------
 
-Thanks to SourceForge.net for hosting the project until September 2016.
-Thanks to Github.com for hosting the project from October 2016.
-Thanks to Robb Shecter for having
-given me the chance to take over this project from him many years ago (ca 2004!).
-Thanks to all those users of PyPubSub who ask questions, make suggestions, point out
-bugs, etc. 
+Thanks to 
+
+- github.com for hosting the project since 2016
+- SourceForge.net for having hosted the original PyPubSub project when it was
+  first moved out of wxPython, until 2016
+- Robb Shechter for having given me the chance to take over this project 
+  from him many years ago (ca. 2004)
+- All those users of PyPubSub who ask questions, make suggestions, point 
+  out bugs, etc. 
 
 
 PyPubSub Users
@@ -294,9 +297,17 @@ summer of 2013, and to improve the docs.
 In early 2016 I started work to remove the deprecated code and support only the
 original messaging protocol that I had designed in 3.0. With two busy kids,
 it is not easy to find the time to do this, so it took me till October 2016 for me to
-get my act together and finally release v4: a nice simple design with no import
+get my act together and finally release 4.0: a nice simple design with no import
 magic needed, no configuration, no complicated docs to explain the mulitple APIs,
 use of wheels instead of eggs, use of annotations, etc.
+
+In early 2019 I made an update to support Python 3's star operator in function 
+signatures. It was also brought to my attention (thanks Horea!) that source
+distribution for PyPubSub 3.3 was broken (the Python wheel distribution was fine). 
+So I created version 3.4, from one of the first commits that I made when I moved 
+PyPubSub code base from SourceForge to github. This version is deprecated and will 
+not be further extended (so only 3.4.x releases when critical issues indentified
+and fixed).
 
 
 .. _label-roadmap:

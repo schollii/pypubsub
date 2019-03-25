@@ -40,13 +40,13 @@ in the ``examples`` folder. Some focus on the basics, others on more
 advanced aspects of PyPubSub usage. Some examples are GUI-based and may
 require other packages (such as wxPython).
 
-The examples/basic_kwargs folder contains examples of basic usage of PyPubSub
-"out of the box", i.e. using the default ("kwargs") messaging protocol. 
-The README.txt file in `examples_basic_kwargs`_ explains:
+The examples/basic folder contains examples of basic usage of PyPubSub
+"out of the box". 
+The README.txt file in `examples_basic`_ explains:
 
-.. include:: ../../examples/basic_kwargs/README.txt
+.. include:: ../../examples/basic/README.txt
 
 
-.. _examples_basic_kwargs: http://svn.code.sf.net/p/pubsub/code/trunk/examples/basic_kwargs
+.. _examples_basic: http://svn.code.sf.net/p/pubsub/code/trunk/examples/basic
 
 

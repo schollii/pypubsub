@@ -24,7 +24,7 @@ Consequences of these changes:
   to help with this task. Once you have completed this migration, you should be able
   to upgrade to pypubsub v4 without further changes.
 - The delivery order of sendMessage() has been changed. However as described in the
-  documentation since the very early days of Pypubsub 3, you should design your
+  documentation since the very early days of PyPubSub 3, you should design your
   application to not depend on the order of message delivery to listeners. If you
   did not follow this very important architectural principle, you should fix your
   application before upgrading. Then the upgrade will be trivial.

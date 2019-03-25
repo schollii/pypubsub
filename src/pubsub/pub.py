@@ -123,6 +123,7 @@ __all__ = [
 
 ]
 
+
 # --------- Publisher singleton and bound methods ------------------------------------
 
 _publisher = Publisher()
