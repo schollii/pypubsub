@@ -1,6 +1,7 @@
 *.bak
 __pycache__
 
+/.vscode
 /build
 /dist
 
