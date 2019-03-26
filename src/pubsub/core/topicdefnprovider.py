@@ -98,7 +98,7 @@ class ITopicDefnDeserializer:
         """Get the docstring for the topic tree."""
         raise NotImplementedError
 
-    def getNextTopic(self) -> TopicDefn:
+    def getNextTopic(self) -> 'TopicDefn':
         """
         Get the next topic definition available from the data. The return
         must be an instance of TopicDefn. Must return None when no topics
@@ -147,7 +147,7 @@ class TopicDefnDeserialClass(ITopicDefnDeserializer):
         if pyClassObj is not None:
             self.__rootDoc = pyClassObj.__doc__
             topicClasses = self.__getTopicClasses(pyClassObj)
-            for topicName, pyClassObj in topicClasses:
+            for _, pyClassObj in topicClasses:
                 self.__addDefnFromClassObj(pyClassObj)
 
     def getTreeDoc(self) -> str:

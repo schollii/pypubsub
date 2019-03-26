@@ -91,6 +91,7 @@ __all__ = [
     'topicsMap',
     'TopicManager',
     'getDefaultTopicMgr',
+    'getDefaultTopicTreeRoot',
 
     # topioc defn provider stuff
 
@@ -101,7 +102,7 @@ __all__ = [
     'TOPIC_TREE_FROM_CLASS',
     'TOPIC_TREE_FROM_STRING',
     'exportTopicTreeSpec',
-    'instantiateAllDefinedTopics'
+    'instantiateAllDefinedTopics',
 
     'TopicDefnError',
     'TopicNameError',
@@ -197,8 +198,13 @@ def getDefaultTopicMgr() -> TopicManager:
     return _topicMgr
 
 
-addTopicDefnProvider = _topicMgr.addDefnProvider
-clearTopicDefnProviders = _topicMgr.clearDefnProviders
+def getDefaultTopicTreeRoot() -> Topic:
+    """Get the root of topic tree."""
+    return _topicMgr.getRootAllTopics()
+
+
+addTopicDefnProvider     = _topicMgr.addDefnProvider
+clearTopicDefnProviders  = _topicMgr.clearDefnProviders
 getNumTopicDefnProviders = _topicMgr.getNumDefnProviders
 
 

@@ -1,6 +1,7 @@
 *.bak
 __pycache__
 
+/.vscode
 /build
 /dist
 
@@ -12,3 +13,5 @@ __pycache__
 /tests/suite/htmlcov/
 /tests/*.pstats
 /tests/suite/.coverage
+
+/pypubsub.code-workspace

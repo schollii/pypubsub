@@ -98,7 +98,6 @@ from listener0, the following code would raise a
 
 because arg3 is not part of the MDS. 
 
-
 Topic Name Errors
 ^^^^^^^^^^^^^^^^^
 
