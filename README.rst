@@ -6,8 +6,8 @@
 News
 ====
 
-January 2019: pypubsub 4.0.3 released! (for those -- and only those -- who use Python >= 3).
-March 2019: pypubsub 3.4.2 released (for those -- and only those -- who use Python 2.7.x).
+- January 2019: pypubsub 4.0.3 released! (for those -- and only those -- who use Python >= 3).
+- March 2019: pypubsub 3.4.2 released (for those -- and only those -- who use Python 2.7.x).
 
 Overview
 ========
