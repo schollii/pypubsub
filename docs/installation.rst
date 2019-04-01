@@ -55,7 +55,7 @@ Method 2. From source distribution
 Method 3. From source code repository
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1. Browse to https://github.com/schollii/pypubsub/tree/v3.4.0
+1. Browse to https://github.com/schollii/pypubsub/tree/v3.4
 2. Click on the "Clone or Download" button, then "Download zip"
 3. Extract the contents
 4. From a console window, cd to extracted folder, then do :command:`python setup.py install`

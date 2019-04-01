@@ -1,4 +1,4 @@
-For PyPubSub v3.4.0
+For PyPubSub v3.4.2
 ^^^^^^^^^^^^^^^^^^^^^
 
 PyPubSub 3.3 *source* distro was incomplete, and had more API than necessary. Hence,
