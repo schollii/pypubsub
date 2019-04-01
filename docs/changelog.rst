@@ -3,7 +3,7 @@ Changelog
 
 High-level changelog. 
 
-:3.4.1 (Mar 2019):
+:3.4.2 (Mar 2019):
 
 PyPubSub 3.4 was created because I somehow did not include all source files (for 
 testing and docs) in the source distribution of 3.3 when I moved it from SourceForge 
