@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="IdProvider" IDEtalkID="28D00B8FC16C826098BC68D2FBB24E77" />
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.6" project-jdk-type="Python SDK" />
-  <component name="SvnBranchConfigurationManager">
-    <option name="mySupportsUserInfoFilter" value="true" />
-  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.6 (pypubsub_venv)" project-jdk-type="Python SDK" />
 </project>
