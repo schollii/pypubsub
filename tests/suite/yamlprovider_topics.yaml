@@ -1,0 +1,18 @@
+ALL_TOPICS:
+  description: Root of all topics
+  topics:
+  - topic: parent
+    description: Parent with a parameter and subtopics
+    listenerspec:
+    - arg: lastname
+      description: surname
+    - arg: name
+      description: given name
+      optional: true
+    topics:
+    - topic: child
+      description: This is the first child
+      listenerspec:
+      - arg: nick
+        description: A nickname
+      
