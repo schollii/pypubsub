@@ -1,4 +1,4 @@
-Maintainabiity
+Maintainability
 ==============
 
 .. contents:: In this section:
