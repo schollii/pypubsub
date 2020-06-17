@@ -26,7 +26,7 @@ setup(
     name='TestPubSub',
     description="Script to test pubsub for packaging with cxfreeze",
     version='0.1',
-    
+
     options={'build_exe' : opts},
     executables=[WIN_Target]
     )
