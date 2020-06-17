@@ -1,6 +1,6 @@
 """
-Provides utility functions and classes that are not required for using 
-pubsub but are likely to be very useful. 
+Provides utility functions and classes that are not required for using
+pubsub but are likely to be very useful.
 
 :copyright: Copyright since 2006 by Oliver Schoenborn, all rights reserved.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
