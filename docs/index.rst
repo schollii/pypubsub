@@ -32,7 +32,7 @@ to receive those messages. PyPubSub takes care of the plumbing.
 
 The Publish-Subscribe API provided by PyPubSub has the following characteristics:
 
-1. Message Sender: The sender of a PyPubSub message is the ccode that calls pub.sendMessage().
+1. Message Sender: The sender of a PyPubSub message is the code that calls pub.sendMessage().
 2. Message Topic: 
    a. Every message is specific to a "topic", defined as a string name;
    b. Topics form a hierarchy. A parent topic is more generic than a child topic.
