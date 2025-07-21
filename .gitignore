@@ -9,6 +9,7 @@ __pycache__
 /docs/_build
 
 /src/PyPubSub.egg-info
+/src/Pypubsub.egg-info
 
 /tests/suite/htmlcov/
 /tests/*.pstats
