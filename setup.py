@@ -40,7 +40,7 @@ setup(
 
     packages     = getPackagesToDistribute(),
     package_dir  = {'': 'src'},
-    package_data = {'pubsub': ['LICENSE_BSD_Simple.txt', 'RELEASE_NOTES.txt']},
+    package_data = {'pubsub': ['LICENSE_BSD_Simple.txt', 'RELEASE_NOTES.txt', 'py.typed']},
     install_requires=getInstallRequires(),
 
     classifiers  = [
