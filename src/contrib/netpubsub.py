@@ -1,17 +1,17 @@
 """
 Skeleton code (will not load... must be completed):
-UDP-based net-centric Pubsub extension so that pubsub can be used over a 
-network of pubsub-powered applications. Extending to use TCP wouldn't be 
-too difficult. 
+UDP-based net-centric Pubsub extension so that pubsub can be used over a
+network of pubsub-powered applications. Extending to use TCP wouldn't be
+too difficult.
 
-Usage: each of your applications that uses pubsub would create a 
-suitable AppListener, then call its sendMessage when wanting to 
-send a message, or call processMessages whenever it is ready to 
-process queued messages from other applications. In addition, one 
+Usage: each of your applications that uses pubsub would create a
+suitable AppListener, then call its sendMessage when wanting to
+send a message, or call processMessages whenever it is ready to
+process queued messages from other applications. In addition, one
 of your applications must be the "pubsub server", or the server
-could live in its own python program.  For it, you would 
-create a PubsubAppServer then call its processMessages() 
-in an infinite loop. 
+could live in its own python program.  For it, you would
+create a PubsubAppServer then call its processMessages()
+in an infinite loop.
 
 Oliver Schoenborn
 """
