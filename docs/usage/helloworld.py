@@ -1,6 +1,6 @@
 """
 One listener is subscribed to a topic called 'rootTopic'.
-One 'rootTopic' message gets sent. 
+One 'rootTopic' message gets sent.
 """
 
 from pubsub import pub
