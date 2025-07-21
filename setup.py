@@ -23,8 +23,8 @@ def getPubsubVersion():
 def getInstallRequires():
     import sys
     if sys.version_info < (3,5):
-        return ['typing']
-    return []
+        return ['typing', 'voluptuous', 'pyyaml']
+    return ['voluptuous', 'pyyaml']
 
 
 setup(
