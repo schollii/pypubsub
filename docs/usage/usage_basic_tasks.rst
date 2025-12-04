@@ -5,10 +5,6 @@ Basic PyPubSub Tasks
 
 Several essential tasks supported by PyPubSub
 
-.. contents:: In this section:
-   :depth: 2
-   :local:
-
 
 Subscribing to Topics
 ---------------------

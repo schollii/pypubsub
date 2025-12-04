@@ -2,10 +2,6 @@
 Other
 =====
 
-.. contents:: In this section:
-   :depth: 2
-   :local:
-
 
 Dev app (process)
 -----------------

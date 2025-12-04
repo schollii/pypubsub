@@ -1,10 +1,6 @@
 About 
 =====
 
-.. contents:: In this section:
-   :depth: 1
-   :local:
-
 License
 -------
 
@@ -324,4 +320,3 @@ The following is no longer on list of things to do:
 - support pubsub over UDP and TCP sockets: mqtt does this! PyPubSub and mqtt
   are complementary: PyPubSub for messaging between application components within
   one Python interpreter; mqtt for messaging between compoonents on a network.
-

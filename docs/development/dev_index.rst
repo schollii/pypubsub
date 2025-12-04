@@ -3,10 +3,6 @@ Contribute
 
 This page is intended for developers of (or contributing to) PyPubSub.
 
-.. contents:: In this section:
-   :depth: 1
-   :local:
-
 
 .. _label-contributing:
 
@@ -64,9 +60,9 @@ Scripts Available
     the PyPubSub root folder, run :command:`tox`. This will attempt to run the
     test suite in every 3.x version of Python, x>=3 (ie 3.3, 3.4, etc).
 
-    After changes are committed to github, the Travis CI will automatically
-    run the tests on a Linux platform, for all versions of Python supported
-    by PyPubSub. The results will be at https://travis-ci.org/schollii/pypubsub/builds.
+    After changes are committed to github, GitHub Actions will automatically
+    run the tests on Linux across supported Python versions. Results at
+    https://github.com/schollii/pypubsub/actions/workflows/ci.yml.
 
     There is also a buildbot maintained by Jerome Laheurte to test on additional
     \*nix flavors, including OSX. Test results can be viewed at
@@ -116,7 +112,7 @@ Generating a new release involves the following sequence of steps:
 - Add section at top of `docs/changelog.rst` with details of what changed (audience: pypubsub developers)
 - Update `src/pubsub/RELEASE_NOTES.txt` (audience: pypubsub end-users) to have high-level summary
   of changes for this release, handling incompatibilities, etc
-- Update the setup.py classifiers (such as adding a new version of Python supported)
+- Update project metadata (classifiers, python_requires) in pyproject.toml
 - In docs folder:
 
   - Update index.rst and docs/installation.rst
@@ -130,7 +126,7 @@ Persist to server:
 Distribute:
 
 - Clean out the `dist/` folder
-- Generate the source and wheel distributions: `python setup.py bdist_wheel sdist`
+- Generate the source and wheel distributions: `python -m build`
 - Upload to PyPI: `twine upload dist/\*`
 - Verify new release info and links on https://pypi.python.org
 - Create new branch (tag) in github
@@ -142,7 +138,7 @@ Distribute:
 Py2Exe and cx_Freeze
 --------------------
 
-For packaging py2exe or cx_Freeze, see (possibly out of date):
+For packaging py2exe or cx_Freeze (legacy/possibly out of date):
 
 .. toctree::
 

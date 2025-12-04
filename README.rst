@@ -59,6 +59,29 @@ To run a small example suite, use the helper script (assumes your venv is active
 
   bash examples/runall.sh  # uses 'python' from your venv
 
+Versioning and tags
+-------------------
+
+Versions come from git tags via ``setuptools_scm``. To see the last tagged release::
+
+  git describe --tags --abbrev=0
+
+To create a new tag, pick your next version (e.g. ``v4.0.4``) and tag the current commit::
+
+  git tag v4.0.4
+  git push origin v4.0.4
+
+There is also a helper script with subcommands for tagging/pushing::
+
+  python release.py get-latest            # show latest vX.Y.Z tag (or v0.0.0)
+  python release.py init-tag v4.0.4       # create the first tag if none exists
+  python release.py bump-local patch      # create a local tag (major/minor/patch)
+  python release.py push-tag              # push latest tag (prompts/warns about PyPI release)
+
+Warning: pushing a ``v*`` tag triggers the GitHub Actions release workflow, which builds and uploads to PyPI using the configured token.
+
+CI will build and publish from that tag (using the tag version; no manual bump needed).
+
 wxPython on Ubuntu 22+
 ----------------------
 
@@ -69,3 +92,22 @@ If you want to run the wx examples, install wxPython and SDL2 runtime in your ve
   sudo apt-get install libsdl2-2.0-0  # runtime for the wheel
 
 If the wheel is not found for your distro/Python combo, you’ll need GTK3/SDL build deps to compile from source instead.
+
+Docs
+----
+
+Install deps into a local venv and build::
+
+  pip install -r docs/requirements.txt
+  make docs          # builds docs/_build/html
+  make clean-docs    # removes docs/_build
+
+Helpers:
+
+- ``make venv`` sets up a local venv at .venv (uses system python).
+- ``make clean-venv`` removes that venv.
+- ``make add-wxpy-ubuntu`` installs wxPython 4.2.4 wheel + SDL2 runtime on Ubuntu (requires sudo).
+  Useful for running wx examples in that venv.
+- Release helpers can be run via Makefile wrappers, e.g. ``make init-tag TAG=v4.0.4`` or ``make bump-local BUMP=patch``.
+
+Release helpers can be run via the Makefile wrappers, e.g. ``make init-tag TAG=v4.0.4`` or ``make bump-local BUMP=patch``.

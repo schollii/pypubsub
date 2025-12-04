@@ -2,6 +2,8 @@
 __pycache__
 
 /.vscode
+/\.idea
+.idea/
 /build
 /dist
 /.tox
@@ -15,9 +17,13 @@ __pycache__
 
 /src/PyPubSub.egg-info
 /src/Pypubsub.egg-info
+/src/pubsub/_version.py
+/dist/
 
 /tests/suite/htmlcov/
 /tests/*.pstats
 /tests/suite/.coverage
 
 /pypubsub.code-workspace
+/**/kwargs_topics_out.py
+/.venv*

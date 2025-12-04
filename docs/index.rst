@@ -88,15 +88,14 @@ with their approval. I hosted the code on SourceForget.net for about 10 years, t
 github sometime in 2016. The code is very mature and stable. See :ref:`label-history` for
 details on its history and :ref:`label-roadmap` for possible future work.
 
-Contents:
-
 .. toctree::
    :maxdepth: 2
+   :caption: Contents
 
-   about
    installation
    usage/index
    development/dev_index
+   about
 
    
 Indices and tables
@@ -105,4 +104,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

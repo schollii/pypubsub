@@ -1,8 +1,7 @@
-Packaging with py2exe and cxFreeze
-==================================
+Legacy packaging (py2exe and cxFreeze)
+======================================
 
-In this section we will see how to package applications that use
-PyPubSub, with `py2exe`_ and `cx_Freeze`_ packaging tools.
+These notes cover packaging with `py2exe`_ and `cx_Freeze`_. They are unmaintained and may be out of date.
 
 Introduction
 ------------
@@ -93,5 +92,4 @@ We can safely ignore the missing modules warning in the build log::
    ? publishermixin imported from pubsub.core.topicobj
    ? topicargspecimpl imported from pubsub.core.topicargspec
    ? topicmgrimpl imported from pubsub.core.topicmgr
-
 

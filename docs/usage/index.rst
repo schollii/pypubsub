@@ -11,10 +11,6 @@ causes and effects challenging to identify. Also, you need better control over e
 handling, and more maintainability via documentation of message structure. This is when 
 you turn to the :ref:`label-usage-advanced` section. 
 
-.. contents:: 
-   :depth: 1
-   :local:
-
 .. toctree::
    :maxdepth: 2
    

@@ -14,5 +14,3 @@ There is a wxPython example in PyPubSub source distribution /examples folder,
 and wx/lib/pubsub/examples. The WxPython wiki also discusses usage of pubsub in
 wxPython, the latest docs are only maintained at pypubsub.readthedocs.org
 
-Oliver Schoenborn
-January 2019

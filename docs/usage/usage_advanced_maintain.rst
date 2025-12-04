@@ -1,9 +1,5 @@
 Maintainability
-==============
-
-.. contents:: In this section:
-   :depth: 2
-   :local:
+===============
 
 
 .. _label-topic_tree_def:
@@ -83,4 +79,3 @@ will raise an ``pub.TopicUnspecifiedError``.
 
 Note that any topic that does not have a docstring is not considered 
 to be defined. This may allow for some temporary "undefining" of topics. 
-

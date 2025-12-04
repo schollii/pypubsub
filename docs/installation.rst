@@ -1,10 +1,6 @@
 Install
 =======
 
-.. contents:: In this section:
-   :depth: 1
-   :local:
-
 .. _label-install-reqs:
 
 System Requirements

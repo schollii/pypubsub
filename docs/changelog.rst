@@ -3,6 +3,12 @@ Changelog
 
 High-level changelog. For details, consult the SVN logs.
 
+:4.0.4 (Dec 2025):
+
+* Modernized packaging: pyproject/setuptools-scm, tag-driven versions, tox-uv matrix, GitHub Actions CI/release.
+* Expanded Python support: tested on 3.7–3.14; dropped legacy config for 3.3–3.6.
+* Added helper tooling/scripts for releases and running examples; refreshed docs and ignored generated files.
+
 :4.0.3 (Jan 2019):
 
 * Cleanup for Python 3.7 (mostly add support for keyword-only args, use
@@ -138,4 +144,3 @@ High-level changelog. For details, consult the SVN logs.
 - Created by Rob Shecter in wxPython's ``wx.lib`` (early 2000?)
 - Weakmethod added by Oliver Schoenborn (2004)
 - Further development transfered to Schoenborn (2004)
-
