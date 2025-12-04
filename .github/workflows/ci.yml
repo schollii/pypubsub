@@ -8,27 +8,18 @@ on:
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        os: [ubuntu-latest, windows-latest]
+        exclude:
+          - python-version: "3.7"
+            os: ubuntu-latest
         include:
           - python-version: "3.7"
-            tox-env: "py37"
-          - python-version: "3.8"
-            tox-env: "py38"
-          - python-version: "3.9"
-            tox-env: "py39"
-          - python-version: "3.10"
-            tox-env: "py310"
-          - python-version: "3.11"
-            tox-env: "py311"
-          - python-version: "3.12"
-            tox-env: "py312"
-          - python-version: "3.13"
-            tox-env: "py313"
-          - python-version: "3.14"
-            tox-env: "py314"
+            os: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
@@ -42,13 +33,23 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v3
 
-      - name: Install tox with uv backend
-        run: uv pip install --system tox tox-uv
+      - name: Install tox
+        shell: bash
+        run: |
+          pip install --upgrade pip setuptools wheel tox
+          # tox-uv is only available in py > 3.7 but here we don't care much about  
+          # perf so leaving for archival reason only: 
+          # if [ "${{ matrix.python-version }}" = "3.7" ]; then
+          #   pip install --upgrade pip setuptools wheel tox
+          # else
+          #   uv pip install --system tox tox-uv
+          # fi
 
       - name: Run tox
-        env:
-          TOXENV: ${{ matrix.tox-env }}
-        run: tox -e $TOXENV
+        shell: bash
+        run: |
+          TOXENV="py$(echo '${{ matrix.python-version }}' | tr -d '.')"
+          tox -e "$TOXENV"
 
   pkg:
     runs-on: ubuntu-latest
