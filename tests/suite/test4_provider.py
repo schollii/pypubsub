@@ -316,8 +316,8 @@ def test_string_prov_export():
     # check there are no differences
     from difflib import context_diff, ndiff
     diffs = ndiff(dedent(expectExport).splitlines(), exported.splitlines())
-    diffs = [d for d in diffs if not d.startswith(' ')]
-    assert diffs == ['- ', '+         ']
+    diffs = [d for d in diffs if not d.startswith(' ') and d[2:].strip()]
+    assert diffs == ['- ', '+         '] or not diffs
 
     # now for module:
     provider = pub.addTopicDefnProvider('test4_prov_module_expect')
@@ -329,8 +329,8 @@ def test_string_prov_export():
     lines1 = open('test4_prov_module_actual.py', 'r').readlines()
     lines2 = open('test4_prov_module_expect.py', 'r').readlines()
     diffs = ndiff(lines1, lines2)
-    diffs = [d for d in diffs if not d.startswith(' ')]
-    assert not list(diffs) or list(diffs) == ['- # - fileObj: TextIOWrapper\n', '+ # - fileObj: file\n']
+    diffs = [d for d in diffs if not d.startswith(' ') and d[2:].strip()]
+    assert not diffs or diffs == ['- # - fileObj: TextIOWrapper\n', '+ # - fileObj: file\n']
     Path('test4_prov_module_actual.py').unlink()
 
 

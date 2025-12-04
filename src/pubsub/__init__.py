@@ -5,7 +5,11 @@ Pubsub package initialization.
 :license: BSD, see LICENSE_BSD_Simple.txt for details.
 """
 
-__version__ = "4.0.3"
+# Version is provided by setuptools_scm at build time via src/pubsub/_version.py
+try:
+    from ._version import version as __version__
+except ImportError:  # pragma: no cover - fallback for editable installs without SCM metadata
+    __version__ = "0.0.0"
 
 __all__ = [
     'pub',
