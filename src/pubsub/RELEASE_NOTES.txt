@@ -1,35 +1,14 @@
-Main changes in v4.0.3 (compared to 3.3)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Pypubsub 4.0.4 (Dec 2025)
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* Support Python 3.5 and 3.6
-* Distribution via wheel
-* Abandon support for Python 2.x and easy_install
-* Abandon support for (long-ago deprecated) arg1 messaging protocol
-* Added currying of subscribed listener args
-* Significant speed improvement for message delivery
-* Use PEP 484 style of annotations throughout
-* Support listeners with keyword-only arguments
+- Modern packaging: PEP 621/pyproject, setuptools-scm tag-driven versions, tox-uv, GitHub Actions CI/release.
+- Supported/tested Python versions: 3.7 through 3.14 (legacy support for 3.3–3.6 removed).
+- Helper tooling: release management (`release.py`), example runner (`examples/runall.sh`), Make targets for docs/venv.
+- Docs refreshed (Sphinx 7 + Furo); cleanup of legacy configs and files (Travis, landscape, MANIFEST, setup.py).
 
-Consequences of these changes:
+Upgrade notes
+^^^^^^^^^^^^^
 
-- If your app runs in Python 2.x, you cannot upgrade to pypubsub v4.
-- If your Python 3.x application uses setupkwargs.py, simply remove the import statement
-  from your app. Your app should run without further changes. If your app won't run
-  after doing this, please post on https://groups.google.com/forum/#!forum/pypubsub.
-- If your Python 3.x application uses setuparg1.py, this means you are using the
-  long-ago deprecated arg1 API for messaging. Before upgrading to v4 pypubsub, you
-  will have to migrate your app/package to use pypubsub's kwargs API. This is most
-  easily done via pypubsub 3.3, which has functions and docs
-  (http://pypubsub.readthedocs.io/en/stable/usage/howtos/index.html)
-  to help with this task. Once you have completed this migration, you should be able
-  to upgrade to pypubsub v4 without further changes.
-- The delivery order of sendMessage() has been changed. However as described in the
-  documentation since the very early days of Pypubsub 3, you should design your
-  application to not depend on the order of message delivery to listeners. If you
-  did not follow this very important architectural principle, you should fix your
-  application before upgrading. Then the upgrade will be trivial.
-
-
-Oliver Schoenborn
-January 2019
-
+- Version now comes from git tags; bump by tagging (e.g., `v4.0.4`), no manual `__version__` edits.
+- If you need wx examples, install wxPython 4.2.4 via the extras feed and SDL2 runtime on Ubuntu (see README).
+- Python <3.7 is no longer supported/tested.

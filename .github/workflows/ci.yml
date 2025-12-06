@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        os: [ubuntu-latest, windows-latest]
+        exclude:
+          - python-version: "3.7"
+            os: ubuntu-latest
+        include:
+          - python-version: "3.7"
+            os: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Install tox
+        shell: bash
+        run: |
+          pip install --upgrade pip setuptools wheel tox
+          # tox-uv is only available in py > 3.7 but here we don't care much about  
+          # perf so leaving for archival reason only: 
+          # if [ "${{ matrix.python-version }}" = "3.7" ]; then
+          #   pip install --upgrade pip setuptools wheel tox
+          # else
+          #   uv pip install --system tox tox-uv
+          # fi
+
+      - name: Run tox
+        shell: bash
+        run: |
+          TOXENV="py$(echo '${{ matrix.python-version }}' | tr -d '.')"
+          tox -e "$TOXENV"
+
+  pkg:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Install tox with uv backend
+        run: uv pip install --system tox tox-uv
+
+      - name: Build and check packages
+        run: tox -e pkg

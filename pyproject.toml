@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=68,<77", "wheel", "setuptools-scm>=7"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Pypubsub"
+dynamic = ["version"]
+description = "Python Publish-Subscribe Package"
+readme = { file = "README.rst", content-type = "text/x-rst" }
+requires-python = ">=3.7"
+license = { text = "BSD-2-Clause" }
+authors = [
+  { name = "Oliver Schoenborn (aka \"schollii\")", email = "oliver.schoenborn@gmail.com" }
+]
+keywords = [
+  "publish",
+  "subscribe",
+  "observer",
+  "signal",
+  "signals",
+  "event",
+  "events",
+  "message",
+  "messages",
+  "messaging",
+  "dispatch",
+  "dispatching",
+]
+classifiers = [
+  "Natural Language :: English",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Libraries :: Application Frameworks",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+Homepage = "https://github.com/schollii/pypubsub"
+Documentation = "http://pypubsub.readthedocs.io"
+PyPI = "https://pypi.python.org/pypi/PyPubSub"
+Source = "https://github.com/schollii/pypubsub"
+Issues = "https://github.com/schollii/pypubsub/issues"
+
+[tool.setuptools]
+zip-safe = false
+package-dir = {"" = "src"}
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
+local_scheme = "node-and-date"
+write_to = "src/pubsub/_version.py"
+write_to_template = "# This file is managed by setuptools_scm. Do not edit manually.\nversion = \"{version}\"\n"
+
+[tool.setuptools.package-data]
+pubsub = ["LICENSE_BSD_Simple.txt", "RELEASE_NOTES.txt", "py.typed"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

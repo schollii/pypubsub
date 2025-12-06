@@ -67,9 +67,7 @@ The following additional functions may be useful during debugging:
 
 .. autofunction:: isValid
 .. autofunction:: validate
-.. autoexception:: TopicDefnError
-    :show-inheritance:
-    
+
 **Advanced use:**
 
 The following are not typically required but can be useful in certain circumstances, 
@@ -211,4 +209,3 @@ topic definition providers or serialization formats for the builtin provider:
 .. autoclass:: pubsub.core.ITopicDefnDeserializer
 .. autoclass:: pubsub.core.TopicDefnProvider
     :show-inheritance:
-

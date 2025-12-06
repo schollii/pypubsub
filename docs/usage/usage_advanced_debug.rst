@@ -1,10 +1,6 @@
 Debugging an application
 ========================
 
-.. contents:: In this section:
-   :depth: 2
-   :local:
-
 
 Types of Errors
 ---------------

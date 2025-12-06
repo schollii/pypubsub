@@ -2,17 +2,28 @@
 __pycache__
 
 /.vscode
+/\.idea
+.idea/
 /build
 /dist
+/.tox
+/.pytest_cache
+/.coverage
+.python-version
+.DS_Store
 
 /docs/html
 /docs/_build
 
 /src/PyPubSub.egg-info
 /src/Pypubsub.egg-info
+/src/pubsub/_version.py
+/dist/
 
 /tests/suite/htmlcov/
 /tests/*.pstats
 /tests/suite/.coverage
 
 /pypubsub.code-workspace
+/**/kwargs_topics_out.py
+/.venv*
