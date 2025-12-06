@@ -6,6 +6,8 @@
 News
 ====
 
+- December 2025: pypubsub 4.0.4 released! (update to latest packaging system, testing, docs).
+- ... (has it really been this long since I cleaned this up?!)...
 - January 2019: pypubsub 4.0.3 released! (for those -- and only those -- who use Python >= 3).
 - March 2019: pypubsub 3.4.2 released (for those -- and only those -- who use Python 2.7.x).
 
@@ -74,8 +76,8 @@ To create a new tag, pick your next version (e.g. ``v4.0.4``) and tag the curren
 There is also a helper script with subcommands for tagging/pushing::
 
   python release.py get-latest            # show latest vX.Y.Z tag (or v0.0.0)
-  python release.py init-tag v4.0.4       # create the first tag if none exists
-  python release.py bump-local patch      # create a local tag (major/minor/patch)
+  python release.py init-tag v4.0.4       # create a specific tag
+  python release.py bump-local [patch]    # create a local tag (major/minor/patch; default patch)
   python release.py push-tag              # push latest tag (prompts/warns about PyPI release)
 
 Warning: pushing a ``v*`` tag triggers the GitHub Actions release workflow, which builds and uploads to PyPI using the configured token.
