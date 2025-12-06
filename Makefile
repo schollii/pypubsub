@@ -31,6 +31,9 @@ add-wxpy-ubuntu: venv
 # make init-tag TAG=v4.0.4
 # make bump-local BUMP=patch
 # make push-tag TAG=v4.0.4
+latest-tag:
+	$(PYTHON) release.py get-latest-tag
+
 init-tag:
 	$(PYTHON) release.py init-tag $(TAG)
 

@@ -4,7 +4,7 @@
 Subcommands:
   - get-latest: print latest vX.Y.Z tag (defaults to v0.0.0 if none)
   - bump-local {major,minor,patch}: ensure clean tree, compute next version from latest tag, create local tag
-  - init-tag <vX.Y.Z>: create the first tag if none exists (no bump)
+  - init-tag <vX.Y.Z>: create a specific tag (first tag or an explicit version)
   - push-tag [tag]: warn and push the given tag (defaults to latest)
 """
 
@@ -32,11 +32,12 @@ def require_clean_worktree() -> None:
         sys.exit(1)
 
 
-def latest_tag() -> str:
+def latest_tag() -> str | None:
     res = run(["git", "describe", "--tags", "--abbrev=0"])
     if res.returncode != 0:
-        return "v0.0.0"
-    return res.stdout.strip()
+        return None
+    tag = res.stdout.strip()
+    return tag if tag else None
 
 
 def parse_version(tag: str) -> Tuple[int, int, int]:
@@ -74,13 +75,17 @@ def tag_exists(tag: str) -> bool:
 
 
 def cmd_get_latest(_: argparse.Namespace) -> None:
-    print(latest_tag())
+    tag = latest_tag()
+    if tag is None:
+        print("No tags found.")
+    else:
+        print(tag)
 
 
 def cmd_bump_local(args: argparse.Namespace) -> None:
     require_clean_worktree()
     current = latest_tag()
-    if current == "v0.0.0":
+    if current is None:
         print("No existing tag found. Use init-tag first.", file=sys.stderr)
         sys.exit(1)
     new_tag = bump_version(current, args.bump)
@@ -102,6 +107,9 @@ def cmd_bump_local(args: argparse.Namespace) -> None:
 
 def cmd_push_tag(args: argparse.Namespace) -> None:
     tag = args.tag or latest_tag()
+    if not tag:
+        print("No tags found to push.", file=sys.stderr)
+        sys.exit(1)
     if not tag_exists(tag):
         print(f"Tag {tag} does not exist.", file=sys.stderr)
         sys.exit(1)
@@ -117,28 +125,35 @@ def cmd_push_tag(args: argparse.Namespace) -> None:
 
 def cmd_init_tag(args: argparse.Namespace) -> None:
     require_clean_worktree()
-    if latest_tag() != "v0.0.0":
+    current = latest_tag()
+    if current:
+        print(f"Latest tag: {current}")
         print("A tag already exists; use bump-local instead.", file=sys.stderr)
         sys.exit(1)
+
     tag = args.tag
-    if not tag.startswith("v"):
-        print("Tag must start with 'v', e.g. v4.0.4", file=sys.stderr)
+    if tag_exists(tag):
+        print(f"Tag {tag} already exists.", file=sys.stderr)
         sys.exit(1)
+
     try:
         parse_version(tag)
     except ValueError as exc:
         print(str(exc), file=sys.stderr)
         sys.exit(1)
-    print(f"About to create initial tag {tag}.")
+
+    print(f"About to create tag {tag}.")
     print("Warning: pushing this tag will trigger the release workflow to PyPI.")
     confirm = input("Create tag locally? [y/N] ").strip().lower()
     if confirm != "y":
         print("Aborted.")
         sys.exit(1)
+
     res = run(["git", "tag", tag], capture_output=False)
     if res.returncode != 0:
         print("Failed to create tag", file=sys.stderr)
         sys.exit(res.returncode)
+
     print(f"Tag created: {tag}")
 
 
@@ -146,10 +161,16 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Release helper for tag-based publishing.")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    sub.add_parser("get-latest", help="Print latest vX.Y.Z tag").set_defaults(func=cmd_get_latest)
+    sub.add_parser("get-latest-tag", help="Print latest vX.Y.Z tag").set_defaults(func=cmd_get_latest)
 
     bump = sub.add_parser("bump-local", help="Bump from latest tag and create a local tag")
-    bump.add_argument("bump", choices=["major", "minor", "patch"], help="Version segment to bump")
+    bump.add_argument(
+        "bump",
+        nargs="?",
+        default="patch",
+        choices=["major", "minor", "patch"],
+        help="Version segment to bump (default: patch)",
+    )
     bump.set_defaults(func=cmd_bump_local)
 
     initp = sub.add_parser("init-tag", help="Create an initial tag when none exists")
