@@ -6,7 +6,7 @@
 News
 ====
 
-- December 2025: pypubsub 4.0.4 released! (update to latest packaging system, testing, docs).
+- December 2025: pypubsub 4.0.7 released! (update to latest packaging system, testing, docs).
 - ... (has it really been this long since I cleaned this up?!)...
 - January 2019: pypubsub 4.0.3 released! (for those -- and only those -- who use Python >= 3).
 - March 2019: pypubsub 3.4.2 released (for those -- and only those -- who use Python 2.7.x).
@@ -68,15 +68,15 @@ Versions come from git tags via ``setuptools_scm``. To see the last tagged relea
 
   git describe --tags --abbrev=0
 
-To create a new tag, pick your next version (e.g. ``v4.0.4``) and tag the current commit::
+To create a new tag, pick your next version (e.g. ``v4.0.7``) and tag the current commit::
 
-  git tag v4.0.4
-  git push origin v4.0.4
+  git tag v4.0.7
+  git push origin v4.0.7
 
 There is also a helper script with subcommands for tagging/pushing::
 
   python release.py get-latest            # show latest vX.Y.Z tag (or v0.0.0)
-  python release.py init-tag v4.0.4       # create a specific tag
+  python release.py init-tag v4.0.7       # create a specific tag
   python release.py bump-local [patch]    # create a local tag (major/minor/patch; default patch)
   python release.py push-tag              # push latest tag (prompts/warns about PyPI release)
 
@@ -110,6 +110,6 @@ Helpers:
 - ``make clean-venv`` removes that venv.
 - ``make add-wxpy-ubuntu`` installs wxPython 4.2.4 wheel + SDL2 runtime on Ubuntu (requires sudo).
   Useful for running wx examples in that venv.
-- Release helpers can be run via Makefile wrappers, e.g. ``make init-tag TAG=v4.0.4`` or ``make bump-local BUMP=patch``.
+- Release helpers can be run via Makefile wrappers, e.g. ``make init-tag TAG=v4.0.7`` or ``make bump-local BUMP=patch``.
 
-Release helpers can be run via the Makefile wrappers, e.g. ``make init-tag TAG=v4.0.4`` or ``make bump-local BUMP=patch``.
+Release helpers can be run via the Makefile wrappers, e.g. ``make init-tag TAG=v4.0.7`` or ``make bump-local BUMP=patch``.

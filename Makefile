@@ -28,9 +28,9 @@ add-wxpy-ubuntu: venv
 	sudo apt-get install -y libsdl2-2.0-0
 
 # Release helpers (wrap release.py). Example:
-# make init-tag TAG=v4.0.4
+# make init-tag TAG=v4.0.7
 # make bump-local BUMP=patch
-# make push-tag TAG=v4.0.4
+# make push-tag TAG=v4.0.7
 latest-tag:
 	$(PYTHON) release.py get-latest-tag
 

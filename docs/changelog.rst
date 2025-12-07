@@ -3,7 +3,7 @@ Changelog
 
 High-level changelog. For details, consult the SVN logs.
 
-:4.0.6 (Dec 2025):
+:4.0.7 (Dec 2025):
 
 * Modernized packaging: pyproject/setuptools-scm, tag-driven versions, tox-uv matrix, GitHub Actions CI/release.
 * Expanded Python support: tested on 3.7–3.14; dropped legacy config for 3.3–3.6.
