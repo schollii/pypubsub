@@ -6,12 +6,8 @@ Install
 System Requirements
 -------------------
 
-Requires Python >= 3.3. It has been tested on Windows 7 and various
-flavors of \*nix (such as Fedora, OpenSuse, Ubuntu and OSX). For Python < 3.5, there are
-additional requirements:
-
-- Python 3.4: requires the "typing" package (from PyPI)
-- Python 3.3: requires the same as 3.4 + enum34, pathlib and weakrefmethod (all on PyPI)
+Requires Python >= 3.7. It has been tested on recent Windows and various
+flavors of \*nix (such as Fedora, Ubuntu and macOS).
 
 Please post on pypubsub forum (see :ref:`label-support` section) if you have 
 successfully used PyPubSub with other combinations of Python and Platform.

@@ -11,7 +11,7 @@ a package called 'pypubsub' which provides a publish-subscribe API to facilitate
 2. decoupling an application's in-memory components
 
 PyPubSub provides the infrastructure for using the Observer pattern in your
-single-process application. It is pure Python and works on Python 3.3+.
+single-process application. It is pure Python and works on Python 3.7+.
 
 Using the Observer pattern in your single-process application can dramatically
 simplify its design and improve testability.
