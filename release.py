@@ -53,17 +53,19 @@ def format_tag(version: Tuple[int, int, int]) -> str:
     return f"v{version[0]}.{version[1]}.{version[2]}"
 
 
-def bump_version(tag: str, bump: str) -> str:
+def bump_version(tag: str, bump: str, step: int = 1) -> str:
     major, minor, patch = parse_version(tag)
+    if step < 1:
+        raise ValueError("step must be >= 1")
     if bump == "major":
-        major += 1
+        major += step
         minor = 0
         patch = 0
     elif bump == "minor":
-        minor += 1
+        minor += step
         patch = 0
     elif bump == "patch":
-        patch += 1
+        patch += step
     else:  # pragma: no cover - argparse enforces choices
         raise ValueError(f"Unknown bump type: {bump}")
 
@@ -84,12 +86,21 @@ def cmd_get_latest(_: argparse.Namespace) -> None:
 
 def cmd_bump_local(args: argparse.Namespace) -> None:
     require_clean_worktree()
-    current = latest_tag()
+    current = args.base or latest_tag()
     if current is None:
         print("No existing tag found. Use init-tag first.", file=sys.stderr)
         sys.exit(1)
 
-    new_tag = bump_version(current, args.bump)
+    if not tag_exists(current):
+        print(f"Base tag {current} does not exist.", file=sys.stderr)
+        sys.exit(1)
+
+    try:
+        new_tag = bump_version(current, args.bump, args.step)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        sys.exit(1)
+
     if tag_exists(new_tag):
         print(f"Tag {new_tag} already exists.", file=sys.stderr)
         sys.exit(1)
@@ -186,6 +197,16 @@ def main() -> None:
         default="patch",
         choices=["major", "minor", "patch"],
         help="Version segment to bump (default: patch)",
+    )
+    bump.add_argument(
+        "--step",
+        type=int,
+        default=1,
+        help="Increment amount for the chosen segment (default: 1)",
+    )
+    bump.add_argument(
+        "--base",
+        help="Base tag to bump from (defaults to latest reachable tag)",
     )
     bump.set_defaults(func=cmd_bump_local)
 
